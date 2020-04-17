@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">home finances helper</string>
+    <string name="login_prompt">Enter your e-mail address</string>
+    <string name="password_prompt">Enter your password</string>
+    <string name="password_confirmation_prompt">Confirm your passowrd</string>
+    <string name="login_action">Log in!</string>
+    <string name="register_action">Register new account!</string>
+    <string name="confirm_registration_action">Confirm your registration</string>
+    <string name="cancel_registration_action">Cancel registration</string>
+    <string name="budget_list_loading_error">There was a problem loading your list!</string>
+    <string name="register_bad_password">Password must contain at least: 1 lower case character, 1 upper case character, 1 number, 1 special character min 6</string>
+    <string name="register_passwords_doesnt_match">Passwords do not match</string>
+    <string name="register_email_not_valid">Bad email address</string>
+    <string name="login_credentials_error">Entered email address or password are incorrect!</string>
+</resources>
