@@ -1,5 +1,7 @@
 package com.example.engineerdegreeapp.fragment;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Base64;
@@ -19,16 +21,20 @@ import androidx.fragment.app.Fragment;
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.retrofit.UserApi;
 import com.example.engineerdegreeapp.retrofit.entity.UserAuth;
+import com.example.engineerdegreeapp.util.AccountUtils;
 
-import java.io.IOException;
 
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.example.engineerdegreeapp.util.AccountUtils.APP_NAME;
 
 public class LoginFragment extends Fragment implements View.OnClickListener{
 
@@ -39,6 +45,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     EditText usernameEditText;
     EditText passwordEditText;
     TextView errorMessageTextView;
+    private AccountManager mAccountManager;
 
     OnFragmentClickListener mClickListener;
 
@@ -56,6 +63,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         registerButton = rootView.findViewById(R.id.login_register_button);
         registerButton.setOnClickListener(this);
         errorMessageTextView = rootView.findViewById(R.id.login_error_message);
+        mAccountManager = AccountManager.get(getContext());
         return rootView;
     }
 
@@ -84,6 +92,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     }
 
     private void checkCredentialsAndLogIn(){
+        registerButton.setEnabled(false);
+        loginButton.setEnabled(false);
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(USERS_API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -91,7 +102,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
         UserApi budgetListApi = retrofit.create(UserApi.class);
 
-        String credentials = usernameEditText.getText().toString() + ":" + passwordEditText.getText().toString();
+        final String loginCredential = usernameEditText.getText().toString();
+        final String passwordCredential = passwordEditText.getText().toString();
+        String credentials = loginCredential + ":" + passwordCredential;
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
         Call<UserAuth> call = budgetListApi.getAccount(auth);
@@ -99,19 +112,43 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onResponse(Call<UserAuth> call, Response<UserAuth> response) {
                 if(!response.isSuccessful()){
-                    if( response.code() == 401){
+                    registerButton.setEnabled(true);
+                    loginButton.setEnabled(true);
+                    if(response.code() == 401){
                         errorMessageTextView.setVisibility(View.VISIBLE);
                     }else{
                         Toast.makeText(getActivity(),"There was a problem logging in", Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     errorMessageTextView.setVisibility(View.INVISIBLE);
-                    mClickListener.onClickInteraction(R.id.login_sign_in_button);
+                    Account[] accounts = mAccountManager.getAccountsByType(AccountUtils.ACCOUNT_TYPE);
+                    if (accounts.length > 0)
+                    {
+                        registerButton.setEnabled(true);
+                        loginButton.setEnabled(true);
+                        Toast toast = Toast.makeText(getActivity(), getString(R.string.login_account_manager_already_exists), Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                    else
+                    {
+                        final Account account = new Account(loginCredential, AccountUtils.ACCOUNT_TYPE);
+                        final DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
+                        String authToken = loginCredential + "_" + AccountUtils.APP_NAME + "_" + df.format(new Date());
+
+                        Bundle bundle = new Bundle();
+
+                        mAccountManager.addAccountExplicitly(account, passwordCredential, bundle);
+                        mAccountManager.setAuthToken(account, AccountUtils.AUTH_TOKEN_TYPE, authToken);
+
+                        mClickListener.onClickInteraction(R.id.login_sign_in_button);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<UserAuth> call, Throwable t) {
+                registerButton.setEnabled(true);
+                loginButton.setEnabled(true);
                 Toast.makeText(getActivity(), "Failed to login check your internet connection", Toast.LENGTH_SHORT).show();
             }
         });

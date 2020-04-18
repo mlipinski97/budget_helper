@@ -3,6 +3,8 @@ package com.example.engineerdegreeapp.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
@@ -12,6 +14,7 @@ import android.widget.EditText;
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.fragment.LoginFragment;
 import com.example.engineerdegreeapp.fragment.RegistrationFragment;
+import com.example.engineerdegreeapp.util.AccountUtils;
 
 
 public class LoginActivity extends AppCompatActivity implements
@@ -22,12 +25,24 @@ public class LoginActivity extends AppCompatActivity implements
     public static final String ARG_AUTH_TOKEN_TYPE = "authTokenType";
     public static final String ARG_IS_ADDING_NEW_ACCOUNT = "isAddingNewAccount";
     public static final String PARAM_USER_PASSWORD = "password";
-    public static final String SERVER_USER_ROLE = "serverUserRole";
+    private String authToken;
+    private AccountManager mAccountManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        authToken = null;
+        mAccountManager = AccountManager.get(this);
+
+        // Ask for an auth token
+        //mAccountManager.getAuthTokenByFeatures(AccountUtils.ACCOUNT_TYPE, AccountUtils.AUTH_TOKEN_TYPE, null, this, null, null, new GetAuthTokenCallback(), null);
+        Account[] accounts = mAccountManager.getAccountsByType(AccountUtils.ACCOUNT_TYPE);
+        if (accounts.length >= 1){
+            startAndGoToMainActivity();
+        }
+
 
         LoginFragment loginFragment = new LoginFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();

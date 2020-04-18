@@ -12,4 +12,12 @@
     <string name="register_passwords_doesnt_match">Passwords do not match</string>
     <string name="register_email_not_valid">Bad email address</string>
     <string name="login_credentials_error">Entered email address or password are incorrect!</string>
+    <string name="login_account_manager_already_exists">There is already an account saved in app. Remove previous account first.</string>
+
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
+    <string name="contact_email">maciej.lipinski@student.wat.edu.pl</string>
+    <string name="menu_prompt">Menu:</string>
+
 </resources>
