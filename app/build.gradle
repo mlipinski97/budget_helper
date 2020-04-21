@@ -36,7 +36,12 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:design:26.1.0'
     implementation 'androidx.fragment:fragment:1.2.4'
+    //noinspection GradleCompatible
 
+    implementation 'com.android.support:preference-v14:25.3.1'
+
+
+    //noinspection GradleCompatible
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

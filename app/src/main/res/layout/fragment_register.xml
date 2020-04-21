@@ -14,7 +14,9 @@
         android:padding="10dp"
         android:autofillHints="email"
         android:hint="@string/login_prompt"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:textColor="?attr/textColor"
+        />
 
     <EditText
         android:id="@+id/register_password_edit_text"
@@ -28,7 +30,9 @@
         android:layout_centerHorizontal="true"
         android:hint="@string/password_prompt"
         android:autofillHints="password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:textColor="?attr/textColor"
+        />
 
     <EditText
         android:id="@+id/register_password_confirmation_edit_text"
@@ -42,7 +46,9 @@
         android:layout_centerHorizontal="true"
         android:hint="@string/password_confirmation_prompt"
         android:autofillHints="password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:textColor="?attr/textColor"
+        />
 
     <Button
         android:id="@+id/register_confirm_button"
@@ -53,7 +59,10 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
-        android:text="@string/confirm_registration_action" />
+        android:text="@string/confirm_registration_action"
+        android:textColor="?attr/textColor"
+        android:background="?attr/buttonColor"
+        android:backgroundTint="?attr/backgroundTint"/>
 
     <Button
         android:id="@+id/register_cancel_button"
@@ -64,5 +73,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
-        android:text="@string/cancel_registration_action" />
+        android:text="@string/cancel_registration_action"
+        android:textColor="?attr/textColor"
+        android:background="?attr/buttonColor"
+        android:backgroundTint="?attr/backgroundTint"/>
 </RelativeLayout>

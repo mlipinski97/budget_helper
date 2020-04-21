@@ -20,4 +20,21 @@
     <string name="contact_email">maciej.lipinski@student.wat.edu.pl</string>
     <string name="menu_prompt">Menu:</string>
 
+    <string name="loading_error">Something went wrong!</string>
+
+    <string name="logged_in_as">Currently logged in as:</string>
+
+    <string name="logout">logout</string>
+    <string name="settings">settings</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="dark_mode_preference_title">Dark mode</string>
+
+    <!-- Preference keys -->
+    <string name="dark_mode_preference_key">dark_mode</string>
+
+
+
 </resources>

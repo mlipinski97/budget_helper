@@ -14,29 +14,31 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.MainActivity">
+        tools:context=".activity.MainActivity"
+        android:background="?attr/backgroundColor">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/main_toolbar"
-            style="@style/ToolbarColor"
+            android:background="?attr/toolbarColor"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:elevation="4dp"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="@string/app_name" />
+            app:title="@string/app_name"
+            />
 
         <FrameLayout
             android:id="@+id/main_activity_details_frame_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/main_toolbar">
+            android:layout_below="@+id/main_toolbar"
+            android:background="?attr/backgroundColor">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="P - - - - H"
-                android:textSize="110sp" />
+                android:textSize="110sp"
+                android:textColor="?attr/textColor"/>
         </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -52,7 +54,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/budget_list_loading_error"
-            android:textColor="#000000"
+            android:textColor="?attr/textColor"
             android:textSize="40sp"
             android:visibility="invisible" />
 
@@ -65,7 +67,10 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/navigation_drawer_header"
-        app:menu="@menu/menu_main_options"
+        app:menu="@menu/navigation_drawer_menu"
+        android:background="?attr/backgroundColor"
+        app:itemTextColor="?attr/textColor"
+        app:itemIconTint="?attr/tintColor"
         />
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -1,11 +1,14 @@
 package com.example.engineerdegreeapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.Button;
@@ -25,15 +28,15 @@ public class LoginActivity extends AppCompatActivity implements
     public static final String ARG_AUTH_TOKEN_TYPE = "authTokenType";
     public static final String ARG_IS_ADDING_NEW_ACCOUNT = "isAddingNewAccount";
     public static final String PARAM_USER_PASSWORD = "password";
-    private String authToken;
+    private SharedPreferences mPreferences;
     private AccountManager mAccountManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        checkSharedPreferences();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        authToken = null;
         mAccountManager = AccountManager.get(this);
 
         // Ask for an auth token
@@ -76,5 +79,14 @@ public class LoginActivity extends AppCompatActivity implements
     private void startAndGoToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    private void checkSharedPreferences(){
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if(mPreferences.getBoolean(getString(R.string.dark_mode_preference_key), false)){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 }
