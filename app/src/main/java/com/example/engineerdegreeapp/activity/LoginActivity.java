@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onClickInteraction(int clickedElementId) {
+    public void onFragmentClickInteraction(int clickedElementId) {
         switch (clickedElementId){
             case R.id.login_sign_in_button:
                 startAndGoToMainActivity();
@@ -89,4 +89,5 @@ public class LoginActivity extends AppCompatActivity implements
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
     }
+
 }

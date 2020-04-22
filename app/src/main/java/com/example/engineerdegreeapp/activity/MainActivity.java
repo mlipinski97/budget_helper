@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,10 @@ import android.widget.Toast;
 
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.adapter.BudgetListAdapter;
+import com.example.engineerdegreeapp.fragment.BudgetListFragment;
+import com.example.engineerdegreeapp.fragment.LoginFragment;
+import com.example.engineerdegreeapp.fragment.NewBudgetListFragment;
+import com.example.engineerdegreeapp.fragment.RegistrationFragment;
 import com.example.engineerdegreeapp.retrofit.BudgetListApi;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.util.AccountUtils;
@@ -37,6 +42,8 @@ import com.google.android.material.navigation.NavigationView.OnNavigationItemSel
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.datatype.Duration;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,11 +52,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements BudgetListAdapter.ListItemClickListener,
         OnNavigationItemSelectedListener,
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        BudgetListFragment.OnFragmentClickListener{
 
     private BudgetListAdapter budgetListAdapter;
-    private TextView budgetListErrorTextView;
-    private RecyclerView budgetListRecyclerView;
     private Toast mToast;
     private ArrayList<BudgetList> budgetLists;
     private MainActivity mainActivity;
@@ -61,10 +67,10 @@ public class MainActivity extends AppCompatActivity implements BudgetListAdapter
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.AppTheme_NoActionBarDark);
-        } else{
-          setTheme(R.style.AppTheme_NoActionBarLight);
+        } else {
+            setTheme(R.style.AppTheme_NoActionBarLight);
         }
         mainActivity = this;
         super.onCreate(savedInstanceState);
@@ -75,12 +81,11 @@ public class MainActivity extends AppCompatActivity implements BudgetListAdapter
 
         mAccountManager = AccountManager.get(this);
         Account[] accounts = mAccountManager.getAccountsByType(AccountUtils.ACCOUNT_TYPE);
-        if(accounts.length > 0 ){
+        if (accounts.length > 0) {
             mAccount = accounts[0];
-        } else{
+        } else {
             return;
         }
-
 
 
         mTopToolbar = findViewById(R.id.main_toolbar);
@@ -92,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements BudgetListAdapter
         toggle.syncState();
 
 
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.main_drawer_view);
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
@@ -100,21 +104,20 @@ public class MainActivity extends AppCompatActivity implements BudgetListAdapter
         currentlyLoggedInTextView = headerView.findViewById(R.id.navigation_drawer_logged_user_text_view);
         currentlyLoggedInTextView.setText(mAccount.name);
 
+        BudgetListFragment budgetListFragment = new BudgetListFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
-        budgetListErrorTextView = findViewById(R.id.budget_list_loading_error);
-
-        budgetListRecyclerView = findViewById(R.id.budget_list_recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        budgetListRecyclerView.setLayoutManager(layoutManager);
-        budgetListRecyclerView.setHasFixedSize(true);
-        loadBudgetLists();
+        fragmentManager.beginTransaction()
+                .add(R.id.main_fragment_layout_holder, budgetListFragment)
+                .commit();
     }
+
 
     @Override
     public void onBackPressed() {
-        if(drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -128,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements BudgetListAdapter
 
     @Override
     public void onListItemClick(int clickedBudgetListId) {
-        if(mToast != null){
+        if (mToast != null) {
             mToast.cancel();
         }
         String clickMessage = "Here will open list #" + clickedBudgetListId;
@@ -136,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements BudgetListAdapter
         mToast.show();
     }
 
-    private void logout(){
+    private void logout() {
         mAccountManager.removeAccount(mAccount, null, null, null);
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -147,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements BudgetListAdapter
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int clickedItemId = item.getItemId();
-        switch (clickedItemId){
+        switch (clickedItemId) {
             case R.id.drawer_logout:
                 if (drawer.isDrawerOpen(GravityCompat.START)) {
                     drawer.closeDrawer(GravityCompat.START);
@@ -165,51 +168,32 @@ public class MainActivity extends AppCompatActivity implements BudgetListAdapter
         return true;
     }
 
-    private void loadBudgetLists(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://engineer-degree-project.herokuapp.com/api/budgetlist/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        BudgetListApi budgetListApi = retrofit.create(BudgetListApi.class);
-
-        String loginCredential = mAccount.name;
-        String passwordCredential = mAccountManager.getPassword(mAccount);
-        String credentials = loginCredential + ":" + passwordCredential ;
-        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-
-        Call<List<BudgetList>> call = budgetListApi.getBudgetLists(auth, loginCredential);
-        call.enqueue(new Callback<List<BudgetList>>() {
-            @Override
-            public void onResponse(Call<List<BudgetList>> call, Response<List<BudgetList>> response) {
-                if(!response.isSuccessful()){
-                    budgetListErrorTextView.setVisibility(View.VISIBLE);
-                    return;
-                } else{
-                    budgetListErrorTextView.setVisibility(View.INVISIBLE);
-                    budgetLists = new ArrayList<>(response.body());
-                    budgetListAdapter = new BudgetListAdapter(budgetLists, budgetLists.size(), MainActivity.this);
-                    budgetListRecyclerView.setAdapter(budgetListAdapter);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<BudgetList>> call, Throwable t) {
-                budgetListErrorTextView.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(getString(R.string.dark_mode_preference_key))){
-            if(sharedPreferences.getBoolean(getString(R.string.dark_mode_preference_key), false)){
+        if (key.equals(getString(R.string.dark_mode_preference_key))) {
+            if (sharedPreferences.getBoolean(getString(R.string.dark_mode_preference_key), false)) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 mTopToolbar.setBackgroundColor(Color.parseColor("#80000000"));
 
-            } else{
+            } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
+        }
+    }
+
+    @Override
+    public void onFragmentClickInteraction(int clickedElementId) {
+        switch (clickedElementId){
+            case R.id.budget_list_floating_action_button:
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                        .addToBackStack("budget_list_fragment")
+                        .replace(R.id.main_fragment_layout_holder, new NewBudgetListFragment()).commit();
+                break;
+/*
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+*/
+
         }
     }
 }

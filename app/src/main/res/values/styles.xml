@@ -12,7 +12,7 @@
         <item name="textColor">#353333</item>
         <item name="actionMenuTextColor">#353333</item>
         <item name="tintColor">#000000</item>
-        <item name="buttonColor">#A38BB3</item>
+        <item name="buttonColor">#758C85</item>
         <item name="toolbarColor">#758C85</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="preferenceTheme">@style/AppTheme.Light</item>
@@ -30,7 +30,7 @@
         <item name="textColor">#D8D4D4</item>
         <item name="actionMenuTextColor">#D8D4D4</item>
         <item name="tintColor">#ffffff</item>
-        <item name="buttonColor">#668079</item>
+        <item name="buttonColor">#656464</item>
         <item name="toolbarColor">#656464</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="preferenceTheme">@style/AppTheme.Dark</item>
@@ -46,7 +46,7 @@
         <item name="textColor">#353333</item>
         <item name="actionMenuTextColor">#353333</item>
         <item name="tintColor">#000000</item>
-        <item name="buttonColor">#A38BB3</item>
+        <item name="buttonColor">#0B6A4C</item>
         <item name="toolbarColor">#0B6A4C</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
@@ -62,7 +62,7 @@
         <item name="textColor">#D8D4D4</item>
         <item name="actionMenuTextColor">#D8D4D4</item>
         <item name="tintColor">#ffffff</item>
-        <item name="buttonColor">#668079</item>
+        <item name="buttonColor">#340B6A</item>
         <item name="toolbarColor">#340B6A</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>

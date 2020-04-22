@@ -2,8 +2,6 @@ package com.example.engineerdegreeapp.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +14,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.engineerdegreeapp.R;
-import com.example.engineerdegreeapp.activity.MainActivity;
-import com.example.engineerdegreeapp.adapter.BudgetListAdapter;
-import com.example.engineerdegreeapp.retrofit.BudgetListApi;
 import com.example.engineerdegreeapp.retrofit.UserApi;
-import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.retrofit.entity.UserAuth;
 import com.example.engineerdegreeapp.util.RegexUtils;
 
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -78,7 +68,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     }
 
     public interface OnFragmentClickListener{
-        void onClickInteraction(int clickedElementId);
+        void onFragmentClickInteraction(int clickedElementId);
     }
 
     @Override
@@ -99,7 +89,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                 }
                 break;
             case R.id.register_cancel_button:
-                mClickListener.onClickInteraction(clickedItemId);
+                mClickListener.onFragmentClickInteraction(clickedItemId);
                 break;
         }
     }
@@ -154,7 +144,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                     return;
                 } else{
                     Toast.makeText(getActivity(), "User Registered", Toast.LENGTH_SHORT).show();
-                    mClickListener.onClickInteraction(R.id.register_confirm_button);
+                    mClickListener.onFragmentClickInteraction(R.id.register_confirm_button);
                 }
             }
 

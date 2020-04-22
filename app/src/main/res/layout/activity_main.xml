@@ -10,12 +10,12 @@
     tools:context=".activity.MainActivity"
     >
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.MainActivity"
-        android:background="?attr/backgroundColor">
+        android:background="?attr/backgroundColor"
+        android:id="@+id/main_fragment_layout_holder">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/main_toolbar"
@@ -25,7 +25,7 @@
             android:elevation="4dp"
             app:title="@string/app_name"
             />
-
+        <!--
         <FrameLayout
             android:id="@+id/main_activity_details_frame_layout"
             android:layout_width="match_parent"
@@ -35,10 +35,10 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="P - - - - H"
-                android:textSize="110sp"
-                android:textColor="?attr/textColor"/>
+                android:textColor="?attr/textColor"
+                android:textSize="70sp" />
         </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -58,7 +58,21 @@
             android:textSize="40sp"
             android:visibility="invisible" />
 
-    </RelativeLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_add_black_24dp"
+            android:tint="?attr/tintColor"
+            android:backgroundTint="?attr/buttonColor"
+            app:fabSize="normal" />-->
+
+    </FrameLayout>
 
 
     <com.google.android.material.navigation.NavigationView

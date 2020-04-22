@@ -34,9 +34,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.example.engineerdegreeapp.util.AccountUtils.APP_NAME;
-
-public class LoginFragment extends Fragment implements View.OnClickListener{
+public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private final String USERS_API_BASE_URL = "https://engineer-degree-project.herokuapp.com/api/users/";
 
@@ -86,7 +84,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                 checkCredentialsAndLogIn();
                 break;
             case R.id.login_register_button:
-                mClickListener.onClickInteraction(clickedItemId);
+                mClickListener.onFragmentClickInteraction(clickedItemId);
                 errorMessageTextView.setVisibility(View.INVISIBLE);
                 break;
         }
@@ -141,7 +139,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                         mAccountManager.addAccountExplicitly(account, passwordCredential, bundle);
                         mAccountManager.setAuthToken(account, AccountUtils.AUTH_TOKEN_TYPE, authToken);
 
-                        mClickListener.onClickInteraction(R.id.login_sign_in_button);
+                        mClickListener.onFragmentClickInteraction(R.id.login_sign_in_button);
                     }
                 }
             }
@@ -156,6 +154,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     }
 
     public interface OnFragmentClickListener{
-        void onClickInteraction(int clickedElementId);
+        void onFragmentClickInteraction(int clickedElementId);
     }
 }
