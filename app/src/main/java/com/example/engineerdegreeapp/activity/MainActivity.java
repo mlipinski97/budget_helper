@@ -53,7 +53,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity implements BudgetListAdapter.ListItemClickListener,
         OnNavigationItemSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener,
-        BudgetListFragment.OnFragmentClickListener{
+        BudgetListFragment.OnFragmentClickListener,
+        NewBudgetListFragment.OnFragmentClickListener{
 
     private BudgetListAdapter budgetListAdapter;
     private Toast mToast;
@@ -190,10 +191,15 @@ public class MainActivity extends AppCompatActivity implements BudgetListAdapter
                         .addToBackStack("budget_list_fragment")
                         .replace(R.id.main_fragment_layout_holder, new NewBudgetListFragment()).commit();
                 break;
-/*
-            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-*/
-
+            case R.id.new_budget_list_button_confirm:
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.main_fragment_layout_holder, new BudgetListFragment())
+                        .commit();
+                break;
+            case R.id.new_budget_list_button_cancel:
+                getSupportFragmentManager().popBackStack();
+                break;
         }
     }
 }

@@ -1,10 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="palceholder"
-        />
-</RelativeLayout>
+        android:layout_height="wrap_content"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/new_budget_list_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/toolbarColor"
+            android:elevation="4dp"
+            app:title="@string/new_budget_list_toolbar_name" />
+
+        <TextView
+            android:id="@+id/new_budget_list_name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_budget_list_toolbar"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/new_budget_list_name_prompt"
+            android:textColor="?attr/textColor" />
+
+        <EditText
+            android:id="@+id/new_budget_list_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_budget_list_name_text_view"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="?attr/toolbarColor"
+            android:hint="@string/new_budget_list_name_hint"
+            android:textColor="?attr/textColor"
+            android:textColorHint="?attr/toolbarColor" />
+
+        <TextView
+            android:id="@+id/new_budget_list_name_error_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_budget_list_name_edit_text"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="2dp"
+            android:text="@string/new_budget_list_name_error"
+            android:textColor="@color/login_error_color"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/new_budget_list_amount_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_budget_list_name_error_text_view"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/new_budget_list_value_prompt"
+            android:textColor="?attr/textColor" />
+
+        <EditText
+            android:id="@+id/new_budget_list_amount_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_budget_list_amount_text_view"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="?attr/toolbarColor"
+            android:ems="10"
+            android:hint="@string/new_budget_list_value_hint"
+            android:textColor="?attr/textColor"
+            android:textColorHint="?attr/toolbarColor" />
+
+        <TextView
+            android:id="@+id/new_budget_list_amount_error_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_budget_list_amount_edit_text"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="2dp"
+            android:text="@string/new_budget_list_value_error"
+            android:textColor="@color/login_error_color"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/new_budget_list_due_date_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_budget_list_amount_error_text_view"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/new_budget_list_due_date_prompt"
+            android:textColor="?attr/textColor" />
+
+        <CalendarView
+            android:id="@+id/new_budget_list_calendar_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_budget_list_due_date_text_view"
+            android:layout_centerHorizontal="true"
+            android:dateTextAppearance="@style/CalenderViewDateCustomText"
+            android:theme="@style/CalenderViewCustom"
+            android:weekDayTextAppearance="@style/CalenderViewWeekCustomText"
+            />
+
+        <Button
+            android:id="@+id/new_budget_list_button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/new_budget_list_calendar_view"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="?attr/buttonColor"
+            android:text="@string/new_budget_list_cancel_button"
+            android:textColor="?attr/textColor" />
+
+        <Button
+            android:id="@+id/new_budget_list_button_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/new_budget_list_calendar_view"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="?attr/buttonColor"
+            android:text="@string/new_budget_list_confirm_button"
+            android:textColor="?attr/textColor" />
+    </RelativeLayout>
+</ScrollView>

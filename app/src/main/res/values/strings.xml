@@ -1,5 +1,9 @@
 <resources>
+
+    <!-- General app strings -->
     <string name="app_name">home finances helper</string>
+
+    <!-- Login activity -->
     <string name="login_prompt">Enter your e-mail address</string>
     <string name="password_prompt">Enter your password</string>
     <string name="password_confirmation_prompt">Confirm your passowrd</string>
@@ -7,23 +11,37 @@
     <string name="register_action">Register new account!</string>
     <string name="confirm_registration_action">Confirm your registration</string>
     <string name="cancel_registration_action">Cancel registration</string>
-    <string name="budget_list_loading_error">There was a problem loading your list!</string>
     <string name="register_bad_password">Password must contain at least: 1 lower case character, 1 upper case character, 1 number, 1 special character min 6</string>
     <string name="register_passwords_doesnt_match">Passwords do not match</string>
     <string name="register_email_not_valid">Bad email address</string>
     <string name="login_credentials_error">Entered email address or password are incorrect!</string>
     <string name="login_account_manager_already_exists">There is already an account saved in app. Remove previous account first.</string>
 
+    <!-- BudgetList(main) fragment -->
+    <string name="budget_list_loading_error">There was a problem loading your list!</string>
+
+    <!-- new budgetlist fragment -->
+    <string name="new_budget_list_toolbar_name">Add new list</string>
+    <string name="new_budget_list_name_prompt">List name:</string>
+    <string name="new_budget_list_name_hint">Enter name of your new list here</string>
+    <string name="new_budget_list_name_error">List must have name!</string>
+    <string name="new_budget_list_value_prompt">Money amount:</string>
+    <string name="new_budget_list_value_hint">Amount you can spend</string>
+    <string name="new_budget_list_value_error">Amount can\'t be less than 0!</string>
+    <string name="new_budget_list_due_date_prompt">Due date:</string>
+    <string name="new_budget_list_cancel_button">Cancel</string>
+    <string name="new_budget_list_confirm_button">Add list</string>
+
+
+    <!-- Navigation drawer -->
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-
     <string name="contact_email">maciej.lipinski@student.wat.edu.pl</string>
     <string name="menu_prompt">Menu:</string>
-
     <string name="loading_error">Something went wrong!</string>
-
     <string name="logged_in_as">Currently logged in as:</string>
 
+    <!-- Settings strings -->
     <string name="logout">logout</string>
     <string name="settings">settings</string>
     <string name="dark_mode">Dark mode</string>
