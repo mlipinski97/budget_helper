@@ -12,7 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.BudgetListViewHolder> {
 
@@ -36,8 +40,8 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
 
 
         View view = inflater.inflate(listItemId, parent, shouldAttachToParentImmediately);
-        BudgetListViewHolder budgetListAdpater = new BudgetListViewHolder(view);
-        return budgetListAdpater;
+        BudgetListViewHolder budgetListAdapter = new BudgetListViewHolder(view);
+        return budgetListAdapter;
     }
 
     @Override
@@ -51,7 +55,7 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
     }
 
     public interface ListItemClickListener{
-        void onListItemClick(int clickedBudgetListId);
+        void onListItemClick(int clickedBudgetListId, String clickedBudgetListName, String listDueDate);
     }
 
     class BudgetListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -59,6 +63,7 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
         TextView budgetListName;
         TextView budgetListValue;
         TextView budgetListRemainingValue;
+        TextView budgetListDueDate;
 
         public Integer getBudgetListId() {
             return budgetListId;
@@ -75,6 +80,7 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
             budgetListName = (TextView) itemView.findViewById(R.id.budget_list_name_text_view);
             budgetListValue = (TextView) itemView.findViewById(R.id.budget_list_value_text_view);
             budgetListRemainingValue = (TextView) itemView.findViewById(R.id.budget_list_remaining_value_text_view);
+            budgetListDueDate = (TextView) itemView.findViewById(R.id.budget_list_due_date_text_view);
             itemView.setOnClickListener(this);
         }
 
@@ -82,12 +88,19 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
             budgetListName.setText(budgetList.getName());
             budgetListValue.setText(String.valueOf(budgetList.getValue()));
             budgetListRemainingValue.setText(String.valueOf(budgetList.getRemainingValue()));
+            if(budgetList.getDueDate() != null){
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                budgetListDueDate.setText(sdf.format(budgetList.getDueDate()).toString());
+            }else{
+                budgetListDueDate.setText("No due date found(old data)");
+            }
+
             budgetListId = budgetList.getId();
         }
 
         @Override
         public void onClick(View v) {
-            clickListener.onListItemClick(budgetListId);
+            clickListener.onListItemClick(budgetListId, budgetListName.getText().toString(), budgetListDueDate.getText().toString());
         }
     }
 }

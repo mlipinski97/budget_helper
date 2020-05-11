@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,14 @@ import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,7 +52,9 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
     private AccountManager mAccountManager;
     private FloatingActionButton addListFloatingActionButton;
     OnFragmentClickListener mClickListener;
-
+    private TextView accountDetailsTextView;
+    private TextView accountDetailsListNameTextView;
+    private TextView accountDetailsValueTextView;
 
     public BudgetListFragment() {
 
@@ -73,6 +82,10 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         budgetListRecyclerView.setLayoutManager(layoutManager);
         budgetListRecyclerView.setHasFixedSize(true);
+        accountDetailsTextView = rootView.findViewById(R.id.fragment_budget_list_greetings_details_text_view);
+        accountDetailsTextView.setText(getString(R.string.user_greetings) + " " + mAccount.name);
+        accountDetailsListNameTextView = rootView.findViewById(R.id.fragment_budget_list_close_to_date_text_view);
+        accountDetailsValueTextView = rootView.findViewById(R.id.fragment_budget_list_close_to_date_value_text_view);
 
         loadBudgetLists();
         return rootView;
@@ -91,7 +104,7 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         String credentials = loginCredential + ":" + passwordCredential;
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
-        Call<List<BudgetList>> call = budgetListApi.getBudgetLists(auth, loginCredential);
+       Call<List<BudgetList>> call = budgetListApi.getBudgetLists(auth, loginCredential);
         call.enqueue(new Callback<List<BudgetList>>() {
             @Override
             public void onResponse(Call<List<BudgetList>> call, Response<List<BudgetList>> response) {
@@ -103,6 +116,7 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
                     budgetLists = new ArrayList<>(response.body());
                     budgetListAdapter = new BudgetListAdapter(budgetLists, budgetLists.size(), BudgetListFragment.this);
                     budgetListRecyclerView.setAdapter(budgetListAdapter);
+                    fillUserHelpFrame();
                 }
             }
 
@@ -113,14 +127,24 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         });
     }
 
+    private void fillUserHelpFrame(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        final Date currentTime = cal.getTime();
+        Log.d("fillUserHelpFrame", "fillUserHelpFrame: current time - 1(yesterday): " + currentTime);
+        List<BudgetList> filteredBudgetLists = budgetLists.stream()
+                .filter(budgetList -> budgetList.getDueDate().after(currentTime))
+                .sorted(Comparator.comparing(BudgetList::getDueDate))
+                .collect(Collectors.toList());
+        BudgetList elementToDisplay = filteredBudgetLists.get(0);
+        accountDetailsListNameTextView.append(" " + elementToDisplay.getName());
+        accountDetailsValueTextView.append(" " + elementToDisplay.getRemainingValue() + " from total of: " + elementToDisplay.getValue());
+    }
     @Override
-    public void onListItemClick(int clickedBudgetListId) {
-        if (mToast != null) {
-            mToast.cancel();
-        }
-        String clickMessage = "(fragment)Here will open list #" + clickedBudgetListId;
-        mToast = Toast.makeText(getContext(), clickMessage, Toast.LENGTH_SHORT);
-        mToast.show();
+    public void onListItemClick(int clickedBudgetListId, String clickedBudgetListName, String listDueDate) {
+        mClickListener.onFragmentBudgetListElementClickInteraction((long) clickedBudgetListId, clickedBudgetListName, listDueDate);
+
     }
 
     @Override
@@ -133,8 +157,11 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         }
     }
 
+
+
     public interface OnFragmentClickListener{
         void onFragmentClickInteraction(int clickedElementId);
+        void onFragmentBudgetListElementClickInteraction(Long clickedListElementId, String clickedListElementName, String dueDate);
     }
 
 
@@ -144,7 +171,7 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         try{
             mClickListener = (OnFragmentClickListener) context;
         } catch (ClassCastException e){
-            throw new ClassCastException(context.toString() + "must implement OnFragmentClickListener");
+            throw new ClassCastException(context.toString() + "must implement BudgetListFragment.OnFragmentClickListener");
         }
     }
 }

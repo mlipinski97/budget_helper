@@ -17,21 +17,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.example.engineerdegreeapp.R;
-import com.example.engineerdegreeapp.adapter.BudgetListAdapter;
 import com.example.engineerdegreeapp.retrofit.BudgetListApi;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.util.AccountUtils;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.engineerdegreeapp.util.RegexUtils;
+
 
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -56,6 +55,7 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
     private Account mAccount;
     private AccountManager mAccountManager;
     OnFragmentClickListener mClickListener;
+    Long currentlySelectedDate;
 
 
     public NewBudgetListFragment() {
@@ -84,6 +84,15 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
         listValueEditText = rootView.findViewById(R.id.new_budget_list_amount_edit_text);
         dueDateCalendarView = rootView.findViewById(R.id.new_budget_list_calendar_view);
         dueDateCalendarView.setMinDate((new Date().getTime()));
+        currentlySelectedDate = dueDateCalendarView.getDate();
+        dueDateCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                Calendar c = Calendar.getInstance();
+                c.set(year, month, dayOfMonth);
+                currentlySelectedDate = c.getTimeInMillis();
+            }
+        });
         cancelButton = rootView.findViewById(R.id.new_budget_list_button_cancel);
         cancelButton.setOnClickListener(this);
         confirmButton = rootView.findViewById(R.id.new_budget_list_button_confirm);
@@ -105,7 +114,7 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
         String credentials = loginCredential + ":" + passwordCredential;
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String selectedDate = sdf.format(new Date(dueDateCalendarView.getDate()));
+        String selectedDate = sdf.format(new Date(currentlySelectedDate));
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -152,9 +161,28 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
                 mClickListener.onFragmentClickInteraction(clickedItemId);
                 break;
             case R.id.new_budget_list_button_confirm:
-                postBudgetList();
+                if(isMoneyRegexSafe() && isNameValid()){
+                    postBudgetList();
+                } else{
+                    if(!isMoneyRegexSafe()){
+                        listValueErrorTextView.setVisibility(View.VISIBLE);
+                    }
+                    if(!isNameValid()){
+                        listNameErrorTextView.setVisibility(View.VISIBLE);
+                    }
+                }
                 break;
         }
+    }
+
+    private boolean isMoneyRegexSafe(){
+        String moneyValue = listValueEditText.getText().toString();
+        return RegexUtils.isMoneyAmountRegexSafe(moneyValue);
+    }
+
+    private boolean isNameValid(){
+        String name = listNameEditText.getText().toString();
+        return !name.isEmpty();
     }
 
     public interface OnFragmentClickListener{
@@ -167,7 +195,9 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
         try{
             mClickListener = (OnFragmentClickListener) context;
         } catch (ClassCastException e){
-            throw new ClassCastException(context.toString() + "must implement OnFragmentClickListener");
+            throw new ClassCastException(context.toString() + "must implement NewBudgetListFragment.OnFragmentClickListener");
         }
     }
+
+
 }

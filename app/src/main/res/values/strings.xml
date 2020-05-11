@@ -27,7 +27,7 @@
     <string name="new_budget_list_name_error">List must have name!</string>
     <string name="new_budget_list_value_prompt">Money amount:</string>
     <string name="new_budget_list_value_hint">Amount you can spend</string>
-    <string name="new_budget_list_value_error">Amount can\'t be less than 0!</string>
+    <string name="new_budget_list_value_error">Wrong money amount!</string>
     <string name="new_budget_list_due_date_prompt">Due date:</string>
     <string name="new_budget_list_cancel_button">Cancel</string>
     <string name="new_budget_list_confirm_button">Add list</string>
@@ -53,6 +53,10 @@
     <!-- Preference keys -->
     <string name="dark_mode_preference_key">dark_mode</string>
 
+    <!--Budget List Fragment Details Text-->
+    <string name="user_greetings">Greetings </string>
+    <string name="closest_list_to_date">Close to due: </string>
+    <string name="closest_list_to_date_value">Money left till due date: </string>
 
 
 </resources>

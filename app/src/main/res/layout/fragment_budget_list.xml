@@ -7,35 +7,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/main_toolbar"
-        android:background="?attr/toolbarColor"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="4dp"
-        app:title="@string/app_name"
-        />
-
     <FrameLayout
-        android:id="@+id/main_activity_details_frame_layout"
+        android:id="@+id/fragment_budget_list_details_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/main_toolbar"
         android:background="?attr/backgroundColor">
 
         <TextView
+        android:id="@+id/fragment_budget_list_greetings_details_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="?attr/textColor"
+        android:text="@string/user_greetings"
+        android:textSize="25sp"/>
+        <TextView
+            android:id="@+id/fragment_budget_list_close_to_date_text_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="P - - - - H"
             android:textColor="?attr/textColor"
-            android:textSize="70sp" />
+            android:text="@string/closest_list_to_date"
+            android:textSize="15sp"
+            android:layout_marginTop="26sp"/>
+        <TextView
+            android:id="@+id/fragment_budget_list_close_to_date_value_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="?attr/textColor"
+            android:text="@string/closest_list_to_date_value"
+            android:textSize="15sp"
+            android:layout_marginTop="42sp"/>
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/budget_list_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/main_activity_details_frame_layout" />
+        android:layout_below="@+id/fragment_budget_list_details_frame_layout" />
 
     <TextView
         android:id="@+id/budget_list_loading_error"

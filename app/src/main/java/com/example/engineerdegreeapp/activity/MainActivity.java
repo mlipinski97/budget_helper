@@ -9,8 +9,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -19,50 +17,37 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.adapter.BudgetListAdapter;
+import com.example.engineerdegreeapp.fragment.BudgetListDetailsFragment;
 import com.example.engineerdegreeapp.fragment.BudgetListFragment;
-import com.example.engineerdegreeapp.fragment.LoginFragment;
 import com.example.engineerdegreeapp.fragment.NewBudgetListFragment;
-import com.example.engineerdegreeapp.fragment.RegistrationFragment;
-import com.example.engineerdegreeapp.retrofit.BudgetListApi;
+import com.example.engineerdegreeapp.fragment.NewExpenseFragment;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
-import javax.xml.datatype.Duration;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-public class MainActivity extends AppCompatActivity implements BudgetListAdapter.ListItemClickListener,
-        OnNavigationItemSelectedListener,
+public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener,
         BudgetListFragment.OnFragmentClickListener,
-        NewBudgetListFragment.OnFragmentClickListener{
+        NewBudgetListFragment.OnFragmentClickListener,
+        BudgetListDetailsFragment.OnFragmentClickListener,
+        NewExpenseFragment.OnFragmentClickListener {
 
-    private BudgetListAdapter budgetListAdapter;
-    private Toast mToast;
-    private ArrayList<BudgetList> budgetLists;
-    private MainActivity mainActivity;
     private Account mAccount;
     private AccountManager mAccountManager;
-    private Toolbar mTopToolbar;
+    public Toolbar mTopToolbar;
     private DrawerLayout drawer;
     private TextView currentlyLoggedInTextView;
 
@@ -73,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements BudgetListAdapter
         } else {
             setTheme(R.style.AppTheme_NoActionBarLight);
         }
-        mainActivity = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -130,15 +114,6 @@ public class MainActivity extends AppCompatActivity implements BudgetListAdapter
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    @Override
-    public void onListItemClick(int clickedBudgetListId) {
-        if (mToast != null) {
-            mToast.cancel();
-        }
-        String clickMessage = "Here will open list #" + clickedBudgetListId;
-        mToast = Toast.makeText(this, clickMessage, Toast.LENGTH_SHORT);
-        mToast.show();
-    }
 
     private void logout() {
         mAccountManager.removeAccount(mAccount, null, null, null);
@@ -200,6 +175,36 @@ public class MainActivity extends AppCompatActivity implements BudgetListAdapter
             case R.id.new_budget_list_button_cancel:
                 getSupportFragmentManager().popBackStack();
                 break;
+            case R.id.new_expense_button_cancel:
+                getSupportFragmentManager().popBackStack();
+                break;
+            default:
+                Log.d("MainActivity", "onFragmentClickInteraction clicked element ID: " + clickedElementId);
+                break;
         }
     }
+
+    @Override
+    public void onFragmentClickInteraction(int clickedElementId, String listDueDate) {
+        switch (clickedElementId){
+            case R.id.budget_list_details_floating_action_button:
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                        .addToBackStack("budget_list_details_fragment")
+                        .replace(R.id.main_fragment_layout_holder, new NewExpenseFragment(listDueDate)).commit();
+                break;
+        }
+
+    }
+
+    @Override
+    public void onFragmentBudgetListElementClickInteraction(Long clickedListElementId, String clickedListElementName, String dueDate) {
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                .addToBackStack("budget_list_fragment")
+                .replace(R.id.main_fragment_layout_holder, new BudgetListDetailsFragment(clickedListElementId,
+                        clickedListElementName,
+                        dueDate)).commit();
+    }
+
 }

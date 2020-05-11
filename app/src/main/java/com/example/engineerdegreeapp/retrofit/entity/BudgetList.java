@@ -2,6 +2,8 @@ package com.example.engineerdegreeapp.retrofit.entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 public class BudgetList {
 
     private int id;
@@ -10,6 +12,8 @@ public class BudgetList {
 
     @SerializedName("budgetValue")
     private double value;
+
+    private Date dueDate;
 
     @SerializedName("remainingValue")
     private double remainingValue;
@@ -53,5 +57,13 @@ public class BudgetList {
 
     public void setRemainingValue(double remainingValue) {
         this.remainingValue = remainingValue;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
     }
 }

@@ -1,7 +1,6 @@
 package com.example.engineerdegreeapp.retrofit;
 
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
-import com.example.engineerdegreeapp.retrofit.entity.UserAuth;
 
 import java.util.List;
 

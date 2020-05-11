@@ -24,6 +24,9 @@ public class RegexUtils {
 
     static Pattern moneyAmountPattern = Pattern.compile("^[\\d]+[\\.\\,][\\d]{2}$");
     public static boolean isMoneyAmountRegexSafe(String moneyAmount){
+        if(!moneyAmount.contains(",") && !moneyAmount.contains(".")){
+            moneyAmount += ".00";
+        }
         Matcher matcher = moneyAmountPattern.matcher(moneyAmount);
         return matcher.matches();
     }
