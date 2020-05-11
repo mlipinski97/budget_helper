@@ -141,7 +141,6 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     }
 
     public interface OnFragmentClickListener{
-        void onFragmentClickInteraction(int clickedElementId);
         void onFragmentClickInteraction(int clickedElementId, String listDueDate);
     }
 
