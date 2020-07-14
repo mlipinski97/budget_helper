@@ -27,7 +27,8 @@
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme.Light"/>
+            android:theme="@style/AppTheme.Light"
+            />
         <activity
             android:name=".activity.LoginActivity"
             android:launchMode="singleTop"
@@ -43,7 +44,10 @@
         <activity
             android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBarLight"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+            />
 
         <service android:name=".account.manager.AuthenticatorService">
             <intent-filter>

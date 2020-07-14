@@ -10,15 +10,18 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ExpenseApi {
 
     @GET("getallbybudgetlist")
-    Call<List<Expense>> getExepnsesFromBudgetList(@Header("Authorization") String auth, @Query("id") Long id);
+    Call<List<Expense>> getExpensesFromBudgetList(@Header("Authorization") String auth, @Query("id") Long id);
 
     @POST("add")
     Call<Expense> postExpense(@Header("Authorization") String auth, @Query("budgetListId") Long budgetListId, @Body RequestBody expenseBody);
 
+    @PATCH("changedonestate")
+    Call<Expense> patchDoneState(@Header("Authorization") String auth, @Query("id") Long id);
 }

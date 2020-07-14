@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +26,12 @@ import com.example.engineerdegreeapp.retrofit.entity.Expense;
 import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,6 +55,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     private ExpenseAdapter expenseAdapter;
     private FloatingActionButton newExpenseFloatingActionButton;
     private String budgetListDueDate;
+    private List<Long> expenseIdToChangeDoneState = new LinkedList<>();
 
 
     public BudgetListDetailsFragment() {
@@ -110,7 +114,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         String credentials = loginCredential + ":" + passwordCredential;
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
-        Call<List<Expense>> call = expenseApi.getExepnsesFromBudgetList(auth, budgetListId);
+        Call<List<Expense>> call = expenseApi.getExpensesFromBudgetList(auth, budgetListId);
         call.enqueue(new Callback<List<Expense>>() {
             @Override
             public void onResponse(Call<List<Expense>> call, Response<List<Expense>> response) {
@@ -135,9 +139,58 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         });
     }
 
+    private void updateExpenseDoneStatus(Long expenseId){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://engineer-degree-project.herokuapp.com/api/expenses/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ExpenseApi expenseApi = retrofit.create(ExpenseApi.class);
+
+        String loginCredential = mAccount.name;
+        String passwordCredential = mAccountManager.getPassword(mAccount);
+        String credentials = loginCredential + ":" + passwordCredential;
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+
+        Call<Expense> call = expenseApi.patchDoneState(auth, expenseId);
+        call.enqueue(new Callback<Expense>() {
+            @Override
+            public void onResponse(Call<Expense> call, Response<Expense> response) {
+                if(!response.isSuccessful()) {
+                    try {
+                        System.out.println(response.errorBody().string());
+                    } catch (IOException e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } else{
+                    Log.d("onResponse success", "onResponse: sucessful doneStatusChange - id = " + expenseId);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Expense> call, Throwable t) {
+                Log.d("onFailure", "onFailure: failed doneStatusChange - id = " + expenseId);
+
+            }
+        });
+
+    }
+
     @Override
     public void onListItemClick(Long clickedExpenseId) {
-        System.out.println(clickedExpenseId);
+        Toast.makeText(getContext(), "clicked expense with id: " + clickedExpenseId, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onListItemDoneStateChange(Long changedStateExpenseId) {
+        Toast.makeText(getContext(), "changed checkbox on expense with id: " + changedStateExpenseId, Toast.LENGTH_SHORT).show();
+        if(expenseIdToChangeDoneState.contains(changedStateExpenseId)){
+            expenseIdToChangeDoneState.remove(changedStateExpenseId);
+        } else{
+            expenseIdToChangeDoneState.add(changedStateExpenseId);
+        }
+
     }
 
     @Override
@@ -164,4 +217,12 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        for (Long l : expenseIdToChangeDoneState ) {
+            Log.d("updateExpenseDoneStatus()", "onPause: updateExpenseDoneStatus() called");
+            updateExpenseDoneStatus(l);
+        }
+    }
 }

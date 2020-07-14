@@ -53,6 +53,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
 
     public interface ListItemClickListener {
         void onListItemClick(Long clickedExpenseId);
+        void onListItemDoneStateChange(Long changedStateExpenseId);
     }
 
     class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -81,6 +82,13 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
             expenseDateOfExpenseTextView = itemView.findViewById(R.id.expense_item_due_date_text_view);
             doneCheckbox = itemView.findViewById(R.id.expense_item_done_check_box);
             itemView.setOnClickListener(this);
+            doneCheckbox.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    clickListener.onListItemDoneStateChange(id);
+                }
+            });
         }
 
         public void bind(Expense expense) {

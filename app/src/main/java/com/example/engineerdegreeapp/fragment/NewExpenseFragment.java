@@ -58,6 +58,10 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
     Long currentlySelectedDate;
     String listDueDate;
 
+    public NewExpenseFragment(){
+
+    }
+
     public NewExpenseFragment(String listDueDate, Long budgetListId) {
         this.budgetListId = budgetListId;
         this.listDueDate = listDueDate;
