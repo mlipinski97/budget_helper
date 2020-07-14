@@ -55,7 +55,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         void onListItemClick(Long clickedExpenseId);
     }
 
-    //TODO fill whole ExpenseViewHolder class and make recyclerview in details fragment
     class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView expenseNameTextView;

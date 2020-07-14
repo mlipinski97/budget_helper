@@ -7,7 +7,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,13 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.engineerdegreeapp.R;
-import com.example.engineerdegreeapp.activity.MainActivity;
 import com.example.engineerdegreeapp.adapter.ExpenseAdapter;
 import com.example.engineerdegreeapp.retrofit.ExpenseApi;
 import com.example.engineerdegreeapp.retrofit.entity.Expense;
 import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -78,6 +78,16 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         expenseListErrorTextView = rootView.findViewById(R.id.budget_list_details_loading_error);
         newExpenseFloatingActionButton = rootView.findViewById(R.id.budget_list_details_floating_action_button);
         newExpenseFloatingActionButton.setOnClickListener(this);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        Date strDate = null;
+        try {
+            strDate = sdf.parse(budgetListDueDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (System.currentTimeMillis() > strDate.getTime()) {
+            newExpenseFloatingActionButton.setEnabled(false);
+        }
 
         expenseListRecyclerView = rootView.findViewById(R.id.expense_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -127,7 +137,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
 
     @Override
     public void onListItemClick(Long clickedExpenseId) {
-
+        System.out.println(clickedExpenseId);
     }
 
     @Override
@@ -135,13 +145,13 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         int clickedItemId = v.getId();
         switch (clickedItemId) {
             case R.id.budget_list_details_floating_action_button:
-                mClickListener.onFragmentClickInteraction(clickedItemId, budgetListDueDate);
+                mClickListener.onFragmentClickInteraction(clickedItemId, budgetListDueDate, budgetListId);
                 break;
         }
     }
 
     public interface OnFragmentClickListener{
-        void onFragmentClickInteraction(int clickedElementId, String listDueDate);
+        void onFragmentClickInteraction(int clickedElementId, String listDueDate, Long budgetListId);
     }
 
     @Override

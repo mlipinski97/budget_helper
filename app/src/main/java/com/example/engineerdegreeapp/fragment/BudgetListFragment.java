@@ -137,9 +137,15 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
                 .filter(budgetList -> budgetList.getDueDate().after(currentTime))
                 .sorted(Comparator.comparing(BudgetList::getDueDate))
                 .collect(Collectors.toList());
-        BudgetList elementToDisplay = filteredBudgetLists.get(0);
-        accountDetailsListNameTextView.append(" " + elementToDisplay.getName());
-        accountDetailsValueTextView.append(" " + elementToDisplay.getRemainingValue() + " from total of: " + elementToDisplay.getValue());
+        if(filteredBudgetLists.size() > 0){
+            BudgetList elementToDisplay = filteredBudgetLists.get(0);
+            accountDetailsListNameTextView.append(" " + elementToDisplay.getName());
+            accountDetailsValueTextView.append(" " + elementToDisplay.getRemainingValue() + " from total of: " + elementToDisplay.getValue());
+        } else{
+            accountDetailsListNameTextView.setText(R.string.user_help_frame_no_list_found);
+            accountDetailsValueTextView.setText("");
+        }
+
     }
     @Override
     public void onListItemClick(int clickedBudgetListId, String clickedBudgetListName, String listDueDate) {

@@ -166,9 +166,13 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
                 } else{
                     if(!isMoneyRegexSafe()){
                         listValueErrorTextView.setVisibility(View.VISIBLE);
+                    } else{
+                        listValueErrorTextView.setVisibility(View.INVISIBLE);
                     }
                     if(!isNameValid()){
                         listNameErrorTextView.setVisibility(View.VISIBLE);
+                    } else{
+                        listNameErrorTextView.setVisibility(View.INVISIBLE);
                     }
                 }
                 break;

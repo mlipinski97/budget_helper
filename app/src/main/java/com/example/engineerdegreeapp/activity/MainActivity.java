@@ -167,14 +167,13 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                         .replace(R.id.main_fragment_layout_holder, new NewBudgetListFragment()).commit();
                 break;
             case R.id.new_budget_list_button_confirm:
+            case R.id.new_expense_button_confirm:
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.main_fragment_layout_holder, new BudgetListFragment())
                         .commit();
                 break;
             case R.id.new_budget_list_button_cancel:
-                getSupportFragmentManager().popBackStack();
-                break;
             case R.id.new_expense_button_cancel:
                 getSupportFragmentManager().popBackStack();
                 break;
@@ -185,13 +184,13 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     @Override
-    public void onFragmentClickInteraction(int clickedElementId, String listDueDate) {
+    public void onFragmentClickInteraction(int clickedElementId, String listDueDate, Long budgetListId) {
         switch (clickedElementId){
             case R.id.budget_list_details_floating_action_button:
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
                         .addToBackStack("budget_list_details_fragment")
-                        .replace(R.id.main_fragment_layout_holder, new NewExpenseFragment(listDueDate)).commit();
+                        .replace(R.id.main_fragment_layout_holder, new NewExpenseFragment(listDueDate, budgetListId)).commit();
                 break;
         }
 

@@ -10,17 +10,19 @@ public class Expense {
     private Double amount;
     private Date dateOfExpense;
     private UserAuth expenseOwner;
+    private Long budgetListId;
     private boolean done;
 
     public Expense() {
     }
 
-    public Expense(Long id, Double amount, Date dateOfExpense, UserAuth expenseOwner, boolean done) {
+    public Expense(Long id, Double amount, Date dateOfExpense, UserAuth expenseOwner, boolean done, Long budgetListId) {
         this.id = id;
         this.amount = amount;
         this.dateOfExpense = dateOfExpense;
         this.expenseOwner = expenseOwner;
         this.done = done;
+        this.budgetListId = budgetListId;
     }
 
     public String getExpenseOwnerName(){
@@ -73,5 +75,13 @@ public class Expense {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public Long getBudgetListId() {
+        return budgetListId;
+    }
+
+    public void setBudgetListId(Long budgetListId) {
+        this.budgetListId = budgetListId;
     }
 }
