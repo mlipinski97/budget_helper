@@ -5,8 +5,10 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +47,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapter.ListItemClickListener,
         View.OnClickListener{
 
+    private final String EXPENSES_BASE_URL = "https://engineer-degree-project.herokuapp.com/api/expenses/";
+
     private Account mAccount;
     private AccountManager mAccountManager;
     private TextView expenseListErrorTextView;
@@ -56,7 +61,8 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     private FloatingActionButton newExpenseFloatingActionButton;
     private String budgetListDueDate;
     private List<Long> expenseIdToChangeDoneState = new LinkedList<>();
-
+    private ArrayList<Expense> selectedExpenses = new ArrayList<>();
+    private Button deleteButton;
 
     public BudgetListDetailsFragment() {
     }
@@ -79,6 +85,22 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         } else {
             return null;
         }
+        deleteButton = rootView.findViewById(R.id.budget_list_details_delete_button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for(Expense e : selectedExpenses){
+                    deleteSelectedExpenses(e.getId());
+                }
+                expenseListRecyclerView = rootView.findViewById(R.id.expense_recycler_view);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                expenseListRecyclerView.setLayoutManager(layoutManager);
+                expenseListRecyclerView.setHasFixedSize(true);
+                loadExpenseList();
+                loadExpenseList();
+                deleteButton.setVisibility(View.INVISIBLE);
+            }
+        });
         expenseListErrorTextView = rootView.findViewById(R.id.budget_list_details_loading_error);
         newExpenseFloatingActionButton = rootView.findViewById(R.id.budget_list_details_floating_action_button);
         newExpenseFloatingActionButton.setOnClickListener(this);
@@ -103,7 +125,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
 
     private void loadExpenseList() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://engineer-degree-project.herokuapp.com/api/expenses/")
+                .baseUrl(EXPENSES_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -120,14 +142,14 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
             public void onResponse(Call<List<Expense>> call, Response<List<Expense>> response) {
                 if (!response.isSuccessful()) {
                     try {
-                        System.out.println(response.errorBody().string());
+                        Log.d("loadExpenseList()", response.errorBody().string());
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } else {
                     expenseListErrorTextView.setVisibility(View.INVISIBLE);
                     expenseList = new ArrayList<>(response.body());
-                    expenseAdapter = new ExpenseAdapter(expenseList, expenseList.size(), BudgetListDetailsFragment.this);
+                    expenseAdapter = new ExpenseAdapter(expenseList, expenseList.size(), BudgetListDetailsFragment.this, getContext());
                     expenseListRecyclerView.setAdapter(expenseAdapter);
                 }
             }
@@ -135,13 +157,14 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
             @Override
             public void onFailure(Call<List<Expense>> call, Throwable t) {
                 expenseListErrorTextView.setVisibility(View.VISIBLE);
+                Log.d("loadExpenseList()", "onFailure call failed");
             }
         });
     }
 
     private void updateExpenseDoneStatus(Long expenseId){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://engineer-degree-project.herokuapp.com/api/expenses/")
+                .baseUrl(EXPENSES_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -158,28 +181,79 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
             public void onResponse(Call<Expense> call, Response<Expense> response) {
                 if(!response.isSuccessful()) {
                     try {
-                        System.out.println(response.errorBody().string());
+                        Log.d("updateExpenseDoneStatus()", response.errorBody().string());
                     } catch (IOException e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } else{
-                    Log.d("onResponse success", "onResponse: sucessful doneStatusChange - id = " + expenseId);
+                    Log.d("updateExpenseDoneStatus()", "onResponse: sucessful doneStatusChange - id = " + expenseId);
                 }
             }
 
             @Override
             public void onFailure(Call<Expense> call, Throwable t) {
-                Log.d("onFailure", "onFailure: failed doneStatusChange - id = " + expenseId);
+                Log.d("updateExpenseDoneStatus()", "onFailure: failed doneStatusChange - id = " + expenseId);
 
             }
         });
 
     }
 
-    @Override
-    public void onListItemClick(Long clickedExpenseId) {
-        Toast.makeText(getContext(), "clicked expense with id: " + clickedExpenseId, Toast.LENGTH_SHORT).show();
+    private void deleteSelectedExpenses(Long expenseId){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(EXPENSES_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ExpenseApi expenseApi = retrofit.create(ExpenseApi.class);
 
+        String loginCredential = mAccount.name;
+        String passwordCredential = mAccountManager.getPassword(mAccount);
+        String credentials = loginCredential + ":" + passwordCredential;
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        Call<Void> call = expenseApi.deleteExpense(auth, expenseId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+               if(!response.isSuccessful()){
+                   try{
+                       Log.d("deleteSelectedExpenses()", response.errorBody().string());
+                   } catch (IOException e){
+                       e.printStackTrace();
+                   }
+               } else{
+                   Log.d("deleteSelectedExpenses()", "deleted expense with id: " + expenseId);
+               }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("deleteSelectedExpenses()", "onFailure while deleting expense with id: " + expenseId);
+            }
+        });
+    }
+
+    @Override
+        public void onListItemLongClick(View v, Expense expense) {
+        expense.setSelected(!expense.isSelected());
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            v.setBackgroundColor(expense.isSelected() ?
+                    getContext().getResources().getColor(R.color.darkCardSelectedBackgroundColor, null)
+                    : getContext().getResources().getColor(R.color.darkCardBackgroundColor, null) );
+        } else {
+            v.setBackgroundColor(expense.isSelected() ?
+                    getContext().getResources().getColor(R.color.lightCardSelectedBackgroundColor, null)
+                    : getContext().getResources().getColor(R.color.lightCardBackgroundColor, null) );
+        }
+        if(expense.isSelected()){
+            selectedExpenses.add(expense);
+        } else{
+            selectedExpenses.remove(expense);
+        }
+        if(!selectedExpenses.isEmpty()){
+            deleteButton.setVisibility(View.VISIBLE);
+        } else{
+            deleteButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -205,6 +279,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
 
     public interface OnFragmentClickListener{
         void onFragmentClickInteraction(int clickedElementId, String listDueDate, Long budgetListId);
+        void onFragmentLongClickInteraction();
     }
 
     @Override
@@ -225,4 +300,6 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
             updateExpenseDoneStatus(l);
         }
     }
+
+
 }

@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardBackgroundColor="?attr/cardBackgroundColor"
-        tools:ignore="PrivateResource">
+        tools:ignore="PrivateResource"
+        android:id="@+id/expense_item_card_view">
 
         <TextView
             android:id="@+id/expense_item_name_text_view"

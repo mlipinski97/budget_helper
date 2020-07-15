@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 
@@ -21,22 +22,18 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.example.engineerdegreeapp.R;
-import com.example.engineerdegreeapp.adapter.BudgetListAdapter;
 import com.example.engineerdegreeapp.fragment.BudgetListDetailsFragment;
 import com.example.engineerdegreeapp.fragment.BudgetListFragment;
 import com.example.engineerdegreeapp.fragment.NewBudgetListFragment;
 import com.example.engineerdegreeapp.fragment.NewExpenseFragment;
-import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 
-import java.util.ArrayList;
-import java.util.Objects;
-
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener,
@@ -50,6 +47,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     public Toolbar mTopToolbar;
     private DrawerLayout drawer;
     private TextView currentlyLoggedInTextView;
+    private Long recentlyClickedListElementId;
+    private String recentlyClickedListElementName;
+    private String recentlyClickedDueDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,12 +97,21 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 .commit();
     }
 
+    private Fragment getVisibleFragment() {
+        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        for (Fragment fragment : fragments) {
+            if (fragment != null && fragment.isVisible())
+                return fragment;
+        }
+        return null;
+    }
 
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else{
             super.onBackPressed();
         }
     }
@@ -167,11 +176,21 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                         .replace(R.id.main_fragment_layout_holder, new NewBudgetListFragment()).commit();
                 break;
             case R.id.new_budget_list_button_confirm:
-            case R.id.new_expense_button_confirm:
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.main_fragment_layout_holder, new BudgetListFragment())
                         .commit();
+
+                break;
+            case R.id.new_expense_button_confirm:
+                getSupportFragmentManager().popBackStack("budget_list_details_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                        .add(R.id.main_fragment_layout_holder, new BudgetListDetailsFragment(recentlyClickedListElementId
+                                , recentlyClickedListElementName
+                                , recentlyClickedDueDate))
+                        .commit();
+
                 break;
             case R.id.new_budget_list_button_cancel:
             case R.id.new_expense_button_cancel:
@@ -197,7 +216,18 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     @Override
+    public void onFragmentLongClickInteraction() {
+/*        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                .addToBackStack("budget_list_details_fragment")
+                .replace(R.id.main_fragment_layout_holder, new NewExpenseFragment(listDueDate, budgetListId)).commit();*/
+    }
+
+    @Override
     public void onFragmentBudgetListElementClickInteraction(Long clickedListElementId, String clickedListElementName, String dueDate) {
+        this.recentlyClickedListElementId = clickedListElementId;
+        this.recentlyClickedListElementName = clickedListElementName;
+        this.recentlyClickedDueDate = dueDate;
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
                 .addToBackStack("budget_list_fragment")
@@ -207,3 +237,5 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
 }
+
+///TODO editing expenses, budget lists

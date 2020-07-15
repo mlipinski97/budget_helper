@@ -12,6 +12,7 @@ public class Expense {
     private UserAuth expenseOwner;
     private Long budgetListId;
     private boolean done;
+    private boolean isSelected;
 
     public Expense() {
     }
@@ -83,5 +84,13 @@ public class Expense {
 
     public void setBudgetListId(Long budgetListId) {
         this.budgetListId = budgetListId;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

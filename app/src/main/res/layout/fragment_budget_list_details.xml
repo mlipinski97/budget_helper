@@ -2,6 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
@@ -40,5 +41,18 @@
         android:tint="?attr/tintColor"
         android:backgroundTint="?attr/buttonColor"
         app:fabSize="normal" />
+
+    <Button
+        android:id="@+id/budget_list_details_delete_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp"
+        android:gravity="bottom|center_horizontal"
+        android:text="@string/budget_list_details_delete_button"
+        android:textAlignment="center"
+        android:visibility="invisible"
+        />
 
 </RelativeLayout>

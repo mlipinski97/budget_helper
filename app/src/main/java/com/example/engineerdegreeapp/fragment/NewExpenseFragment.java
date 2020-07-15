@@ -106,8 +106,6 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
 
         return rootView;
     }
-    //TODO THIS!
-    //TODO handle exceptions while trying to add expense to "expired" list!
     private void postExpense() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://engineer-degree-project.herokuapp.com/api/expenses/")

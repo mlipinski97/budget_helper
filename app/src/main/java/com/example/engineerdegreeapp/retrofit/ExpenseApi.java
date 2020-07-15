@@ -8,6 +8,7 @@ import java.util.List;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
@@ -24,4 +25,8 @@ public interface ExpenseApi {
 
     @PATCH("changedonestate")
     Call<Expense> patchDoneState(@Header("Authorization") String auth, @Query("id") Long id);
+
+    @DELETE("deletebyid")
+    Call<Void> deleteExpense(@Header("Authorization") String auth, @Query("id") Long id);
+
 }

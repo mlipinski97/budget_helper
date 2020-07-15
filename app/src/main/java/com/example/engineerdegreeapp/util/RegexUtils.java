@@ -22,7 +22,7 @@ public class RegexUtils {
         return matcher.matches();
     }
 
-    static Pattern moneyAmountPattern = Pattern.compile("^[\\d]+[\\.\\,][\\d]{2}$");
+    static Pattern moneyAmountPattern = Pattern.compile("^[\\d]+[\\.\\,][\\d]{1,2}$");
     public static boolean isMoneyAmountRegexSafe(String moneyAmount){
         if(!moneyAmount.contains(",") && !moneyAmount.contains(".")){
             moneyAmount += ".00";
