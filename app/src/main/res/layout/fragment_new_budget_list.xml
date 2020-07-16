@@ -29,7 +29,9 @@
             android:backgroundTint="?attr/toolbarColor"
             android:hint="@string/new_budget_list_name_hint"
             android:textColor="?attr/textColor"
-            android:textColorHint="?attr/toolbarColor" />
+            android:textColorHint="?attr/toolbarColor"
+            android:inputType="text"
+            />
 
         <TextView
             android:id="@+id/new_budget_list_name_error_text_view"
@@ -63,6 +65,7 @@
             android:ems="10"
             android:hint="@string/new_budget_list_value_hint"
             android:textColor="?attr/textColor"
+            android:inputType="numberDecimal"
             android:textColorHint="?attr/toolbarColor" />
 
         <TextView

@@ -59,6 +59,7 @@
     <string name="closest_list_to_date">Close to due: </string>
     <string name="closest_list_to_date_value">Money left till due date: </string>
     <string name="budget_list_details_delete_button">delete expenses</string>
+    <string name="edit_budget_list">Edit</string>
 
 
 </resources>

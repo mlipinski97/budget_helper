@@ -16,7 +16,8 @@
         android:hint="@string/login_prompt"
         android:inputType="textEmailAddress"
         android:padding="10dp"
-        android:textColor="?attr/textColor" />
+        android:textColor="?attr/textColor"
+        />
 
     <EditText
         android:id="@+id/login_password_edit_text"

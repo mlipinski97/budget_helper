@@ -19,12 +19,15 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.engineerdegreeapp.R;
+import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
 import com.example.engineerdegreeapp.fragment.BudgetListDetailsFragment;
 import com.example.engineerdegreeapp.fragment.BudgetListFragment;
 import com.example.engineerdegreeapp.fragment.NewBudgetListFragment;
@@ -40,7 +43,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         BudgetListFragment.OnFragmentClickListener,
         NewBudgetListFragment.OnFragmentClickListener,
         BudgetListDetailsFragment.OnFragmentClickListener,
-        NewExpenseFragment.OnFragmentClickListener {
+        NewExpenseFragment.OnFragmentClickListener,
+        ToolbarChangeListener {
 
     private Account mAccount;
     private AccountManager mAccountManager;
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private Long recentlyClickedListElementId;
     private String recentlyClickedListElementName;
     private String recentlyClickedDueDate;
+    MenuItem edit_budget_list_menu_item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,8 +239,53 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 .replace(R.id.main_fragment_layout_holder, new BudgetListDetailsFragment(clickedListElementId,
                         clickedListElementName,
                         dueDate)).commit();
+        System.out.println(clickedListElementName);
     }
 
+    @Override
+    public void changeToolbarTitle(String name) {
+        getSupportActionBar().setTitle(name);
+    }
+
+    @Override
+    public void restoreToolbarTitle() {
+        getSupportActionBar().setTitle(R.string.app_name);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_budget_list_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.edit_budget_list_menu_item) {
+            Toast.makeText(MainActivity.this, "Action clicked", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        edit_budget_list_menu_item = menu.findItem(R.id.edit_budget_list_menu_item);
+        edit_budget_list_menu_item.setVisible(false);
+        return true;
+    }
+
+    @Override
+    public void showEditButton() {
+        edit_budget_list_menu_item.setVisible(true);
+    }
+
+    @Override
+    public void hideEditButton() {
+        edit_budget_list_menu_item.setVisible(false);
+    }
 }
 
-///TODO editing expenses, budget lists
+//TODO editing expenses, budget lists

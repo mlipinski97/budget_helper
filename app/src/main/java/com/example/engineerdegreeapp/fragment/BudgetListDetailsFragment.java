@@ -5,7 +5,6 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -24,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.adapter.ExpenseAdapter;
+import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
 import com.example.engineerdegreeapp.retrofit.ExpenseApi;
 import com.example.engineerdegreeapp.retrofit.entity.Expense;
 import com.example.engineerdegreeapp.util.AccountUtils;
@@ -45,7 +45,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapter.ListItemClickListener,
-        View.OnClickListener{
+        View.OnClickListener {
 
     private final String EXPENSES_BASE_URL = "https://engineer-degree-project.herokuapp.com/api/expenses/";
 
@@ -63,6 +63,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     private List<Long> expenseIdToChangeDoneState = new LinkedList<>();
     private ArrayList<Expense> selectedExpenses = new ArrayList<>();
     private Button deleteButton;
+    private ToolbarChangeListener toolbarChangeListener;
 
     public BudgetListDetailsFragment() {
     }
@@ -77,7 +78,6 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_budget_list_details, container, false);
-
         mAccountManager = AccountManager.get(getContext());
         Account[] accounts = mAccountManager.getAccountsByType(AccountUtils.ACCOUNT_TYPE);
         if (accounts.length > 0) {
@@ -85,6 +85,8 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         } else {
             return null;
         }
+        toolbarChangeListener.changeToolbarTitle(budgetListName);
+        toolbarChangeListener.showEditButton();
         deleteButton = rootView.findViewById(R.id.budget_list_details_delete_button);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -272,6 +274,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         int clickedItemId = v.getId();
         switch (clickedItemId) {
             case R.id.budget_list_details_floating_action_button:
+                toolbarChangeListener.hideEditButton();
                 mClickListener.onFragmentClickInteraction(clickedItemId, budgetListDueDate, budgetListId);
                 break;
         }
@@ -290,6 +293,12 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         } catch (ClassCastException e){
             throw new ClassCastException(context.toString() + "must implement BudgetListDetailsFragment.OnFragmentClickListener");
         }
+        try{
+            toolbarChangeListener = (ToolbarChangeListener) context;
+        } catch (ClassCastException f){
+            throw new ClassCastException(context.toString() + "must implement BudgetListDetailsFragment.ToolbarChangeListener");
+
+        }
     }
 
     @Override
@@ -301,5 +310,10 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         }
     }
 
-
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        toolbarChangeListener.restoreToolbarTitle();
+        toolbarChangeListener.hideEditButton();
+    }
 }
