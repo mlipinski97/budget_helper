@@ -55,7 +55,7 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
     }
 
     public interface ListItemClickListener{
-        void onListItemClick(int clickedBudgetListId, String clickedBudgetListName, String listDueDate);
+        void onListItemClick(int clickedBudgetListId, String clickedBudgetListName, String listDueDate, String clickedBudgetListAmount);
     }
 
     class BudgetListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -100,7 +100,10 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
 
         @Override
         public void onClick(View v) {
-            clickListener.onListItemClick(budgetListId, budgetListName.getText().toString(), budgetListDueDate.getText().toString());
+            clickListener.onListItemClick(budgetListId,
+                    budgetListName.getText().toString(),
+                    budgetListDueDate.getText().toString(),
+                    budgetListValue.getText().toString());
         }
     }
 }

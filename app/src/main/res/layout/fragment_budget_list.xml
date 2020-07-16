@@ -29,20 +29,29 @@
             android:textSize="15sp"
             android:layout_marginTop="26sp"/>
         <TextView
-            android:id="@+id/fragment_budget_list_close_to_date_value_text_view"
+            android:id="@+id/fragment_budget_list_close_to_date_value_remaining_text_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="?attr/textColor"
-            android:text="@string/closest_list_to_date_value"
+            android:text="@string/closest_list_to_date_value_remaining"
             android:textSize="15sp"
             android:layout_marginTop="42sp"/>
+        <TextView
+            android:id="@+id/fragment_budget_list_close_to_date_value_total_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="?attr/textColor"
+            android:text="@string/closest_list_to_date_value_total"
+            android:textSize="15sp"
+            android:layout_marginTop="57sp"/>
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/budget_list_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/fragment_budget_list_details_frame_layout" />
+        android:layout_below="@+id/fragment_budget_list_details_frame_layout"
+        android:layout_marginTop="0dp" />
 
     <TextView
         android:id="@+id/budget_list_loading_error"

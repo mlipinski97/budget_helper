@@ -54,7 +54,8 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
     OnFragmentClickListener mClickListener;
     private TextView accountDetailsTextView;
     private TextView accountDetailsListNameTextView;
-    private TextView accountDetailsValueTextView;
+    private TextView accountDetailsValueRemainingTextView;
+    private TextView accountDetailsValueTotalTextView;
 
     public BudgetListFragment() {
 
@@ -85,7 +86,8 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         accountDetailsTextView = rootView.findViewById(R.id.fragment_budget_list_greetings_details_text_view);
         accountDetailsTextView.setText(getString(R.string.user_greetings) + " " + mAccount.name);
         accountDetailsListNameTextView = rootView.findViewById(R.id.fragment_budget_list_close_to_date_text_view);
-        accountDetailsValueTextView = rootView.findViewById(R.id.fragment_budget_list_close_to_date_value_text_view);
+        accountDetailsValueRemainingTextView = rootView.findViewById(R.id.fragment_budget_list_close_to_date_value_remaining_text_view);
+        accountDetailsValueTotalTextView = rootView.findViewById(R.id.fragment_budget_list_close_to_date_value_total_text_view);
 
         loadBudgetLists();
         return rootView;
@@ -139,17 +141,21 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
                 .collect(Collectors.toList());
         if(filteredBudgetLists.size() > 0){
             BudgetList elementToDisplay = filteredBudgetLists.get(0);
-            accountDetailsListNameTextView.append(" " + elementToDisplay.getName());
-            accountDetailsValueTextView.append(" " + elementToDisplay.getRemainingValue() + " from total of: " + elementToDisplay.getValue());
+            accountDetailsListNameTextView.append(elementToDisplay.getName());
+            accountDetailsValueRemainingTextView.append(String.valueOf(elementToDisplay.getRemainingValue()));
+            accountDetailsValueTotalTextView.append(String.valueOf(elementToDisplay.getValue()));
         } else{
             accountDetailsListNameTextView.setText(R.string.user_help_frame_no_list_found);
-            accountDetailsValueTextView.setText("");
+            accountDetailsValueRemainingTextView.setText("");
         }
 
     }
     @Override
-    public void onListItemClick(int clickedBudgetListId, String clickedBudgetListName, String listDueDate) {
-        mClickListener.onFragmentBudgetListElementClickInteraction((long) clickedBudgetListId, clickedBudgetListName, listDueDate);
+    public void onListItemClick(int clickedBudgetListId, String clickedBudgetListName, String listDueDate, String clickedBudgetListAmount) {
+        mClickListener.onFragmentBudgetListElementClickInteraction((long) clickedBudgetListId,
+                clickedBudgetListName,
+                listDueDate,
+                clickedBudgetListAmount);
 
     }
 
@@ -167,7 +173,10 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
 
     public interface OnFragmentClickListener{
         void onFragmentClickInteraction(int clickedElementId);
-        void onFragmentBudgetListElementClickInteraction(Long clickedListElementId, String clickedListElementName, String dueDate);
+        void onFragmentBudgetListElementClickInteraction(Long clickedListElementId,
+                                                         String clickedListElementName,
+                                                         String dueDate,
+                                                         String clickedBudgetListAmount);
     }
 
 

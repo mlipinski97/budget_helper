@@ -30,6 +30,7 @@ import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
 import com.example.engineerdegreeapp.fragment.BudgetListDetailsFragment;
 import com.example.engineerdegreeapp.fragment.BudgetListFragment;
+import com.example.engineerdegreeapp.fragment.EditBudgetListFragment;
 import com.example.engineerdegreeapp.fragment.NewBudgetListFragment;
 import com.example.engineerdegreeapp.fragment.NewExpenseFragment;
 import com.example.engineerdegreeapp.util.AccountUtils;
@@ -44,7 +45,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         NewBudgetListFragment.OnFragmentClickListener,
         BudgetListDetailsFragment.OnFragmentClickListener,
         NewExpenseFragment.OnFragmentClickListener,
-        ToolbarChangeListener {
+        ToolbarChangeListener,
+        EditBudgetListFragment.OnFragmentClickListener{
 
     private Account mAccount;
     private AccountManager mAccountManager;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private String recentlyClickedListElementName;
     private String recentlyClickedDueDate;
     MenuItem edit_budget_list_menu_item;
+    private String recentlyClickedBudgetListAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,16 +103,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         fragmentManager.beginTransaction()
                 .add(R.id.main_fragment_layout_holder, budgetListFragment)
                 .commit();
-    }
-
-    private Fragment getVisibleFragment() {
-        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
-        List<Fragment> fragments = fragmentManager.getFragments();
-        for (Fragment fragment : fragments) {
-            if (fragment != null && fragment.isVisible())
-                return fragment;
-        }
-        return null;
     }
 
     @Override
@@ -199,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 break;
             case R.id.new_budget_list_button_cancel:
             case R.id.new_expense_button_cancel:
+            case R.id.edit_budget_list_button_cancel:
                 getSupportFragmentManager().popBackStack();
                 break;
             default:
@@ -229,17 +223,20 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     @Override
-    public void onFragmentBudgetListElementClickInteraction(Long clickedListElementId, String clickedListElementName, String dueDate) {
+    public void onFragmentBudgetListElementClickInteraction(Long clickedListElementId,
+                                                            String clickedListElementName,
+                                                            String dueDate,
+                                                            String clickedBudgetListAmount) {
         this.recentlyClickedListElementId = clickedListElementId;
         this.recentlyClickedListElementName = clickedListElementName;
         this.recentlyClickedDueDate = dueDate;
+        this.recentlyClickedBudgetListAmount = clickedBudgetListAmount;
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
                 .addToBackStack("budget_list_fragment")
                 .replace(R.id.main_fragment_layout_holder, new BudgetListDetailsFragment(clickedListElementId,
                         clickedListElementName,
                         dueDate)).commit();
-        System.out.println(clickedListElementName);
     }
 
     @Override
@@ -263,7 +260,14 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         int id = item.getItemId();
 
         if (id == R.id.edit_budget_list_menu_item) {
-            Toast.makeText(MainActivity.this, "Action clicked", Toast.LENGTH_LONG).show();
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                    .addToBackStack("budget_list_details_fragment")
+                    .replace(R.id.main_fragment_layout_holder, new EditBudgetListFragment(recentlyClickedListElementName,
+                            recentlyClickedBudgetListAmount,
+                            recentlyClickedDueDate,
+                            recentlyClickedListElementId))
+                    .commit();
             return true;
         }
 

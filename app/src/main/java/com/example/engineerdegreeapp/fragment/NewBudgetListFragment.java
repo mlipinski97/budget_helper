@@ -42,9 +42,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewBudgetListFragment extends Fragment implements View.OnClickListener {
 
-    private TextView listNameTextView;
     private TextView listNameErrorTextView;
-    private TextView listValueTextView;
     private TextView listValueErrorTextView;
     private EditText listNameEditText;
     private EditText listValueEditText;
@@ -74,9 +72,7 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
             return null;
         }
 
-        listNameTextView = rootView.findViewById(R.id.new_budget_list_name_text_view);
         listNameErrorTextView = rootView.findViewById(R.id.new_budget_list_name_error_text_view);
-        listValueTextView = rootView.findViewById(R.id.new_budget_list_amount_text_view);
         listValueErrorTextView = rootView.findViewById(R.id.new_budget_list_amount_error_text_view);
         listNameEditText = rootView.findViewById(R.id.new_budget_list_name_edit_text);
         listValueEditText = rootView.findViewById(R.id.new_budget_list_amount_edit_text);
