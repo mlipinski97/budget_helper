@@ -85,7 +85,7 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
             budgetListValue = itemView.findViewById(R.id.budget_list_value_text_view);
             budgetListRemainingValue = itemView.findViewById(R.id.budget_list_remaining_value_text_view);
             budgetListDueDate = itemView.findViewById(R.id.budget_list_due_date_text_view);
-            itemView.setOnClickListener(this);
+            cardView.setOnClickListener(this);
         }
 
         public void bind(BudgetList budgetList){
