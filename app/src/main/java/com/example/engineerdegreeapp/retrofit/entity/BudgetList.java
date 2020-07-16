@@ -10,6 +10,7 @@ public class BudgetList {
 
     private String name;
 
+
     @SerializedName("budgetValue")
     private double value;
 
@@ -17,6 +18,8 @@ public class BudgetList {
 
     @SerializedName("remainingValue")
     private double remainingValue;
+
+    private boolean isSelected;
 
     public BudgetList() {
     }
@@ -65,5 +68,13 @@ public class BudgetList {
 
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

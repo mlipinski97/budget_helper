@@ -1,28 +1,19 @@
 package com.example.engineerdegreeapp.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.engineerdegreeapp.R;
-import com.example.engineerdegreeapp.activity.MainActivity;
 import com.example.engineerdegreeapp.retrofit.entity.Expense;
 
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -99,12 +90,12 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         public ExpenseViewHolder(@NonNull View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.expense_item_card_view);
+            cardView.setOnLongClickListener(this);
             expenseNameTextView = itemView.findViewById(R.id.expense_item_name_text_view);
             expenseValueTextView = itemView.findViewById(R.id.expense_item_value_text_view);
             expenseOwnerNameTextView = itemView.findViewById(R.id.expense_item_owner_text_view);
             expenseDateOfExpenseTextView = itemView.findViewById(R.id.expense_item_due_date_text_view);
             doneCheckbox = itemView.findViewById(R.id.expense_item_done_check_box);
-            cardView.setOnLongClickListener(this);
             doneCheckbox.setOnClickListener(v -> clickListener.onListItemDoneStateChange(expense.getId()));
         }
 
@@ -120,14 +111,13 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
                 expenseDateOfExpenseTextView.setText("No due date found(old data)");
             }
             doneCheckbox.setChecked(expense.isDone());
-            this.expense = expense;
-
+            setExpense(expense);
         }
 
 
         @Override
         public boolean onLongClick(View v) {
-            clickListener.onListItemLongClick(v, expense);
+            clickListener.onListItemLongClick(v, getExpense());
             return true;
         }
 

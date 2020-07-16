@@ -8,6 +8,7 @@ import java.util.List;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
@@ -24,5 +25,8 @@ public interface BudgetListApi {
 
     @PATCH("edit")
     Call<BudgetList> patchBudgetList(@Header("Authorization") String auth, @Query("id") Long id, @Body RequestBody budgetListBody);
+
+    @DELETE("delete")
+    Call<Void> deleteBudgetList(@Header("Authorization") String auth, @Query("id") Long id);
 
 }

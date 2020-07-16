@@ -20,6 +20,7 @@
     <!-- BudgetList(main) fragment -->
     <string name="budget_list_loading_error">There was a problem loading your list!</string>
     <string name="user_help_frame_no_list_found">No planned budgets :)</string>
+    <string name="budget_list_delete_button">delete selected lists</string>
 
     <!-- new/edit budgetlist fragment -->
     <string name="new_budget_list_toolbar_name">Add new list</string>
@@ -60,7 +61,7 @@
     <string name="closest_list_to_date">Close to due: </string>
     <string name="closest_list_to_date_value_remaining">Money left till due date: </string>
     <string name="closest_list_to_date_value_total">From total of: </string>
-    <string name="budget_list_details_delete_button">delete expenses</string>
+    <string name="budget_list_details_delete_button">delete selected expenses</string>
     <string name="edit_budget_list">Edit</string>
 
 
