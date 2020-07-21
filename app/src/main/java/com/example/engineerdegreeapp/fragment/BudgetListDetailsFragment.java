@@ -86,22 +86,19 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
             return null;
         }
         toolbarChangeListener.changeToolbarTitle(budgetListName);
-        toolbarChangeListener.showEditButton();
+        toolbarChangeListener.showEditButtons();
         deleteButton = rootView.findViewById(R.id.budget_list_details_delete_button);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for(Expense e : selectedExpenses){
-                    deleteSelectedExpenses(e.getId());
-                }
-                expenseListRecyclerView = rootView.findViewById(R.id.expense_recycler_view);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-                expenseListRecyclerView.setLayoutManager(layoutManager);
-                expenseListRecyclerView.setHasFixedSize(true);
-                loadExpenseList();
-                loadExpenseList();
-                deleteButton.setVisibility(View.INVISIBLE);
+        deleteButton.setOnClickListener(v -> {
+            for(Expense e : selectedExpenses){
+                deleteSelectedExpenses(e.getId());
             }
+            expenseListRecyclerView = rootView.findViewById(R.id.expense_recycler_view);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            expenseListRecyclerView.setLayoutManager(layoutManager);
+            expenseListRecyclerView.setHasFixedSize(true);
+            loadExpenseList();
+            loadExpenseList();
+            deleteButton.setVisibility(View.INVISIBLE);
         });
         expenseListErrorTextView = rootView.findViewById(R.id.budget_list_details_loading_error);
         newExpenseFloatingActionButton = rootView.findViewById(R.id.budget_list_details_floating_action_button);
@@ -151,7 +148,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
                 } else {
                     expenseListErrorTextView.setVisibility(View.INVISIBLE);
                     expenseList = new ArrayList<>(response.body());
-                    expenseAdapter = new ExpenseAdapter(expenseList, expenseList.size(), BudgetListDetailsFragment.this, getContext());
+                    expenseAdapter = new ExpenseAdapter(expenseList, expenseList.size(), BudgetListDetailsFragment.this);
                     expenseListRecyclerView.setAdapter(expenseAdapter);
                 }
             }
@@ -235,7 +232,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     }
 
     @Override
-        public void onListItemLongClick(View v, Expense expense) {
+    public void onListItemLongClick(View v, Expense expense) {
         expense.setSelected(!expense.isSelected());
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             v.setBackgroundColor(expense.isSelected() ?
@@ -260,7 +257,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
 
     @Override
     public void onListItemDoneStateChange(Long changedStateExpenseId) {
-        Toast.makeText(getContext(), "changed checkbox on expense with id: " + changedStateExpenseId, Toast.LENGTH_SHORT).show();
+        Log.d("onListItemDoneStateChange()", "changed checkbox on expense with id: " + changedStateExpenseId);
         if(expenseIdToChangeDoneState.contains(changedStateExpenseId)){
             expenseIdToChangeDoneState.remove(changedStateExpenseId);
         } else{
@@ -274,7 +271,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         int clickedItemId = v.getId();
         switch (clickedItemId) {
             case R.id.budget_list_details_floating_action_button:
-                toolbarChangeListener.hideEditButton();
+                toolbarChangeListener.hideEditButtons();
                 mClickListener.onFragmentClickInteraction(clickedItemId, budgetListDueDate, budgetListId);
                 break;
         }
@@ -296,7 +293,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         try{
             toolbarChangeListener = (ToolbarChangeListener) context;
         } catch (ClassCastException f){
-            throw new ClassCastException(context.toString() + "must implement BudgetListDetailsFragment.ToolbarChangeListener");
+            throw new ClassCastException(context.toString() + "must implement ToolbarChangeListener");
 
         }
     }
@@ -314,6 +311,6 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     public void onDetach() {
         super.onDetach();
         toolbarChangeListener.restoreToolbarTitle();
-        toolbarChangeListener.hideEditButton();
+        toolbarChangeListener.hideEditButtons();
     }
 }

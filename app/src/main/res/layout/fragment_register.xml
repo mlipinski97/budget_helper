@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
+    >
 
     <EditText
         android:id="@+id/register_username_edit_text"
@@ -60,21 +62,17 @@
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:text="@string/confirm_registration_action"
-        android:textColor="?attr/textColor"
-        android:background="?attr/buttonColor"
-        android:backgroundTint="?attr/backgroundTint"/>
+        />
 
-    <Button
-        android:id="@+id/register_cancel_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/register_confirm_button"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:text="@string/cancel_registration_action"
-        android:textColor="?attr/textColor"
-        android:background="?attr/buttonColor"
-        android:backgroundTint="?attr/backgroundTint"/>
+        <Button
+            android:id="@+id/register_cancel_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/register_confirm_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:text="@string/cancel_registration_action"
+            />
 </RelativeLayout>

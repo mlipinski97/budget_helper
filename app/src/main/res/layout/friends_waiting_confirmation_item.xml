@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="1dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/friends_waiting_confirmation_item_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="?attr/cardBackgroundColor"
+        tools:ignore="PrivateResource">
+
+        <TextView
+            android:id="@+id/friends_waiting_confirmation_item_username_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="top|start"
+            android:text="#15"
+            android:textColor="?attr/textColor"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18sp">
+
+            <Button
+                android:id="@+id/friends_waiting_confirmation_item_decline_button"
+                android:layout_width="0dp"
+                android:layout_height="40sp"
+                android:layout_gravity="start"
+                android:layout_weight="0.5"
+                android:backgroundTint="?attr/declineButtonColor"
+                android:text="@string/friend_decline"
+                android:textColor="?attr/textColor"
+                />
+
+            <Button
+                android:id="@+id/friends_waiting_confirmation_item_accept_button"
+                android:layout_weight="0.5"
+                android:layout_width="0dp"
+                android:layout_height="40sp"
+                android:layout_gravity="end"
+                android:backgroundTint="?attr/acceptButtonColor"
+                android:text="@string/friend_accept"
+                android:textColor="?attr/textColor" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

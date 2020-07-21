@@ -8,4 +8,5 @@
     <color name="darkCardSelectedBackgroundColor">#959292</color>
     <color name="lightCardBackgroundColor">#CBF1E6</color>
     <color name="lightCardSelectedBackgroundColor">#A1BFB7</color>
+    <color name="black_overlay">#66000000</color>
 </resources>

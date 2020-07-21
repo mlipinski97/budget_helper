@@ -84,7 +84,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                     } else if(!isPasswordValid()){
                         Toast.makeText(getActivity(), getString(R.string.register_bad_password),Toast.LENGTH_LONG).show();
                     } else if(!doPasswordsMatch()){
-                        Toast.makeText(getActivity(), getString(R.string.register_passwords_doesnt_match),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getString(R.string.register_passwords_does_not_match),Toast.LENGTH_LONG).show();
                     }
                 }
                 break;

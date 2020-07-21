@@ -25,11 +25,10 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     private int numberOfItems;
     final private ListItemClickListener clickListener;
 
-    public ExpenseAdapter(ArrayList<Expense> expenseList, int numberOfItems, ListItemClickListener clickListener, Context context) {
+    public ExpenseAdapter(ArrayList<Expense> expenseList, int numberOfItems, ListItemClickListener clickListener) {
         this.expenseList = expenseList;
         this.numberOfItems = numberOfItems;
         this.clickListener = clickListener;
-        this.context = context;
     }
 
 
@@ -43,8 +42,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(listItemId, parent, shouldAttachToParentImmediately);
-        ExpenseViewHolder expenseAdapter = new ExpenseViewHolder(view);
-        return expenseAdapter;
+        return new ExpenseViewHolder(view);
     }
 
 
@@ -63,7 +61,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     public interface ListItemClickListener {
         void onListItemLongClick(View v, Expense expense);
         void onListItemDoneStateChange(Long changedStateExpenseId);
-
     }
 
     class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
@@ -123,24 +120,3 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
 
     }
 }
-
-/*
-{
-            @Override
-            public void onClick(View view) {
-                expenseList.get(position).setSelected(!expenseList.get(position).isSelected());
-                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                    view.setBackgroundColor(expenseList.get(position).isSelected() ?
-                            context.getResources().getColor(R.color.darkCardSelectedBackgroundColor, null)
-                            : context.getResources().getColor(R.color.darkCardBackgroundColor, null) );
-                } else {
-                    view.setBackgroundColor(expenseList.get(position).isSelected() ?
-                            context.getResources().getColor(R.color.lightCardSelectedBackgroundColor, null)
-                            : context.getResources().getColor(R.color.lightCardBackgroundColor, null) );
-                }
-
-
-                System.out.println("zaznaczenie?");
-            }
-        });
- */

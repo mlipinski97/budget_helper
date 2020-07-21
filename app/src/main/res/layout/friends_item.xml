@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="1dp"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="?attr/cardBackgroundColor"
+        tools:ignore="PrivateResource"
+        android:id="@+id/friends_item_card_view">
+        <TextView
+            android:id="@+id/friends_item_username_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="?attr/textColor"
+            android:text="#15"
+            android:textSize="15sp"
+            android:layout_gravity="center|start"
+            />
+        <CheckBox
+            android:id="@+id/friends_item_done_check_box"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical|end"
+            android:visibility="invisible"
+            android:checked="true"
+            android:clickable="false"
+            />
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <LinearLayout
+            android:id="@+id/share_budget_list_linear_layout"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent">
+            <EditText
+                android:id="@+id/share_budget_list_username_search_text_view"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:inputType="text"
+                android:textColor="?attr/textColor"
+                android:hint="@string/share_budget_list_search_hint"
+                android:textColorHint="?attr/toolbarColor"
+                />
+            <Button
+                android:id="@+id/share_budget_list_username_search_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="@string/share_budget_list_search_button"
+                android:textColor="?attr/textColor"
+                android:backgroundTint="?attr/buttonColor"
+                 />
+        </LinearLayout>
+        <Button
+            android:id="@+id/share_budget_list_button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/share_budget_list_linear_layout"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="?attr/buttonColor"
+            android:text="@string/new_budget_list_cancel_button"
+            android:textColor="?attr/textColor" />
+
+        <Button
+            android:id="@+id/share_budget_list_button_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/share_budget_list_linear_layout"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="?attr/buttonColor"
+            android:text="@string/share_budget_list_share_button"
+            android:textColor="?attr/textColor" />
+    </RelativeLayout>
+</ScrollView>

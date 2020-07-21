@@ -7,5 +7,7 @@
         <attr name="tintColor" format="color"/>
         <attr name="buttonColor" format="color"/>
         <attr name="toolbarColor" format="color"/>
+        <attr name="declineButtonColor" format="color"/>
+        <attr name="acceptButtonColor" format="color"/>
     </declare-styleable>
 </resources>

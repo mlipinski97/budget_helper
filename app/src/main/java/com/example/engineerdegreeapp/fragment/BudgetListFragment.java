@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,9 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.adapter.BudgetListAdapter;
 import com.example.engineerdegreeapp.retrofit.BudgetListApi;
-import com.example.engineerdegreeapp.retrofit.ExpenseApi;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
-import com.example.engineerdegreeapp.retrofit.entity.Expense;
 import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -54,12 +52,11 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
     private BudgetListAdapter budgetListAdapter;
     private TextView budgetListErrorTextView;
     private RecyclerView budgetListRecyclerView;
-    private Toast mToast;
     private ArrayList<BudgetList> budgetLists;
     private Account mAccount;
     private AccountManager mAccountManager;
     private FloatingActionButton addListFloatingActionButton;
-    OnFragmentClickListener mClickListener;
+    private OnFragmentClickListener mClickListener;
     private TextView accountDetailsTextView;
     private TextView accountDetailsListNameTextView;
     private TextView accountDetailsValueRemainingTextView;

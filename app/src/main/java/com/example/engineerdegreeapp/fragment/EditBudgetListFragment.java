@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.engineerdegreeapp.R;
+import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
 import com.example.engineerdegreeapp.retrofit.BudgetListApi;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.util.AccountUtils;
@@ -56,6 +57,7 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
     private String listAmount;
     private String listSelectedDate;
     private Long listId;
+    ToolbarChangeListener toolbarChangeListener;
 
 
     public EditBudgetListFragment(){
@@ -81,6 +83,8 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
             return null;
         }
 
+        toolbarChangeListener.changeToolbarTitle(getResources().getString(R.string.edit_budget_list_toolbar_name));
+        toolbarChangeListener.hideEditButtons();
         listNameErrorTextView = rootView.findViewById(R.id.edit_budget_list_name_error_text_view);
         listValueErrorTextView = rootView.findViewById(R.id.edit_budget_list_amount_error_text_view);
         listNameEditText = rootView.findViewById(R.id.edit_budget_list_name_edit_text);
@@ -211,5 +215,12 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
         } catch (ClassCastException e){
             throw new ClassCastException(context.toString() + "must implement EditBudgetListFragment.OnFragmentClickListener");
         }
+        try{
+            toolbarChangeListener = (ToolbarChangeListener) context;
+        } catch (ClassCastException f){
+            throw new ClassCastException(context.toString() + "must implement ToolbarChangeListener");
+
+        }
     }
+
 }

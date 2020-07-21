@@ -16,6 +16,8 @@
         <item name="toolbarColor">#758C85</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="preferenceTheme">@style/AppTheme.Light</item>
+        <item name="declineButtonColor">#758C85</item>
+        <item name="acceptButtonColor">#27C32D</item>
     </style>
 
     <!--dark mode application theme without actionbar. -->
@@ -34,6 +36,8 @@
         <item name="toolbarColor">#656464</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="preferenceTheme">@style/AppTheme.Dark</item>
+        <item name="declineButtonColor">#656464</item>
+        <item name="acceptButtonColor">#27C32D</item>
     </style>
 
     <!--light mode application theme with actionbar. -->
@@ -50,6 +54,8 @@
         <item name="toolbarColor">#0B6A4C</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="declineButtonColor">#758C85</item>
+        <item name="acceptButtonColor">#27C32D</item>
     </style>
 
     <!--dark mode application theme with actionbar. -->
@@ -66,6 +72,8 @@
         <item name="toolbarColor">#340B6A</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="declineButtonColor">#656464</item>
+        <item name="acceptButtonColor">#27C32D</item>
     </style>
 
 

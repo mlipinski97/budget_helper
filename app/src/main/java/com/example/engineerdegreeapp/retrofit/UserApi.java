@@ -1,5 +1,6 @@
 package com.example.engineerdegreeapp.retrofit;
 
+import com.example.engineerdegreeapp.retrofit.entity.Friendship;
 import com.example.engineerdegreeapp.retrofit.entity.UserAuth;
 
 import java.util.List;
@@ -21,4 +22,7 @@ public interface UserApi {
 
     @GET("account")
     Call<UserAuth> getAccount(@Header("Authorization") String auth);
+
+    @GET("getallfriends")
+    Call<List<Friendship>> getFriends(@Header("Authorization") String auth);
 }

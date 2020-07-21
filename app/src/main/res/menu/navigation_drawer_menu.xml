@@ -8,9 +8,14 @@
         android:id="@+id/drawer_group_1"
         android:checkableBehavior="single">
         <item
+            android:id="@+id/drawer_friends"
+            android:icon="@drawable/ic_people_black_24dp"
+            android:title="@string/drawer_friends"
+            />
+        <item
             android:id="@+id/drawer_settings"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/settings"
+            android:title="@string/drawer_settings"
             />
     </group>
     <group
@@ -19,7 +24,7 @@
         <item
             android:id="@+id/drawer_logout"
             android:icon="@drawable/ic_logout"
-            android:title="@string/logout" />
+            android:title="@string/drawer_logout" />
     </group>
 
 </menu>

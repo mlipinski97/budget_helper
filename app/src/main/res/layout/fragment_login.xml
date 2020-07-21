@@ -43,7 +43,8 @@
         android:layout_marginLeft="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="50dp"
-        android:text="@string/login_action" />
+        android:text="@string/login_action"
+        />
 
     <Button
         android:id="@+id/login_register_button"

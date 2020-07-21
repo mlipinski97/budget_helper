@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 
@@ -31,13 +30,13 @@ import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
 import com.example.engineerdegreeapp.fragment.BudgetListDetailsFragment;
 import com.example.engineerdegreeapp.fragment.BudgetListFragment;
 import com.example.engineerdegreeapp.fragment.EditBudgetListFragment;
+import com.example.engineerdegreeapp.fragment.FriendsFragment;
 import com.example.engineerdegreeapp.fragment.NewBudgetListFragment;
 import com.example.engineerdegreeapp.fragment.NewExpenseFragment;
+import com.example.engineerdegreeapp.fragment.ShareBudgetListFragment;
 import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener,
@@ -46,7 +45,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         BudgetListDetailsFragment.OnFragmentClickListener,
         NewExpenseFragment.OnFragmentClickListener,
         ToolbarChangeListener,
-        EditBudgetListFragment.OnFragmentClickListener{
+        EditBudgetListFragment.OnFragmentClickListener,
+        ShareBudgetListFragment.OnFragmentClickListener{
 
     private Account mAccount;
     private AccountManager mAccountManager;
@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private Long recentlyClickedListElementId;
     private String recentlyClickedListElementName;
     private String recentlyClickedDueDate;
-    MenuItem edit_budget_list_menu_item;
+    private MenuItem edit_budget_list_menu_item;
+    private MenuItem edit_budget_users_menu_item;
     private String recentlyClickedBudgetListAmount;
 
     @Override
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         setSupportActionBar(mTopToolbar);
         drawer = findViewById(R.id.main_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mTopToolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                R.string.drawer_navigation_drawer_open, R.string.drawer_navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -146,6 +147,15 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 }
                 Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(settingsIntent);
+                break;
+            case R.id.drawer_friends:
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                        .addToBackStack("budget_list_fragment")
+                        .replace(R.id.main_fragment_layout_holder, new FriendsFragment()).commit();
                 break;
         }
         return true;
@@ -258,9 +268,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.edit_budget_list_menu_item) {
-            getSupportFragmentManager().beginTransaction()
+        switch (id ) {
+            case R.id.edit_budget_list_menu_item:
+                getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
                     .addToBackStack("budget_list_details_fragment")
                     .replace(R.id.main_fragment_layout_holder, new EditBudgetListFragment(recentlyClickedListElementName,
@@ -268,7 +278,14 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                             recentlyClickedDueDate,
                             recentlyClickedListElementId))
                     .commit();
-            return true;
+                return true;
+            case R.id.edit_budget_users_menu_item:
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                        .addToBackStack("budget_list_details_fragment")
+                        .replace(R.id.main_fragment_layout_holder, new ShareBudgetListFragment())
+                        .commit();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -278,16 +295,20 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     {
         edit_budget_list_menu_item = menu.findItem(R.id.edit_budget_list_menu_item);
         edit_budget_list_menu_item.setVisible(false);
+        edit_budget_users_menu_item = menu.findItem(R.id.edit_budget_users_menu_item);
+        edit_budget_users_menu_item.setVisible(false);
         return true;
     }
 
     @Override
-    public void showEditButton() {
+    public void showEditButtons() {
+        edit_budget_users_menu_item.setVisible(true);
         edit_budget_list_menu_item.setVisible(true);
     }
 
     @Override
-    public void hideEditButton() {
+    public void hideEditButtons() {
+        edit_budget_users_menu_item.setVisible(false);
         edit_budget_list_menu_item.setVisible(false);
     }
 }
