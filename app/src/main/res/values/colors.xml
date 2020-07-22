@@ -9,4 +9,5 @@
     <color name="lightCardBackgroundColor">#CBF1E6</color>
     <color name="lightCardSelectedBackgroundColor">#A1BFB7</color>
     <color name="black_overlay">#66000000</color>
+    <color name="disabled_button">#CACACA</color>
 </resources>

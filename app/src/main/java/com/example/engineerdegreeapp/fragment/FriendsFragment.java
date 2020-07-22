@@ -23,19 +23,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.engineerdegreeapp.R;
-import com.example.engineerdegreeapp.adapter.ExpenseAdapter;
 import com.example.engineerdegreeapp.adapter.FriendsAdapter;
 import com.example.engineerdegreeapp.adapter.FriendsAwaitingConfirmationAdapter;
 import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
 import com.example.engineerdegreeapp.retrofit.UserApi;
-import com.example.engineerdegreeapp.retrofit.entity.Expense;
 import com.example.engineerdegreeapp.retrofit.entity.Friendship;
-import com.example.engineerdegreeapp.retrofit.entity.UserAuth;
 import com.example.engineerdegreeapp.util.AccountUtils;
 
-import java.time.Duration;
+
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +42,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FriendsFragment extends Fragment implements FriendsAdapter.ListItemClickListener,
-        FriendsAwaitingConfirmationAdapter.ListItemClickListener{
+        FriendsAwaitingConfirmationAdapter.ListItemClickListener {
 
     private final String FRIENDSHIP_BASE_URL = "https://engineer-degree-project.herokuapp.com/api/users/friendship/";
 
@@ -66,7 +62,7 @@ public class FriendsFragment extends Fragment implements FriendsAdapter.ListItem
     private Button unfriendButton;
     private ArrayList<Friendship> selectedFriendships = new ArrayList<>();
 
-    public FriendsFragment(){
+    public FriendsFragment() {
     }
 
     @Nullable
@@ -86,9 +82,14 @@ public class FriendsFragment extends Fragment implements FriendsAdapter.ListItem
         toolbarChangeListener.changeToolbarTitle(fragmentTitle);
         unfriendButton = rootView.findViewById(R.id.friends_fragment_unfriend_button);
         unfriendButton.setOnClickListener(v -> {
-            for(Friendship f : selectedFriendships){
-                Toast.makeText(getContext(), f.getFriend().getUsername() + " " + f.getRequester().getUsername(), Toast.LENGTH_SHORT).show();
+            for (Friendship f : selectedFriendships) {
+                if(mAccount.name.equals(f.getFriend().getUsername())){
+                    deleteFriendship(f.getRequester().getUsername());
+                } else{
+                    deleteFriendship(f.getFriend().getUsername());
+                }
             }
+            loadAllFriends();
         });
         searchButton = rootView.findViewById(R.id.friends_fragment_search_button);
         friendsLoadingErrorTextView = rootView.findViewById(R.id.friends_fragment_loading_error);
@@ -105,7 +106,7 @@ public class FriendsFragment extends Fragment implements FriendsAdapter.ListItem
         return rootView;
     }
 
-    private void loadAllFriends(){
+    private void loadAllFriends() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(FRIENDSHIP_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -118,7 +119,7 @@ public class FriendsFragment extends Fragment implements FriendsAdapter.ListItem
         String credentials = loginCredential + ":" + passwordCredential;
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
-        Call<List<Friendship>> call = userApi.getFriends(auth);
+        Call<List<Friendship>> call = userApi.getFriendships(auth);
         call.enqueue(new Callback<List<Friendship>>() {
             @Override
             public void onResponse(Call<List<Friendship>> call, Response<List<Friendship>> response) {
@@ -128,7 +129,7 @@ public class FriendsFragment extends Fragment implements FriendsAdapter.ListItem
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else{
+                } else {
                     friendsLoadingErrorTextView.setVisibility(View.INVISIBLE);
                     friendships = new ArrayList<>(response.body());
                     ArrayList<Friendship> confirmedFriendships = friendships.stream()
@@ -153,17 +154,89 @@ public class FriendsFragment extends Fragment implements FriendsAdapter.ListItem
 
             @Override
             public void onFailure(Call<List<Friendship>> call, Throwable t) {
+                Log.d("loadAllFriends()", "onFailure call failed");
+            }
+        });
+    }
+
+    public void deleteFriendship(String username){
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(FRIENDSHIP_BASE_URL)
+                .build();
+
+        UserApi userApi = retrofit.create(UserApi.class);
+
+        String loginCredential = mAccount.name;
+        String passwordCredential = mAccountManager.getPassword(mAccount);
+        String credentials = loginCredential + ":" + passwordCredential;
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+
+        Call<Void> call = userApi.deleteFriendship(auth, username);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    try {
+                        Log.d("deleteFriendship()", response.errorBody().string());
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } else{
+                    Log.d("deleteFriendship()", "deleted friendship: " + loginCredential + " - " + username);
+                    loadAllFriends();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("deleteFriendship()", "onFailure while deleting friendship: " + loginCredential + " - " + username);
 
             }
         });
     }
 
+    public void acceptFriendship(String username){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(FRIENDSHIP_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UserApi userApi = retrofit.create(UserApi.class);
+
+        String loginCredential = mAccount.name;
+        String passwordCredential = mAccountManager.getPassword(mAccount);
+        String credentials = loginCredential + ":" + passwordCredential;
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+
+        Call<Friendship> call = userApi.acceptFriendship(auth, username);
+        call.enqueue(new Callback<Friendship>() {
+            @Override
+            public void onResponse(Call<Friendship> call, Response<Friendship> response) {
+                if (!response.isSuccessful()) {
+                    try {
+                        Log.d("acceptFriendship()", response.errorBody().string());
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } else{
+                    Log.d("acceptFriendship()", "accepted friendship: " + loginCredential + " - " + username);
+                    loadAllFriends();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Friendship> call, Throwable t) {
+                Log.d("acceptFriendship()", "onFailure while accepting friendship: " + loginCredential + " - " + username);
+            }
+        });
+    }
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        try{
+        try {
             toolbarChangeListener = (ToolbarChangeListener) context;
-        } catch (ClassCastException f){
+        } catch (ClassCastException f) {
             throw new ClassCastException(context.toString() + "must implement ToolbarChangeListener");
 
         }
@@ -181,22 +254,22 @@ public class FriendsFragment extends Fragment implements FriendsAdapter.ListItem
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             v.setBackgroundColor(friendship.isSelected() ?
                     getContext().getResources().getColor(R.color.darkCardSelectedBackgroundColor, null)
-                    : getContext().getResources().getColor(R.color.darkCardBackgroundColor, null) );
+                    : getContext().getResources().getColor(R.color.darkCardBackgroundColor, null));
         } else {
             v.setBackgroundColor(friendship.isSelected() ?
                     getContext().getResources().getColor(R.color.lightCardSelectedBackgroundColor, null)
-                    : getContext().getResources().getColor(R.color.lightCardBackgroundColor, null) );
+                    : getContext().getResources().getColor(R.color.lightCardBackgroundColor, null));
         }
-        if(friendship.isSelected()){
+        if (friendship.isSelected()) {
             selectedFriendships.add(friendship);
             checkBox.setVisibility(View.VISIBLE);
-        } else{
+        } else {
             selectedFriendships.remove(friendship);
             checkBox.setVisibility(View.INVISIBLE);
         }
-        if(!selectedFriendships.isEmpty()){
+        if (!selectedFriendships.isEmpty()) {
             unfriendButton.setVisibility(View.VISIBLE);
-        } else{
+        } else {
             unfriendButton.setVisibility(View.INVISIBLE);
         }
     }
@@ -206,10 +279,14 @@ public class FriendsFragment extends Fragment implements FriendsAdapter.ListItem
         int clickedItemId = v.getId();
         switch (clickedItemId) {
             case R.id.friends_waiting_confirmation_item_decline_button:
-                Toast.makeText(getContext(), "decline", Toast.LENGTH_SHORT).show();
+                if(mAccount.name.equals(friendship.getFriend().getUsername())){
+                    deleteFriendship(friendship.getRequester().getUsername());
+                } else{
+                    deleteFriendship(friendship.getFriend().getUsername());
+                }
                 break;
             case R.id.friends_waiting_confirmation_item_accept_button:
-                Toast.makeText(getContext(), "accept", Toast.LENGTH_SHORT).show();
+                acceptFriendship(friendship.getRequester().getUsername());
                 break;
         }
     }

@@ -47,6 +47,7 @@
                 android:backgroundTint="?attr/acceptButtonColor"
                 android:text="@string/friend_accept"
                 android:textColor="?attr/textColor" />
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </FrameLayout>

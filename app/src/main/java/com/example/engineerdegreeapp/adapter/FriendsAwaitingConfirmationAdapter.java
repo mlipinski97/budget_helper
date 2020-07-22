@@ -1,6 +1,7 @@
 package com.example.engineerdegreeapp.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +95,10 @@ public class FriendsAwaitingConfirmationAdapter extends RecyclerView.Adapter<Fri
                 friendUsernameTextView.setText(friendship.getRequester().getUsername());
             } else{
                 friendUsernameTextView.setText(friendship.getFriend().getUsername());
+                acceptButton.setEnabled(false);
+                acceptButton.setText(R.string.friend_request_sent);
+                acceptButton.setBackgroundTintList(acceptButton.getContext().getResources().getColorStateList(R.color.disabled_button, null));
+                acceptButton.setTextColor(acceptButton.getContext().getResources().getColor(R.color.darkCardBackgroundColor, null));
             }
             setFriendship(friendship);
         }

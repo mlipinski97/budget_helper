@@ -82,6 +82,7 @@
     <string name="friend_fragment_title">Your friends</string>
     <string name="friend_decline">Decline</string>
     <string name="friend_accept">Accept</string>
+    <string name="friend_request_sent">request sent</string>
 
 
     <!-- placeholders and testing -->

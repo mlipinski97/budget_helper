@@ -8,9 +8,12 @@ import java.util.List;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface UserApi {
 
@@ -24,5 +27,11 @@ public interface UserApi {
     Call<UserAuth> getAccount(@Header("Authorization") String auth);
 
     @GET("getallfriends")
-    Call<List<Friendship>> getFriends(@Header("Authorization") String auth);
+    Call<List<Friendship>> getFriendships(@Header("Authorization") String auth);
+
+    @DELETE("delete")
+    Call<Void> deleteFriendship(@Header("Authorization") String auth, @Query("friendUsername") String friendUsername);
+
+    @PATCH("accept")
+    Call<Friendship> acceptFriendship(@Header("Authorization") String auth, @Query("requesterUsername") String requesterUsername);
 }
