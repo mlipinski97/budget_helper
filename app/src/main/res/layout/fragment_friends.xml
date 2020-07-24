@@ -1,103 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor">
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/share_budget_list_search_linear_layout"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/share_budget_list_linear_layout"
+        <EditText
+            android:id="@+id/friends_fragment_search_edit_text"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_width="fill_parent">
-            <EditText
-                android:id="@+id/friends_fragment_search_edit_text"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_width="fill_parent"
-                android:inputType="text"
-                android:textColor="?attr/textColor"
-                android:hint="@string/share_budget_list_search_hint"
-                android:textColorHint="?attr/toolbarColor"
-                />
-            <Button
-                android:id="@+id/friends_fragment_search_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="@string/share_budget_list_search_button"
-                android:textColor="?attr/textColor"
-                android:backgroundTint="?attr/buttonColor"
-                />
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/friends_fragment_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/share_budget_list_linear_layout"
-            android:layout_marginTop="0dp" />
-
-        <TextView
-            android:id="@+id/friends_fragment_loading_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/friend_list_loading_error"
+            android:layout_weight="1"
+            android:hint="@string/share_budget_list_search_hint"
+            android:inputType="text"
             android:textColor="?attr/textColor"
-            android:textSize="40sp"
-            android:visibility="invisible" />
+            android:textColorHint="?attr/toolbarColor" />
 
         <Button
-            android:id="@+id/friends_fragment_unfriend_button"
+            android:id="@+id/friends_fragment_search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="80dp"
+            android:layout_weight="0"
             android:backgroundTint="?attr/buttonColor"
-            android:gravity="bottom|center_horizontal"
-            android:text="@string/friend_list_unfriend_button"
-            android:textAlignment="center"
-            android:visibility="invisible" />
+            android:text="@string/share_budget_list_search_button"
+            android:textColor="?attr/textColor" />
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/friend_waiting_confirmation_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/friend_waiting_confirmation_text"
-            android:layout_below="@+id/friends_fragment_recycler_view"
-            android:textColor="?attr/textColor"
-            />
-        <View
-            android:id="@+id/friend_waiting_confirmation_line"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#c0c0c0"
-            android:layout_below="@+id/friend_waiting_confirmation_text_view"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/friends_fragment_waiting_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/friend_waiting_confirmation_line"
-            android:layout_marginTop="0dp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/friends_fragment_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/share_budget_list_search_linear_layout"
+        android:layout_marginTop="0dp" />
 
-        <TextView
-            android:id="@+id/friends_fragment_waiting_loading_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="@string/friend_list_loading_error"
-            android:textColor="?attr/textColor"
-            android:textSize="40sp"
-            android:visibility="invisible"
-            android:layout_below="@+id/friend_waiting_confirmation_line"
-            />
+    <TextView
+        android:id="@+id/friends_fragment_loading_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/friend_list_loading_error"
+        android:textColor="?attr/textColor"
+        android:textSize="40sp"
+        android:visibility="invisible" />
 
+    <Button
+        android:id="@+id/friends_fragment_unfriend_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp"
+        android:backgroundTint="?attr/buttonColor"
+        android:gravity="bottom|center_horizontal"
+        android:text="@string/friend_list_unfriend_button"
+        android:textAlignment="center"
+        android:visibility="invisible" />
 
-    </RelativeLayout>
-</ScrollView>
+    <TextView
+        android:id="@+id/friend_waiting_confirmation_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friends_fragment_recycler_view"
+        android:text="@string/friend_waiting_confirmation_text"
+        android:textColor="?attr/textColor" />
+
+    <View
+        android:id="@+id/friend_waiting_confirmation_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/friend_waiting_confirmation_text_view"
+        android:background="#c0c0c0" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/friends_fragment_waiting_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friend_waiting_confirmation_line"
+        android:layout_marginTop="0dp" />
+
+    <TextView
+        android:id="@+id/friends_fragment_waiting_loading_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friend_waiting_confirmation_line"
+        android:layout_centerHorizontal="true"
+        android:text="@string/friend_list_loading_error"
+        android:textColor="?attr/textColor"
+        android:textSize="40sp"
+        android:visibility="invisible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/friends_fragment_floating_action_button"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:backgroundTint="?attr/buttonColor"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_baseline_person_add_24"
+        android:tint="?attr/tintColor"
+        app:fabSize="normal" />
+
+</RelativeLayout>

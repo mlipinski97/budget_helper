@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?attr/actionMenuTextColor">
+
+    <TextView
+        android:id="@+id/popup_window_add_friend_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/friend_send_friend_request_text_view"
+        android:textColor="?attr/cardBackgroundColor"
+        android:textSize="15sp"
+        />
+    <TextView
+        android:id="@+id/popup_window_add_friend_error_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/friend_send_friend_request_error_text_view"
+        android:layout_below="@+id/popup_window_add_friend_text_view"
+        android:textColor="?attr/colorError"
+        android:textSize="15sp"
+        android:visibility="invisible"
+        />
+    <EditText
+        android:id="@+id/popup_window_add_friend_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="20"
+        android:hint="@string/friend_add_friend_hint"
+        android:textSize="22sp"
+        android:inputType="text"
+        android:layout_below="@+id/popup_window_add_friend_error_text_view"/>
+
+    <Button
+        android:id="@+id/popup_window_add_friend_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/friend_send_friend_request_button"
+        android:backgroundTint="?attr/buttonColor"
+        android:layout_below="@+id/popup_window_add_friend_edit_text"/>
+</RelativeLayout>

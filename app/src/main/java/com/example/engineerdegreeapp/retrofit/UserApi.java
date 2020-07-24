@@ -34,4 +34,10 @@ public interface UserApi {
 
     @PATCH("accept")
     Call<Friendship> acceptFriendship(@Header("Authorization") String auth, @Query("requesterUsername") String requesterUsername);
+
+    @POST("add")
+    Call<Friendship> addFriendship(@Header("Authorization") String auth, @Query("friendUsername") String friendUsername);
+
+    @GET("getallbybudgetlistid")
+    Call<List<UserAuth>> getAllFriendsByBudgetListId(@Header("Authorization") String auth, @Query("budgetListId") Long budgetListId);
 }

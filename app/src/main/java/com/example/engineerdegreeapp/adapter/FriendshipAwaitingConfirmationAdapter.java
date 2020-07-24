@@ -1,12 +1,10 @@
 package com.example.engineerdegreeapp.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,17 +16,17 @@ import com.example.engineerdegreeapp.retrofit.entity.Friendship;
 
 import java.util.ArrayList;
 
-public class FriendsAwaitingConfirmationAdapter extends RecyclerView.Adapter<FriendsAwaitingConfirmationAdapter.FriendsAwaitingConfirmationViewHolder> {
+public class FriendshipAwaitingConfirmationAdapter extends RecyclerView.Adapter<FriendshipAwaitingConfirmationAdapter.FriendshipAwaitingConfirmationViewHolder> {
 
     private ArrayList<Friendship> friendList;
     private int numberOfItems;
     private String loggedUsername;
     ListItemClickListener clickListener;
 
-    public FriendsAwaitingConfirmationAdapter(ArrayList<Friendship> friendList,
-                                              int numberOfItems,
-                                              String loggedUsername,
-                                              ListItemClickListener clickListener) {
+    public FriendshipAwaitingConfirmationAdapter(ArrayList<Friendship> friendList,
+                                                 int numberOfItems,
+                                                 String loggedUsername,
+                                                 ListItemClickListener clickListener) {
         this.friendList = friendList;
         this.numberOfItems = numberOfItems;
         this.loggedUsername = loggedUsername;
@@ -37,7 +35,7 @@ public class FriendsAwaitingConfirmationAdapter extends RecyclerView.Adapter<Fri
 
     @NonNull
     @Override
-    public FriendsAwaitingConfirmationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FriendshipAwaitingConfirmationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context parentContext = parent.getContext();
         int listItemId = R.layout.friends_waiting_confirmation_item;
         LayoutInflater inflater = LayoutInflater.from(parentContext);
@@ -45,11 +43,11 @@ public class FriendsAwaitingConfirmationAdapter extends RecyclerView.Adapter<Fri
 
 
         View view = inflater.inflate(listItemId, parent, shouldAttachToParentImmediately);
-        return new FriendsAwaitingConfirmationAdapter.FriendsAwaitingConfirmationViewHolder(view);
+        return new FriendshipAwaitingConfirmationViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FriendsAwaitingConfirmationViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FriendshipAwaitingConfirmationViewHolder holder, int position) {
         holder.bind(friendList.get(position));
     }
 
@@ -63,7 +61,7 @@ public class FriendsAwaitingConfirmationAdapter extends RecyclerView.Adapter<Fri
         void onListItemClick(View v, Friendship friendship);
     }
 
-    class FriendsAwaitingConfirmationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class FriendshipAwaitingConfirmationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView friendUsernameTextView;
         CardView cardView;
@@ -80,7 +78,7 @@ public class FriendsAwaitingConfirmationAdapter extends RecyclerView.Adapter<Fri
             this.friendship = friendship;
         }
 
-        public FriendsAwaitingConfirmationViewHolder(@NonNull View itemView) {
+        public FriendshipAwaitingConfirmationViewHolder(@NonNull View itemView) {
             super(itemView);
             friendUsernameTextView = itemView.findViewById(R.id.friends_waiting_confirmation_item_username_text_view);
             cardView = itemView.findViewById(R.id.friends_waiting_confirmation_item_card_view);

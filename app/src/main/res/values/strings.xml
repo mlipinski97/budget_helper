@@ -39,8 +39,14 @@
     <!-- share budget list fragment -->
     <string name="share_budget_list_toolbar_name">Share your budget list with friends</string>
     <string name="share_budget_list_search_button">Search</string>
-    <string name="share_budget_list_share_button">Share</string>
+    <string name="share_budget_list_share_button">Share List</string>
+    <string name="share_budget_list_revoke_button">Revoke Permission</string>
     <string name="share_budget_list_search_hint">Search your friend list</string>
+    <string name="share_budget_list_already_shared">Friends who can see that list:</string>
+    <string name="share_budget_list_already_shared_no_positions">No friends can see that list</string>
+    <string name="share_budget_list_not_shared">Friends you might want to share that list with:</string>
+    <string name="share_budget_list_not_shared_no_positions">All of your current friends can see that list</string>
+    <string name="share_budget_list_error">Can not load your friend list</string>
 
     <!-- Navigation drawer -->
     <string name="drawer_navigation_drawer_open" translatable="false">Open navigation drawer</string>
@@ -83,6 +89,12 @@
     <string name="friend_decline">Decline</string>
     <string name="friend_accept">Accept</string>
     <string name="friend_request_sent">request sent</string>
+    <string name="friend_add_friend_hint">Enter your friend username</string>
+    <string name="friend_send_friend_request_button">Add friend</string>
+    <string name="friend_send_friend_request_text_view">Add your friend by entering their username and clicking "add friend"</string>
+    <string name="friend_send_friend_request_error_text_view">User not found!</string>
+    <string name="friend_send_friend_request_unknown_error">Unknown error occurred please try again later. If that problem persists please contant support</string>
+    <string name="add_friend_menu_item">Add friend</string>
 
 
     <!-- placeholders and testing -->

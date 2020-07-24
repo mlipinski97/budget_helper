@@ -11,6 +11,15 @@ public class UserAuth {
     private String passwordConfirmation;
 
     private boolean enabled;
+    private boolean isSelected;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public String getUsername() {
         return username;

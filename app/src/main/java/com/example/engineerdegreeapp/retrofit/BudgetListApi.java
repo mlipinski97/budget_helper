@@ -29,4 +29,10 @@ public interface BudgetListApi {
     @DELETE("delete")
     Call<Void> deleteBudgetList(@Header("Authorization") String auth, @Query("id") Long id);
 
+    @PATCH("share")
+    Call<Void> shareBudgetList(@Header("Authorization") String auth, @Query("username") String username, @Query("budgetListId") Long budgetListId);
+
+    @DELETE("revoke")
+    Call<Void> revokeBudgetList(@Header("Authorization") String auth, @Query("username") String username, @Query("budgetListId") Long budgetListId);
+
 }

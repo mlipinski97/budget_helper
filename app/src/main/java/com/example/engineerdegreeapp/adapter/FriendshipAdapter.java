@@ -16,15 +16,15 @@ import com.example.engineerdegreeapp.retrofit.entity.Friendship;
 
 import java.util.ArrayList;
 
-public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsViewHolder>{
+public class FriendshipAdapter extends RecyclerView.Adapter<FriendshipAdapter.FriendshipViewHolder>{
 
-    private ArrayList<Friendship> friendList;
+    private ArrayList<Friendship> friendShipList;
     private int numberOfItems;
     private String loggedUsername;
     private ListItemClickListener clickListener;
 
-    public FriendsAdapter(ArrayList<Friendship> friendList, int numberOfItems, String loggedUsername, ListItemClickListener clickListener) {
-        this.friendList = friendList;
+    public FriendshipAdapter(ArrayList<Friendship> friendShipList, int numberOfItems, String loggedUsername, ListItemClickListener clickListener) {
+        this.friendShipList = friendShipList;
         this.numberOfItems = numberOfItems;
         this.loggedUsername = loggedUsername;
         this.clickListener = clickListener;
@@ -32,7 +32,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
 
     @NonNull
     @Override
-    public FriendsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FriendshipViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context parentContext = parent.getContext();
         int listItemId = R.layout.friends_item;
         LayoutInflater inflater = LayoutInflater.from(parentContext);
@@ -40,12 +40,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
 
 
         View view = inflater.inflate(listItemId, parent, shouldAttachToParentImmediately);
-        return new FriendsViewHolder(view);
+        return new FriendshipViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FriendsViewHolder holder, int position) {
-        holder.bind(friendList.get(position));
+    public void onBindViewHolder(@NonNull FriendshipViewHolder holder, int position) {
+        holder.bind(friendShipList.get(position));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
         void onListItemClick(View v, Friendship friendship, CheckBox checkBox);
     }
 
-    class FriendsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class FriendshipViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView friendUsernameTextView;
         CardView cardView;
@@ -73,7 +73,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
             this.friendship = friendship;
         }
 
-        public FriendsViewHolder(@NonNull View itemView) {
+        public FriendshipViewHolder(@NonNull View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.friends_item_card_view);
             cardView.setOnClickListener(this);

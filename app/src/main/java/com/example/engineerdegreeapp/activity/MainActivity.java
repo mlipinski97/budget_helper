@@ -203,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             case R.id.new_budget_list_button_cancel:
             case R.id.new_expense_button_cancel:
             case R.id.edit_budget_list_button_cancel:
+            case R.id.share_budget_list_button_cancel:
                 getSupportFragmentManager().popBackStack();
                 break;
             default:
@@ -283,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
                         .addToBackStack("budget_list_details_fragment")
-                        .replace(R.id.main_fragment_layout_holder, new ShareBudgetListFragment())
+                        .replace(R.id.main_fragment_layout_holder, new ShareBudgetListFragment(recentlyClickedListElementId))
                         .commit();
                 return true;
         }
@@ -312,5 +313,3 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         edit_budget_list_menu_item.setVisible(false);
     }
 }
-
-//TODO editing expenses, budget lists
