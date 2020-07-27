@@ -47,7 +47,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FriendsFragment extends Fragment implements FriendshipAdapter.ListItemClickListener,
         FriendshipAwaitingConfirmationAdapter.ListItemClickListener,
-        View.OnClickListener{
+        View.OnClickListener,
+        FriendshipAdapter.OnCreateStateChangeListener {
 
     private final String FRIENDSHIP_BASE_URL = "https://engineer-degree-project.herokuapp.com/api/users/friendship/";
 
@@ -65,11 +66,13 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
     private TextView friendsLoadingErrorTextView;
     private TextView waitingFriendsErrorTextView;
     private Button unfriendButton;
-    private ArrayList<Friendship> selectedFriendships = new ArrayList<>();
     private EditText popupFindFriendEditText;
     private Button popupAddFriendButton;
     private TextView popupErrorTextView;
     private FloatingActionButton addFriendFloatingActionButton;
+
+
+
 
     public FriendsFragment() {
     }
@@ -86,21 +89,12 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
         } else {
             return null;
         }
+
         fragmentTitle = getContext().getResources().getString(R.string.friend_fragment_title);
         toolbarChangeListener.hideEditButtons();
         toolbarChangeListener.changeToolbarTitle(fragmentTitle);
         unfriendButton = rootView.findViewById(R.id.friends_fragment_unfriend_button);
-        unfriendButton.setOnClickListener(v -> {
-            for (Friendship f : selectedFriendships) {
-                if(mAccount.name.equals(f.getFriend().getUsername())){
-                    deleteFriendship(f.getRequester().getUsername());
-                } else{
-                    deleteFriendship(f.getFriend().getUsername());
-                }
-            }
-            unfriendButton.setVisibility(View.INVISIBLE);
-            loadAllFriends();
-        });
+        unfriendButton.setOnClickListener(this);
         searchButton = rootView.findViewById(R.id.friends_fragment_search_button);
         searchButton.setOnClickListener(this);
         searchEditText = rootView.findViewById(R.id.friends_fragment_search_edit_text);
@@ -183,6 +177,8 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
                     friendshipAdapter = new FriendshipAdapter(confirmedFriendships,
                             confirmedFriendships.size(),
                             loginCredential,
+                            FriendsFragment.this,
+                            getContext(),
                             FriendsFragment.this);
                     friendsRecyclerView.setAdapter(friendshipAdapter);
                     friendshipAwaitingConfirmationAdapter = new FriendshipAwaitingConfirmationAdapter(waitingForConfirmationFriendships,
@@ -349,15 +345,22 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
                     : getContext().getResources().getColor(R.color.lightCardBackgroundColor, null));
         }
         if (friendship.isSelected()) {
-            selectedFriendships.add(friendship);
+            friendships.get(friendships.indexOf(friendship)).setSelected(true);
             checkBox.setVisibility(View.VISIBLE);
         } else {
-            selectedFriendships.remove(friendship);
+            friendships.get(friendships.indexOf(friendship)).setSelected(false);
             checkBox.setVisibility(View.INVISIBLE);
         }
-        if (!selectedFriendships.isEmpty()) {
+        boolean isPositionSelected = false;
+        for(Friendship f : friendships){
+            if(f.isSelected()){
+                isPositionSelected = true;
+                break;
+            }
+        }
+        if(isPositionSelected){
             unfriendButton.setVisibility(View.VISIBLE);
-        } else {
+        } else{
             unfriendButton.setVisibility(View.INVISIBLE);
         }
     }
@@ -389,6 +392,19 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
             case R.id.friends_fragment_floating_action_button:
                 onButtonShowPopupWindowClick();
                 break;
+            case R.id.friends_fragment_unfriend_button:
+                for (Friendship f : friendships) {
+                    if(f.isSelected()){
+                        if(mAccount.name.equals(f.getFriend().getUsername())){
+                            deleteFriendship(f.getRequester().getUsername());
+                        } else{
+                            deleteFriendship(f.getFriend().getUsername());
+                        }
+                    }
+                }
+                unfriendButton.setVisibility(View.INVISIBLE);
+                loadAllFriends();
+                break;
         }
     }
 
@@ -408,9 +424,13 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
                 .filter(f -> !f.isAccepted())
                 .collect(Collectors.toCollection(ArrayList::new));
 
+
+
         friendshipAdapter = new FriendshipAdapter(confirmedFriendships,
                 confirmedFriendships.size(),
                 mAccount.name,
+                FriendsFragment.this,
+                getContext(),
                 FriendsFragment.this);
         friendsRecyclerView.setAdapter(friendshipAdapter);
         friendshipAwaitingConfirmationAdapter = new FriendshipAwaitingConfirmationAdapter(waitingForConfirmationFriendships,
@@ -420,4 +440,9 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
         waitingFriendsRecyclerView.setAdapter(friendshipAwaitingConfirmationAdapter);
     }
 
+
+    @Override
+    public void onCreateStateChanged(View v, CheckBox checkBox) {
+        checkBox.setVisibility(View.VISIBLE);
+    }
 }
