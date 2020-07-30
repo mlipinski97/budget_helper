@@ -2,12 +2,14 @@ package com.example.engineerdegreeapp.fragment;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -165,9 +167,11 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
         int clickedItemId = v.getId();
         switch (clickedItemId) {
             case R.id.new_expense_button_cancel:
+                hideKeyboard();
                 mClickListener.onFragmentClickInteraction(clickedItemId);
                 break;
             case R.id.new_expense_button_confirm:
+                hideKeyboard();
                 if(isMoneyRegexSafe() && isNameValid()){
                     postExpense();
                 } else{
@@ -207,6 +211,14 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
             mClickListener = (OnFragmentClickListener) context;
         } catch (ClassCastException e){
             throw new ClassCastException(context.toString() + "must implement NewExpenseFragment.OnFragmentClickListener");
+        }
+    }
+
+    public void hideKeyboard() {
+        View view =  getActivity().getCurrentFocus();
+        if(view != null){
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 }

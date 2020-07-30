@@ -88,18 +88,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         toolbarChangeListener.changeToolbarTitle(budgetListName);
         toolbarChangeListener.showEditButtons();
         deleteButton = rootView.findViewById(R.id.budget_list_details_delete_button);
-        deleteButton.setOnClickListener(v -> {
-            for(Expense e : selectedExpenses){
-                deleteSelectedExpenses(e.getId());
-            }
-            expenseListRecyclerView = rootView.findViewById(R.id.expense_recycler_view);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-            expenseListRecyclerView.setLayoutManager(layoutManager);
-            expenseListRecyclerView.setHasFixedSize(true);
-            loadExpenseList();
-            loadExpenseList();
-            deleteButton.setVisibility(View.INVISIBLE);
-        });
+        deleteButton.setOnClickListener(this);
         expenseListErrorTextView = rootView.findViewById(R.id.budget_list_details_loading_error);
         newExpenseFloatingActionButton = rootView.findViewById(R.id.budget_list_details_floating_action_button);
         newExpenseFloatingActionButton.setOnClickListener(this);
@@ -198,7 +187,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
 
     }
 
-    private void deleteSelectedExpenses(Long expenseId){
+    private void deleteSelectedExpenses(ArrayList<Long> expenseIdList){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(EXPENSES_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -209,7 +198,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         String passwordCredential = mAccountManager.getPassword(mAccount);
         String credentials = loginCredential + ":" + passwordCredential;
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-        Call<Void> call = expenseApi.deleteExpense(auth, expenseId);
+        Call<Void> call = expenseApi.deleteManyExpenses(auth, expenseIdList);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -220,13 +209,14 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
                        e.printStackTrace();
                    }
                } else{
-                   Log.d("deleteSelectedExpenses()", "deleted expense with id: " + expenseId);
+                   Log.d("deleteSelectedExpenses()", "deleted expenses with id: " + expenseIdList);
+                   loadExpenseList();
                }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("deleteSelectedExpenses()", "onFailure while deleting expense with id: " + expenseId);
+                Log.d("deleteSelectedExpenses()", "onFailure while deleting expenses with id: " + expenseIdList);
             }
         });
     }
@@ -273,6 +263,14 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
             case R.id.budget_list_details_floating_action_button:
                 toolbarChangeListener.hideEditButtons();
                 mClickListener.onFragmentClickInteraction(clickedItemId, budgetListDueDate, budgetListId);
+                break;
+            case R.id.budget_list_details_delete_button:
+                ArrayList<Long> idList = new ArrayList<>();
+                for(Expense e : selectedExpenses){
+                    idList.add(e.getId());
+                }
+                deleteSelectedExpenses(idList);
+                deleteButton.setVisibility(View.INVISIBLE);
                 break;
         }
     }

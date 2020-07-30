@@ -2,12 +2,14 @@ package com.example.engineerdegreeapp.fragment;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -92,6 +94,7 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
         listValueEditText = rootView.findViewById(R.id.edit_budget_list_amount_edit_text);
         listValueEditText.setText(listAmount);
         dueDateCalendarView = rootView.findViewById(R.id.edit_budget_list_calendar_view);
+        currentlySelectedDate = dueDateCalendarView.getDate();
         dueDateCalendarView.setMinDate((new Date().getTime()));
         try {
             dueDateCalendarView.setDate(new SimpleDateFormat("dd-MM-yyyy").parse(listSelectedDate).getTime(), true, true);
@@ -137,7 +140,7 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
                 .addFormDataPart("dueDate", selectedDate)
                 .build();
 
-        Call<BudgetList> call = budgetListApi.patchBudgetList(auth, listId ,requestBody);
+        Call<BudgetList> call = budgetListApi.patchBudgetList(auth, listId , requestBody);
 
         call.enqueue(new Callback<BudgetList>() {
             @Override
@@ -172,6 +175,7 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
         int clickedItemId = v.getId();
         switch (clickedItemId){
             case R.id.edit_budget_list_button_confirm:
+                hideKeyboard();
                 if(isMoneyRegexSafe() && isNameValid()){
                     updateBudgetList();
                 } else{
@@ -188,6 +192,7 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
                 }
                 break;
             case R.id.edit_budget_list_button_cancel:
+                hideKeyboard();
                 mClickListener.onFragmentClickInteraction(clickedItemId);
                 break;
         }
@@ -220,6 +225,14 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
         } catch (ClassCastException f){
             throw new ClassCastException(context.toString() + "must implement ToolbarChangeListener");
 
+        }
+    }
+
+    public void hideKeyboard() {
+        View view =  getActivity().getCurrentFocus();
+        if(view != null){
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

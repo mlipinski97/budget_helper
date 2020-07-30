@@ -1,10 +1,12 @@
 package com.example.engineerdegreeapp.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -76,6 +78,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         int clickedItemId = v.getId();
         switch (clickedItemId){
             case R.id.register_confirm_button:
+                hideKeyboard();
                 if(isMailUsernameValid() && isPasswordValid() && doPasswordsMatch()){
                     registerNewAccount();
                 } else{
@@ -89,6 +92,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                 }
                 break;
             case R.id.register_cancel_button:
+                hideKeyboard();
                 mClickListener.onFragmentClickInteraction(clickedItemId);
                 break;
         }
@@ -154,5 +158,13 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
             }
         });
 
+    }
+
+    public void hideKeyboard() {
+        View view =  getActivity().getCurrentFocus();
+        if(view != null){
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

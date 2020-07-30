@@ -2,6 +2,7 @@ package com.example.engineerdegreeapp.fragment;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Base64;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -96,22 +98,7 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         accountDetailsValueRemainingTextView = rootView.findViewById(R.id.fragment_budget_list_close_to_date_value_remaining_text_view);
         accountDetailsValueTotalTextView = rootView.findViewById(R.id.fragment_budget_list_close_to_date_value_total_text_view);
         deleteButton = rootView.findViewById(R.id.budget_list_delete_button);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for(BudgetList bl : selectedBudgetLists){
-                    deleteSelectedBudgetList((long) bl.getId());
-                }
-                budgetListRecyclerView = rootView.findViewById(R.id.budget_list_recycler_view);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-                budgetListRecyclerView.setLayoutManager(layoutManager);
-                budgetListRecyclerView.setHasFixedSize(true);
-
-                loadBudgetLists();
-                deleteButton.setVisibility(View.INVISIBLE);
-            }
-
-        });
+        deleteButton.setOnClickListener(this);
         loadBudgetLists();
         return rootView;
     }
@@ -129,7 +116,7 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         String credentials = loginCredential + ":" + passwordCredential;
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
-       Call<List<BudgetList>> call = budgetListApi.getBudgetLists(auth, loginCredential);
+        Call<List<BudgetList>> call = budgetListApi.getBudgetLists(auth, loginCredential);
         call.enqueue(new Callback<List<BudgetList>>() {
             @Override
             public void onResponse(Call<List<BudgetList>> call, Response<List<BudgetList>> response) {
@@ -167,13 +154,13 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(!response.isSuccessful()){
-                    try{
+                if (!response.isSuccessful()) {
+                    try {
                         Log.d("deleteSelectedBudgetList()", response.errorBody().string());
-                    } catch (IOException e){
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else{
+                } else {
                     Log.d("deleteSelectedBudgetList()", "deleted budget list with id: " + id);
                 }
             }
@@ -185,7 +172,41 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         });
     }
 
-    private void fillUserHelpFrame(){
+    private void deleteManySelectedBudgetLists(List<Long> id) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BUDGET_LIST_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        BudgetListApi budgetListApi = retrofit.create(BudgetListApi.class);
+
+        String loginCredential = mAccount.name;
+        String passwordCredential = mAccountManager.getPassword(mAccount);
+        String credentials = loginCredential + ":" + passwordCredential;
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        Call<Void> call = budgetListApi.deleteManyBudgetLists(auth, id);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    try {
+                        Log.d("deleteSelectedBudgetList()", response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.d("deleteSelectedBudgetList()", "deleted budget lists with id: " + id);
+                    loadBudgetLists();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("deleteSelectedBudgetList()", "onFailure while deleting budget list with id: " + id);
+            }
+        });
+    }
+
+    private void fillUserHelpFrame() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
@@ -195,20 +216,21 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
                 .filter(budgetList -> budgetList.getDueDate().after(currentTime))
                 .sorted(Comparator.comparing(BudgetList::getDueDate))
                 .collect(Collectors.toList());
-        if(filteredBudgetLists.size() > 0){
+        if (filteredBudgetLists.size() > 0) {
             BudgetList elementToDisplay = filteredBudgetLists.get(0);
             accountDetailsListNameTextView.setText(R.string.closest_list_to_date);
-            accountDetailsListNameTextView.append( " " + elementToDisplay.getName());
+            accountDetailsListNameTextView.append(" " + elementToDisplay.getName());
             accountDetailsValueRemainingTextView.setText(R.string.closest_list_to_date_value_remaining);
-            accountDetailsValueRemainingTextView.append( " " + String.valueOf(elementToDisplay.getRemainingValue()));
+            accountDetailsValueRemainingTextView.append(" " + String.valueOf(elementToDisplay.getRemainingValue()));
             accountDetailsValueTotalTextView.setText(R.string.closest_list_to_date_value_total);
-            accountDetailsValueTotalTextView.append( " " + String.valueOf(elementToDisplay.getValue()));
-        } else{
+            accountDetailsValueTotalTextView.append(" " + String.valueOf(elementToDisplay.getValue()));
+        } else {
             accountDetailsListNameTextView.setText(R.string.user_help_frame_no_list_found);
             accountDetailsValueRemainingTextView.setText("");
         }
 
     }
+
     @Override
     public void onListItemClick(int clickedBudgetListId, String clickedBudgetListName, String listDueDate, String clickedBudgetListAmount) {
         mClickListener.onFragmentBudgetListElementClickInteraction((long) clickedBudgetListId,
@@ -224,20 +246,20 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             v.setBackgroundColor(budgetList.isSelected() ?
                     getContext().getResources().getColor(R.color.darkCardSelectedBackgroundColor, null)
-                    : getContext().getResources().getColor(R.color.darkCardBackgroundColor, null) );
+                    : getContext().getResources().getColor(R.color.darkCardBackgroundColor, null));
         } else {
             v.setBackgroundColor(budgetList.isSelected() ?
                     getContext().getResources().getColor(R.color.lightCardSelectedBackgroundColor, null)
-                    : getContext().getResources().getColor(R.color.lightCardBackgroundColor, null) );
+                    : getContext().getResources().getColor(R.color.lightCardBackgroundColor, null));
         }
-        if(budgetList.isSelected()){
+        if (budgetList.isSelected()) {
             selectedBudgetLists.add(budgetList);
-        } else{
+        } else {
             selectedBudgetLists.remove(budgetList);
         }
-        if(!selectedBudgetLists.isEmpty()){
+        if (!selectedBudgetLists.isEmpty()) {
             deleteButton.setVisibility(View.VISIBLE);
-        } else{
+        } else {
             deleteButton.setVisibility(View.INVISIBLE);
         }
     }
@@ -249,13 +271,22 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
             case R.id.budget_list_floating_action_button:
                 mClickListener.onFragmentClickInteraction(clickedItemId);
                 break;
+            case R.id.budget_list_delete_button:
+                ArrayList<Long> idList = new ArrayList<>();
+                for (BudgetList bl : selectedBudgetLists) {
+                    idList.add((long) bl.getId());
+                }
+                deleteManySelectedBudgetLists(idList);
+                deleteButton.setVisibility(View.INVISIBLE);
+                break;
+
         }
     }
 
 
-
-    public interface OnFragmentClickListener{
+    public interface OnFragmentClickListener {
         void onFragmentClickInteraction(int clickedElementId);
+
         void onFragmentBudgetListElementClickInteraction(Long clickedListElementId,
                                                          String clickedListElementName,
                                                          String dueDate,
@@ -266,10 +297,11 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        try{
+        try {
             mClickListener = (OnFragmentClickListener) context;
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement BudgetListFragment.OnFragmentClickListener");
         }
     }
+
 }

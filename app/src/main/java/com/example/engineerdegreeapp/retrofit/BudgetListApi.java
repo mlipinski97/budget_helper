@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -28,6 +29,9 @@ public interface BudgetListApi {
 
     @DELETE("delete")
     Call<Void> deleteBudgetList(@Header("Authorization") String auth, @Query("id") Long id);
+
+    @HTTP(method = "DELETE", path = "deletemany", hasBody = true)
+    Call<Void> deleteManyBudgetLists(@Header("Authorization") String auth, @Body List<Long> idList);
 
     @PATCH("share")
     Call<Void> shareBudgetList(@Header("Authorization") String auth, @Query("username") String username, @Query("budgetListId") Long budgetListId);

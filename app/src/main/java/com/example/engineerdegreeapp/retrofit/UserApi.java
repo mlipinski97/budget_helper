@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -31,6 +32,10 @@ public interface UserApi {
 
     @DELETE("delete")
     Call<Void> deleteFriendship(@Header("Authorization") String auth, @Query("friendUsername") String friendUsername);
+
+    @HTTP(method = "DELETE", path = "deletemany", hasBody = true)
+    Call<Void> deleteManyFriendships(@Header("Authorization") String auth, @Body List<String> friendsUsernameList);
+
 
     @PATCH("accept")
     Call<Friendship> acceptFriendship(@Header("Authorization") String auth, @Query("requesterUsername") String requesterUsername);
