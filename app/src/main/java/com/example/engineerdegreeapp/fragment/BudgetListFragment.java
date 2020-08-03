@@ -24,6 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.adapter.BudgetListAdapter;
+import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
+import com.example.engineerdegreeapp.communication.ToolbarMenuSortListener;
+import com.example.engineerdegreeapp.fragment.dialog.SortByDialogFragment;
 import com.example.engineerdegreeapp.retrofit.BudgetListApi;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.util.AccountUtils;
@@ -47,7 +50,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BudgetListFragment extends Fragment implements BudgetListAdapter.ListItemClickListener,
-        View.OnClickListener {
+        View.OnClickListener,
+        ToolbarMenuSortListener,
+        SortByDialogFragment.onDialogItemClickedListener{
 
     private final String BUDGET_LIST_BASE_URL = "https://engineer-degree-project.herokuapp.com/api/budgetlist/";
 
@@ -65,6 +70,7 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
     private TextView accountDetailsValueTotalTextView;
     private LinkedList<BudgetList> selectedBudgetLists = new LinkedList<>();
     private Button deleteButton;
+    private ToolbarChangeListener toolbarChangeListener;
 
     public BudgetListFragment() {
 
@@ -84,6 +90,8 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
             return null;
         }
 
+
+        toolbarChangeListener.changeSortButtonListener(this);
         addListFloatingActionButton = rootView.findViewById(R.id.budget_list_floating_action_button);
         addListFloatingActionButton.setOnClickListener(this);
         budgetListErrorTextView = rootView.findViewById(R.id.budget_list_loading_error);
@@ -100,6 +108,7 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         deleteButton = rootView.findViewById(R.id.budget_list_delete_button);
         deleteButton.setOnClickListener(this);
         loadBudgetLists();
+
         return rootView;
     }
 
@@ -129,6 +138,7 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
                     budgetListAdapter = new BudgetListAdapter(budgetLists, budgetLists.size(), BudgetListFragment.this);
                     budgetListRecyclerView.setAdapter(budgetListAdapter);
                     fillUserHelpFrame();
+
                 }
             }
 
@@ -207,6 +217,7 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
     }
 
     private void fillUserHelpFrame() {
+        toolbarChangeListener.showOnlySortButton();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
@@ -283,6 +294,19 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         }
     }
 
+    @Override
+    public void showSortDialog() {
+        SortByDialogFragment newFragment = new SortByDialogFragment(BudgetListFragment.this,
+                getContext().getResources().getString(R.string.budget_list_dialog_sort_by_text),
+                getContext().getResources().getStringArray(R.array.sort_by_budget_list_values));
+        newFragment.show(getParentFragmentManager(), "sortByBudgetListDialog");
+    }
+
+    @Override
+    public void onDialogItemClick(int which) {
+
+    }
+
 
     public interface OnFragmentClickListener {
         void onFragmentClickInteraction(int clickedElementId);
@@ -301,6 +325,12 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
             mClickListener = (OnFragmentClickListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement BudgetListFragment.OnFragmentClickListener");
+        }
+        try {
+            toolbarChangeListener = (ToolbarChangeListener) context;
+        } catch (ClassCastException f) {
+            throw new ClassCastException(context.toString() + "must implement ToolbarChangeListener");
+
         }
     }
 

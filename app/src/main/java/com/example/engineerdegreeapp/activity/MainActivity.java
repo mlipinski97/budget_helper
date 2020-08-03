@@ -34,6 +34,7 @@ import com.example.engineerdegreeapp.fragment.FriendsFragment;
 import com.example.engineerdegreeapp.fragment.NewBudgetListFragment;
 import com.example.engineerdegreeapp.fragment.NewExpenseFragment;
 import com.example.engineerdegreeapp.fragment.ShareBudgetListFragment;
+import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private MenuItem edit_budget_users_menu_item;
     private MenuItem edit_sort_expenses_menu_item;
     private String recentlyClickedBudgetListAmount;
-    private ToolbarMenuSortListener toolbarMenuSortListener;
+    private ToolbarMenuSortListener toolbarMenuSortByListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,14 +230,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     @Override
-    public void onFragmentLongClickInteraction() {
-/*        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
-                .addToBackStack("budget_list_details_fragment")
-                .replace(R.id.main_fragment_layout_holder, new NewExpenseFragment(listDueDate, budgetListId)).commit();*/
-    }
-
-    @Override
     public void onFragmentBudgetListElementClickInteraction(Long clickedListElementId,
                                                             String clickedListElementName,
                                                             String dueDate,
@@ -272,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id ) {
+        switch (id) {
             case R.id.edit_budget_list_menu_item:
                 getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
@@ -291,23 +284,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                         .commit();
                 return true;
                 case R.id.edit_sort_expenses_menu_item:
-                    toolbarMenuSortListener.showSortDialog();
-            return true;
+                    toolbarMenuSortByListener.showSortDialog();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onAttachFragment(@NonNull Fragment fragment) {
-        super.onAttachFragment(fragment);
-        if(fragment instanceof BudgetListDetailsFragment){
-            try{
-                toolbarMenuSortListener = (ToolbarMenuSortListener) fragment;
-            } catch (ClassCastException e){
-                throw new ClassCastException(fragment.toString() + "must implement ToolbarMenuSortListener");
-            }
-        }
     }
 
     public boolean onPrepareOptionsMenu(Menu menu)
@@ -333,5 +314,17 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         edit_budget_users_menu_item.setVisible(false);
         edit_budget_list_menu_item.setVisible(false);
         edit_sort_expenses_menu_item.setVisible(false);
+    }
+
+    @Override
+    public void showOnlySortButton() {
+        edit_budget_users_menu_item.setVisible(false);
+        edit_budget_list_menu_item.setVisible(false);
+        edit_sort_expenses_menu_item.setVisible(true);
+    }
+
+    @Override
+    public void changeSortButtonListener(ToolbarMenuSortListener listener) {
+        toolbarMenuSortByListener = listener;
     }
 }

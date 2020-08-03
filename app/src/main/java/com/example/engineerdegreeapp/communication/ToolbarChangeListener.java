@@ -5,4 +5,6 @@ public interface ToolbarChangeListener {
     void restoreToolbarTitle();
     void showEditButtons();
     void hideEditButtons();
+    void showOnlySortButton();
+    void changeSortButtonListener(ToolbarMenuSortListener listener);
 }

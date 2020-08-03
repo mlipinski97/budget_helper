@@ -3,20 +3,22 @@ package com.example.engineerdegreeapp.fragment.dialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.engineerdegreeapp.R;
 
 public class SortByDialogFragment extends DialogFragment {
 
-    public SortByDialogFragment(onDialogItemClickedListener onDialogItemClickedListener){
+    public SortByDialogFragment(onDialogItemClickedListener onDialogItemClickedListener, String title, String[] itemList) {
         this.onDialogItemClickedListener = onDialogItemClickedListener;
+        this.title = title;
+        this.itemList = itemList;
     }
 
+    private String title;
     private onDialogItemClickedListener onDialogItemClickedListener;
+    private String[] itemList;
 
     public interface onDialogItemClickedListener {
         void onDialogItemClick(int which);
@@ -25,8 +27,8 @@ public class SortByDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.friend_fragment_title)
-                .setItems(R.array.sort_by_values, new DialogInterface.OnClickListener() {
+        builder.setTitle(title)
+                .setItems(itemList , new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         onDialogItemClickedListener.onDialogItemClick(which);

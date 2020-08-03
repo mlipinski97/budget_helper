@@ -70,7 +70,6 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     private ArrayList<Expense> selectedExpenses = new ArrayList<>();
     private Button deleteButton;
     private ToolbarChangeListener toolbarChangeListener;
-    private String[] sortByArrayItems;
 
     public BudgetListDetailsFragment() {
     }
@@ -94,6 +93,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         }
         toolbarChangeListener.changeToolbarTitle(budgetListName);
         toolbarChangeListener.showEditButtons();
+        toolbarChangeListener.changeSortButtonListener(this);
         deleteButton = rootView.findViewById(R.id.budget_list_details_delete_button);
         deleteButton.setOnClickListener(this);
         expenseListErrorTextView = rootView.findViewById(R.id.budget_list_details_loading_error);
@@ -114,7 +114,6 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         expenseListRecyclerView.setLayoutManager(layoutManager);
         expenseListRecyclerView.setHasFixedSize(true);
-        sortByArrayItems = getResources().getStringArray(R.array.sort_by_values);
         loadExpenseList();
         return rootView;
     }
@@ -285,19 +284,12 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
 
     @Override
     public void showSortDialog() {
-        SortByDialogFragment newFragment = new SortByDialogFragment(BudgetListDetailsFragment.this);
-        newFragment.show(getParentFragmentManager(), "sortByDialog");
+        SortByDialogFragment newFragment = new SortByDialogFragment(BudgetListDetailsFragment.this,
+                getContext().getResources().getString(R.string.budget_list_details_dialog_sort_by_text),
+                getContext().getResources().getStringArray(R.array.sort_by_expenses_values));
+        newFragment.show(getParentFragmentManager(), "sortByExpenseDialog");
     }
 
-    /*
-        <item>Categories</item>
-        <item>Name</item>
-        <item>Due date(from earliest)</item>
-        <item>Due date(from latest)</item>
-        <item>Amount(from lowest)</item>
-        <item>Amount(from highest)</item>
-        <item>Last edited by user</item>
-     */
     @Override
     public void onDialogItemClick(int which) {
         ArrayList<Expense> sortedExpenseList = new ArrayList<>();
@@ -344,7 +336,6 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
 
     public interface OnFragmentClickListener{
         void onFragmentClickInteraction(int clickedElementId, String listDueDate, Long budgetListId);
-        void onFragmentLongClickInteraction();
     }
 
     @Override

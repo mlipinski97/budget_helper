@@ -21,6 +21,7 @@
     <string name="budget_list_loading_error">There was a problem loading your list!</string>
     <string name="user_help_frame_no_list_found">No planned budgets :)</string>
     <string name="budget_list_delete_button">delete selected lists</string>
+    <string name="budget_list_dialog_sort_by_text">Sort by:</string>
 
     <!-- new/edit budget list fragment -->
     <string name="new_budget_list_toolbar_name">Add new list</string>
@@ -82,6 +83,7 @@
     <string name="edit_budget_users">users</string>
     <string name="edit_budget_sort">Sort by</string>
     <string name="budget_list_details_dialog_cancel_button">Cancel</string>
+    <string name="budget_list_details_dialog_sort_by_text">Sort by:</string>
 
 
     <!-- Friends fragment -->
