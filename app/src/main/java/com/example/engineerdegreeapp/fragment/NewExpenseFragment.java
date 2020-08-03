@@ -5,14 +5,19 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,17 +26,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.engineerdegreeapp.R;
+import com.example.engineerdegreeapp.retrofit.CategoryApi;
 import com.example.engineerdegreeapp.retrofit.ExpenseApi;
+import com.example.engineerdegreeapp.retrofit.entity.Category;
 import com.example.engineerdegreeapp.retrofit.entity.Expense;
 import com.example.engineerdegreeapp.util.AccountUtils;
+import com.example.engineerdegreeapp.util.DecimalInputFilter;
 import com.example.engineerdegreeapp.util.RegexUtils;
 
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -41,7 +52,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NewExpenseFragment extends Fragment implements View.OnClickListener{
+public class NewExpenseFragment extends Fragment implements View.OnClickListener,
+        AdapterView.OnItemSelectedListener {
 
     private TextView expenseNameTextView;
     private TextView expenseNameErrorTextView;
@@ -56,9 +68,12 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
     private Account mAccount;
     private AccountManager mAccountManager;
     private Long budgetListId;
-    OnFragmentClickListener mClickListener;
-    Long currentlySelectedDate;
-    String listDueDate;
+    private OnFragmentClickListener mClickListener;
+    private Long currentlySelectedDate;
+    private String listDueDate;
+    private Spinner categorySpinner;
+    private Category selectedCategory;
+
 
     public NewExpenseFragment(){
 
@@ -67,6 +82,8 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
     public NewExpenseFragment(String listDueDate, Long budgetListId) {
         this.budgetListId = budgetListId;
         this.listDueDate = listDueDate;
+        selectedCategory = new Category();
+        selectedCategory.setCategoryName("Others");
     }
 
     @Nullable
@@ -81,6 +98,9 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
         } else {
             return null;
         }
+
+        categorySpinner = rootView.findViewById(R.id.new_expense_spinner);
+        categorySpinner.setOnItemSelectedListener(this);
         expenseNameTextView = rootView.findViewById(R.id.new_expense_name_text_view);
         expenseNameErrorTextView = rootView.findViewById(R.id.new_expense_name_error_text_view);
         expenseValueTextView = rootView.findViewById(R.id.new_expense_amount_text_view);
@@ -88,6 +108,7 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
         dueDateTextView = rootView.findViewById(R.id.new_expense_due_date_text_view);
         expenseNameEditText = rootView.findViewById(R.id.new_expense_name_edit_text);
         expenseValueEditText = rootView.findViewById(R.id.new_expense_amount_edit_text);
+        expenseValueEditText.setFilters(new InputFilter[] {new DecimalInputFilter(10,2)});
         dueDateCalendarView = rootView.findViewById(R.id.new_expense_calendar_view);
         dueDateCalendarView.setMinDate((new Date().getTime()));
         try {
@@ -105,8 +126,46 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
         cancelButton.setOnClickListener(this);
         confirmButton = rootView.findViewById(R.id.new_expense_button_confirm);
         confirmButton.setOnClickListener(this);
-
+        loadCategorySpinnerData();
         return rootView;
+    }
+
+    private void loadCategorySpinnerData(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://engineer-degree-project.herokuapp.com/api/category/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        CategoryApi categoryApi = retrofit.create(CategoryApi.class);
+        String loginCredential = mAccount.name;
+        String passwordCredential = mAccountManager.getPassword(mAccount);
+        String credentials = loginCredential + ":" + passwordCredential;
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        Call<List<Category>> call = categoryApi.getAllCategories(auth);
+        call.enqueue(new Callback<List<Category>>() {
+            @Override
+            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                if (!response.isSuccessful()) {
+                    try {
+                        Log.d("loadCategorySpinnerData()", response.errorBody().string());
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } else{
+                    Log.d("loadCategorySpinnerData()", "loaded all categories");
+                    ArrayList<Category> categories = new ArrayList<>(response.body());
+                    ArrayList<String> items = categories.stream().map(Category::getCategoryName).collect(Collectors.toCollection(ArrayList::new));
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, items);
+                    categorySpinner.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Category>> call, Throwable t) {
+                Log.d("loadCategorySpinnerData()", "onFailure while loading spinner data");
+            }
+        });
+
     }
     private void postExpense() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -130,7 +189,7 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
                 .addFormDataPart("dateOfExpense", selectedDate)
                 .build();
 
-        Call<Expense> call = expenseApi.postExpense(auth, budgetListId, requestBody);
+        Call<Expense> call = expenseApi.postExpense(auth, budgetListId, selectedCategory.getCategoryName(), requestBody);
         System.out.println(expenseNameEditText.getText().toString());
         System.out.println(expenseValueEditText.getText().toString().replace(",", "."));
         System.out.println(selectedDate);
@@ -190,6 +249,16 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        selectedCategory.setCategoryName(parent.getItemAtPosition(position).toString());
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
     public interface OnFragmentClickListener{
         void onFragmentClickInteraction(int clickedElementId);
     }
@@ -222,3 +291,4 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
         }
     }
 }
+//TODO selectedcategory setting in spinner listener - its always null atm

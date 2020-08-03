@@ -9,4 +9,14 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <string-array name="sort_by_values">
+        <item>Categories</item>
+        <item>Name</item>
+        <item>Due date(from earliest)</item>
+        <item>Due date(from latest)</item>
+        <item>Amount(from lowest)</item>
+        <item>Amount(from highest)</item>
+        <item>Last edited by user</item>
+    </string-array>
 </resources>

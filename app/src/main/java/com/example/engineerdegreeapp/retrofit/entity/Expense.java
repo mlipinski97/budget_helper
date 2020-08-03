@@ -13,6 +13,7 @@ public class Expense {
     private Long budgetListId;
     private boolean done;
     private boolean isSelected;
+    private Category category;
 
     public Expense() {
     }
@@ -92,5 +93,13 @@ public class Expense {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

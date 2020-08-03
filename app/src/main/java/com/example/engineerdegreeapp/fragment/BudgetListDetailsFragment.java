@@ -24,6 +24,8 @@ import android.widget.Toast;
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.adapter.ExpenseAdapter;
 import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
+import com.example.engineerdegreeapp.communication.ToolbarMenuSortListener;
+import com.example.engineerdegreeapp.fragment.dialog.SortByDialogFragment;
 import com.example.engineerdegreeapp.retrofit.ExpenseApi;
 import com.example.engineerdegreeapp.retrofit.entity.Expense;
 import com.example.engineerdegreeapp.util.AccountUtils;
@@ -33,9 +35,11 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,7 +49,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapter.ListItemClickListener,
-        View.OnClickListener {
+        View.OnClickListener,
+        ToolbarMenuSortListener,
+        SortByDialogFragment.onDialogItemClickedListener{
 
     private final String EXPENSES_BASE_URL = "https://engineer-degree-project.herokuapp.com/api/expenses/";
 
@@ -64,6 +70,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     private ArrayList<Expense> selectedExpenses = new ArrayList<>();
     private Button deleteButton;
     private ToolbarChangeListener toolbarChangeListener;
+    private String[] sortByArrayItems;
 
     public BudgetListDetailsFragment() {
     }
@@ -107,6 +114,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         expenseListRecyclerView.setLayoutManager(layoutManager);
         expenseListRecyclerView.setHasFixedSize(true);
+        sortByArrayItems = getResources().getStringArray(R.array.sort_by_values);
         loadExpenseList();
         return rootView;
     }
@@ -273,6 +281,65 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
                 deleteButton.setVisibility(View.INVISIBLE);
                 break;
         }
+    }
+
+    @Override
+    public void showSortDialog() {
+        SortByDialogFragment newFragment = new SortByDialogFragment(BudgetListDetailsFragment.this);
+        newFragment.show(getParentFragmentManager(), "sortByDialog");
+    }
+
+    /*
+        <item>Categories</item>
+        <item>Name</item>
+        <item>Due date(from earliest)</item>
+        <item>Due date(from latest)</item>
+        <item>Amount(from lowest)</item>
+        <item>Amount(from highest)</item>
+        <item>Last edited by user</item>
+     */
+    @Override
+    public void onDialogItemClick(int which) {
+        ArrayList<Expense> sortedExpenseList = new ArrayList<>();
+        switch (which) {
+            case 0:
+                sortedExpenseList = expenseList.stream()
+                        .sorted(Comparator.comparing(e -> e.getCategory().getCategoryName()))
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+            case 1:
+                sortedExpenseList = expenseList.stream()
+                        .sorted(Comparator.comparing(Expense::getName))
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+            case 2:
+                sortedExpenseList = expenseList.stream()
+                        .sorted(Comparator.comparing(Expense::getDateOfExpense))
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+            case 3:
+                sortedExpenseList = expenseList.stream()
+                        .sorted(Comparator.comparing(Expense::getDateOfExpense).reversed())
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+            case 4:
+                sortedExpenseList = expenseList.stream()
+                        .sorted(Comparator.comparingDouble(Expense::getAmount))
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+            case 5:
+                sortedExpenseList = expenseList.stream()
+                        .sorted(Comparator.comparingDouble(Expense::getAmount).reversed())
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+            case 6:
+                sortedExpenseList = expenseList.stream()
+                        .sorted(Comparator.comparing(Expense::getExpenseOwnerName))
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+        }
+        expenseAdapter = new ExpenseAdapter(sortedExpenseList, sortedExpenseList.size(), BudgetListDetailsFragment.this);
+        expenseListRecyclerView.setAdapter(expenseAdapter);
     }
 
     public interface OnFragmentClickListener{

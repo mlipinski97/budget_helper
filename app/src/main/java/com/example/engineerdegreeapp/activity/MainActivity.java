@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 
@@ -22,11 +23,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
+import com.example.engineerdegreeapp.communication.ToolbarMenuSortListener;
 import com.example.engineerdegreeapp.fragment.BudgetListDetailsFragment;
 import com.example.engineerdegreeapp.fragment.BudgetListFragment;
 import com.example.engineerdegreeapp.fragment.EditBudgetListFragment;
@@ -58,7 +58,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private String recentlyClickedDueDate;
     private MenuItem edit_budget_list_menu_item;
     private MenuItem edit_budget_users_menu_item;
+    private MenuItem edit_sort_expenses_menu_item;
     private String recentlyClickedBudgetListAmount;
+    private ToolbarMenuSortListener toolbarMenuSortListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -288,9 +290,24 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                         .replace(R.id.main_fragment_layout_holder, new ShareBudgetListFragment(recentlyClickedListElementId))
                         .commit();
                 return true;
+                case R.id.edit_sort_expenses_menu_item:
+                    toolbarMenuSortListener.showSortDialog();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onAttachFragment(@NonNull Fragment fragment) {
+        super.onAttachFragment(fragment);
+        if(fragment instanceof BudgetListDetailsFragment){
+            try{
+                toolbarMenuSortListener = (ToolbarMenuSortListener) fragment;
+            } catch (ClassCastException e){
+                throw new ClassCastException(fragment.toString() + "must implement ToolbarMenuSortListener");
+            }
+        }
     }
 
     public boolean onPrepareOptionsMenu(Menu menu)
@@ -299,6 +316,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         edit_budget_list_menu_item.setVisible(false);
         edit_budget_users_menu_item = menu.findItem(R.id.edit_budget_users_menu_item);
         edit_budget_users_menu_item.setVisible(false);
+        edit_sort_expenses_menu_item = menu.findItem(R.id.edit_sort_expenses_menu_item);
+        edit_sort_expenses_menu_item.setVisible(false);
         return true;
     }
 
@@ -306,11 +325,13 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     public void showEditButtons() {
         edit_budget_users_menu_item.setVisible(true);
         edit_budget_list_menu_item.setVisible(true);
+        edit_sort_expenses_menu_item.setVisible(true);
     }
 
     @Override
     public void hideEditButtons() {
         edit_budget_users_menu_item.setVisible(false);
         edit_budget_list_menu_item.setVisible(false);
+        edit_sort_expenses_menu_item.setVisible(false);
     }
 }

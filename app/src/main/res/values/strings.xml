@@ -36,6 +36,9 @@
     <string name="edit_budget_list_confirm_button">Edit list</string>
     <string name="edit_budget_list_toolbar_name">Edit your budget list</string>
 
+    <!-- new/edit expense fragment -->
+    <string name="new_expense_spinner_title_text">Choose category of your new expense:</string>
+
     <!-- share budget list fragment -->
     <string name="share_budget_list_toolbar_name">Share your budget list with friends</string>
     <string name="share_budget_list_search_button">Search</string>
@@ -77,6 +80,9 @@
     <string name="budget_list_details_delete_button">delete selected expenses</string>
     <string name="edit_budget_list">Edit</string>
     <string name="edit_budget_users">users</string>
+    <string name="edit_budget_sort">Sort by</string>
+    <string name="budget_list_details_dialog_cancel_button">Cancel</string>
+
 
     <!-- Friends fragment -->
     <string name="friend_list_loading_error">There was a problem loading your friend list!</string>

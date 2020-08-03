@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor">
@@ -17,7 +16,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:text="@string/new_budget_list_name_prompt"
-            android:textColor="?attr/textColor" />
+            android:textColor="?attr/textColor"
+            />
 
         <EditText
             android:id="@+id/new_expense_name_edit_text"
@@ -31,6 +31,7 @@
             android:textColor="?attr/textColor"
             android:textColorHint="?attr/toolbarColor"
             android:inputType="text"
+            android:maxLength="30"
             />
 
         <TextView
@@ -80,10 +81,30 @@
             android:visibility="invisible" />
 
         <TextView
-            android:id="@+id/new_expense_due_date_text_view"
+            android:id="@+id/new_expense_spinner_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/new_expense_amount_error_text_view"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/new_expense_spinner_title_text"
+            android:textColor="?attr/textColor" />
+
+        <Spinner
+            android:id="@+id/new_expense_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_expense_spinner_text_view"
+            android:spinnerMode="dropdown"
+            android:background="?attr/cardBackgroundColor"
+            android:paddingEnd="5sp"
+            android:paddingStart="5sp"
+            />
+        <TextView
+            android:id="@+id/new_expense_due_date_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_expense_spinner"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:text="@string/new_budget_list_due_date_prompt"

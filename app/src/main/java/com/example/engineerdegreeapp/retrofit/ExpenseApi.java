@@ -22,7 +22,10 @@ public interface ExpenseApi {
     Call<List<Expense>> getExpensesFromBudgetList(@Header("Authorization") String auth, @Query("id") Long id);
 
     @POST("add")
-    Call<Expense> postExpense(@Header("Authorization") String auth, @Query("budgetListId") Long budgetListId, @Body RequestBody expenseBody);
+    Call<Expense> postExpense(@Header("Authorization") String auth,
+                              @Query("budgetListId") Long budgetListId,
+                              @Query("categoryName") String categoryName,
+                              @Body RequestBody expenseBody);
 
     @PATCH("changedonestate")
     Call<Expense> patchDoneState(@Header("Authorization") String auth, @Query("id") Long id);
