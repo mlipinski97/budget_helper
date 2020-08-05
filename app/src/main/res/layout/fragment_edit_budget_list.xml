@@ -68,6 +68,19 @@
             android:inputType="numberDecimal"
             android:textColorHint="?attr/toolbarColor" />
 
+        <Spinner
+            android:id="@+id/edit_budget_list_currency_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edit_budget_list_amount_text_view"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/edit_budget_list_amount_edit_text"
+            android:spinnerMode="dropdown"
+            android:background="?attr/cardBackgroundColor"
+            />
+
         <TextView
             android:id="@+id/edit_budget_list_amount_error_text_view"
             android:layout_width="wrap_content"

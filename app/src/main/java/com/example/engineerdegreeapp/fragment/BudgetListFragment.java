@@ -24,11 +24,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.adapter.BudgetListAdapter;
+import com.example.engineerdegreeapp.adapter.ExpenseAdapter;
 import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
 import com.example.engineerdegreeapp.communication.ToolbarMenuSortListener;
 import com.example.engineerdegreeapp.fragment.dialog.SortByDialogFragment;
 import com.example.engineerdegreeapp.retrofit.BudgetListApi;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
+import com.example.engineerdegreeapp.retrofit.entity.Expense;
 import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -52,7 +54,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class BudgetListFragment extends Fragment implements BudgetListAdapter.ListItemClickListener,
         View.OnClickListener,
         ToolbarMenuSortListener,
-        SortByDialogFragment.onDialogItemClickedListener{
+        SortByDialogFragment.onDialogItemClickedListener {
 
     private final String BUDGET_LIST_BASE_URL = "https://engineer-degree-project.herokuapp.com/api/budgetlist/";
 
@@ -135,7 +137,7 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
                 } else {
                     budgetListErrorTextView.setVisibility(View.INVISIBLE);
                     budgetLists = new ArrayList<>(response.body());
-                    budgetListAdapter = new BudgetListAdapter(budgetLists, budgetLists.size(), BudgetListFragment.this);
+                    budgetListAdapter = new BudgetListAdapter(budgetLists, budgetLists.size(), BudgetListFragment.this, getContext());
                     budgetListRecyclerView.setAdapter(budgetListAdapter);
                     fillUserHelpFrame();
 
@@ -243,11 +245,16 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
     }
 
     @Override
-    public void onListItemClick(int clickedBudgetListId, String clickedBudgetListName, String listDueDate, String clickedBudgetListAmount) {
+    public void onListItemClick(int clickedBudgetListId,
+                                String clickedBudgetListName,
+                                String listDueDate,
+                                String clickedBudgetListAmount,
+                                String clickedCurrencyCode) {
         mClickListener.onFragmentBudgetListElementClickInteraction((long) clickedBudgetListId,
                 clickedBudgetListName,
                 listDueDate,
-                clickedBudgetListAmount);
+                clickedBudgetListAmount,
+                clickedCurrencyCode);
 
     }
 
@@ -304,7 +311,46 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
 
     @Override
     public void onDialogItemClick(int which) {
-
+        ArrayList<BudgetList> sortedBudgetListArray = new ArrayList<>();
+        switch (which) {
+            case 0:
+                sortedBudgetListArray = budgetLists.stream()
+                        .sorted(Comparator.comparing(BudgetList::getName))
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+            case 1:
+                sortedBudgetListArray = budgetLists.stream()
+                        .sorted(Comparator.comparing(BudgetList::getDueDate))
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+            case 2:
+                sortedBudgetListArray = budgetLists.stream()
+                        .sorted(Comparator.comparing(BudgetList::getDueDate).reversed())
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+            case 3:
+                sortedBudgetListArray = budgetLists.stream()
+                        .sorted(Comparator.comparingDouble(BudgetList::getValue))
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+            case 4:
+                sortedBudgetListArray = budgetLists.stream()
+                        .sorted(Comparator.comparingDouble(BudgetList::getValue).reversed())
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+            case 5:
+                sortedBudgetListArray = budgetLists.stream()
+                        .sorted(Comparator.comparingDouble(BudgetList::getRemainingValue))
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+            case 6:
+                sortedBudgetListArray = budgetLists.stream()
+                        .sorted(Comparator.comparingDouble(BudgetList::getRemainingValue).reversed())
+                        .collect(Collectors.toCollection(ArrayList::new));
+                break;
+        }
+        budgetListAdapter = new BudgetListAdapter(sortedBudgetListArray, sortedBudgetListArray.size(), BudgetListFragment.this, getContext());
+        budgetListRecyclerView.setAdapter(budgetListAdapter);
     }
 
 
@@ -314,7 +360,8 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
         void onFragmentBudgetListElementClickInteraction(Long clickedListElementId,
                                                          String clickedListElementName,
                                                          String dueDate,
-                                                         String clickedBudgetListAmount);
+                                                         String clickedBudgetListAmount,
+                                                         String clickedCurrencyCode);
     }
 
 

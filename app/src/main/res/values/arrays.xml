@@ -12,7 +12,7 @@
 
     <string-array name="sort_by_expenses_values">
         <item>Categories</item>
-        <item>Name</item>
+        <item>Name(A-Z)</item>
         <item>Due date(from earliest)</item>
         <item>Due date(from latest)</item>
         <item>Amount(from lowest)</item>
@@ -21,7 +21,7 @@
     </string-array>
 
     <string-array name="sort_by_budget_list_values">
-        <item>Name</item>
+        <item>Name(A-Z)</item>
         <item>Due date(from earliest)</item>
         <item>Due date(from latest)</item>
         <item>Amount(from lowest)</item>

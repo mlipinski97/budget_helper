@@ -70,14 +70,16 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     private ArrayList<Expense> selectedExpenses = new ArrayList<>();
     private Button deleteButton;
     private ToolbarChangeListener toolbarChangeListener;
+    private String currencyCode;
 
     public BudgetListDetailsFragment() {
     }
 
-    public BudgetListDetailsFragment(Long budgetListId, String budgetListName, String dueDate) {
+    public BudgetListDetailsFragment(Long budgetListId, String budgetListName, String dueDate, String currencyCode) {
         this.budgetListId = budgetListId;
         this.budgetListName = budgetListName;
         this.budgetListDueDate = dueDate;
+        this.currencyCode = currencyCode;
     }
 
     @Nullable
@@ -144,7 +146,10 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
                 } else {
                     expenseListErrorTextView.setVisibility(View.INVISIBLE);
                     expenseList = new ArrayList<>(response.body());
-                    expenseAdapter = new ExpenseAdapter(expenseList, expenseList.size(), BudgetListDetailsFragment.this);
+                    expenseAdapter = new ExpenseAdapter(expenseList, expenseList.size(),
+                            BudgetListDetailsFragment.this,
+                            getContext(),
+                            currencyCode);
                     expenseListRecyclerView.setAdapter(expenseAdapter);
                 }
             }
@@ -330,7 +335,11 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
                         .collect(Collectors.toCollection(ArrayList::new));
                 break;
         }
-        expenseAdapter = new ExpenseAdapter(sortedExpenseList, sortedExpenseList.size(), BudgetListDetailsFragment.this);
+        expenseAdapter = new ExpenseAdapter(sortedExpenseList,
+                sortedExpenseList.size(),
+                BudgetListDetailsFragment.this,
+                getContext(),
+                currencyCode);
         expenseListRecyclerView.setAdapter(expenseAdapter);
     }
 

@@ -10,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,17 +23,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.retrofit.BudgetListApi;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.util.AccountUtils;
+import com.example.engineerdegreeapp.util.CurrencyUtils;
 import com.example.engineerdegreeapp.util.RegexUtils;
-
 
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -42,7 +45,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NewBudgetListFragment extends Fragment implements View.OnClickListener {
+import static com.example.engineerdegreeapp.util.CurrencyUtils.getAllCurrencyCodesSortedByPopular;
+
+public class NewBudgetListFragment extends Fragment implements View.OnClickListener,
+        AdapterView.OnItemSelectedListener {
 
     private TextView listNameErrorTextView;
     private TextView listValueErrorTextView;
@@ -53,9 +59,10 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
     private Button confirmButton;
     private Account mAccount;
     private AccountManager mAccountManager;
-    OnFragmentClickListener mClickListener;
-    Long currentlySelectedDate;
-
+    private OnFragmentClickListener mClickListener;
+    private Long currentlySelectedDate;
+    private Spinner currencyCodeSpinner;
+    private String currencyCode;
 
     public NewBudgetListFragment() {
 
@@ -73,7 +80,9 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
         } else {
             return null;
         }
-
+        currencyCodeSpinner = rootView.findViewById(R.id.new_budget_list_currency_spinner);
+        currencyCodeSpinner.setOnItemSelectedListener(this);
+        populateCurrencyCodeSpinner();
         listNameErrorTextView = rootView.findViewById(R.id.new_budget_list_name_error_text_view);
         listValueErrorTextView = rootView.findViewById(R.id.new_budget_list_amount_error_text_view);
         listNameEditText = rootView.findViewById(R.id.new_budget_list_name_edit_text);
@@ -97,6 +106,14 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
         return rootView;
     }
 
+
+
+    private void populateCurrencyCodeSpinner() {
+        ArrayList<String> currencyList = getAllCurrencyCodesSortedByPopular();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, currencyList);
+        currencyCodeSpinner.setAdapter(adapter);
+    }
+
     private void postBudgetList() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://engineer-degree-project.herokuapp.com/api/budgetlist/")
@@ -117,6 +134,7 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
                 .addFormDataPart("name", listNameEditText.getText().toString())
                 .addFormDataPart("budgetValue", listValueEditText.getText().toString().replace(",", "."))
                 .addFormDataPart("dueDate", selectedDate)
+                .addFormDataPart("currencyCode", currencyCode)
                 .build();
 
         Call<BudgetList> call = budgetListApi.postBudgetList(auth, requestBody);
@@ -185,6 +203,16 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
     private boolean isNameValid(){
         String name = listNameEditText.getText().toString();
         return !name.isEmpty();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        currencyCode = parent.getItemAtPosition(position).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     public interface OnFragmentClickListener{

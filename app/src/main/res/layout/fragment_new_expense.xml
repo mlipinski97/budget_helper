@@ -70,6 +70,17 @@
             android:inputType="numberDecimal"/>
 
         <TextView
+            android:id="@+id/new_expense_currency_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_expense_amount_text_view"
+            android:layout_toEndOf="@+id/new_expense_amount_edit_text"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:textColor="?attr/textColor"
+             />
+
+        <TextView
             android:id="@+id/new_expense_amount_error_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

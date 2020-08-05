@@ -1,12 +1,14 @@
 package com.example.engineerdegreeapp.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,17 +17,21 @@ import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Currency;
+import java.util.Locale;
 
 public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.BudgetListViewHolder> {
 
     private ArrayList<BudgetList> budgetLists;
     private int numberOfItems;
     final private ListItemClickListener clickListener;
+    private Context context;
 
-    public BudgetListAdapter(ArrayList<BudgetList> budgetLists, int numberOfItems, ListItemClickListener clickListener) {
+    public BudgetListAdapter(ArrayList<BudgetList> budgetLists, int numberOfItems, ListItemClickListener clickListener, Context context) {
         this.budgetLists = budgetLists;
         this.numberOfItems = numberOfItems;
         this.clickListener = clickListener;
+        this.context = context;
     }
 
     @NonNull
@@ -52,13 +58,18 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
         return numberOfItems;
     }
 
-    public interface ListItemClickListener{
-        void onListItemClick(int clickedBudgetListId, String clickedBudgetListName, String listDueDate, String clickedBudgetListAmount);
+    public interface ListItemClickListener {
+        void onListItemClick(int clickedBudgetListId,
+                             String clickedBudgetListName,
+                             String listDueDate,
+                             String clickedBudgetListAmount,
+                             String clickedCurrencyCode);
+
         void onListItemLongClick(View v, BudgetList budgetList);
     }
 
     class BudgetListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-            View.OnLongClickListener{
+            View.OnLongClickListener {
 
         TextView budgetListName;
         TextView budgetListValue;
@@ -88,14 +99,24 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
             cardView.setOnClickListener(this);
         }
 
-        public void bind(BudgetList budgetList){
+        public void bind(BudgetList budgetList) {
+            if(budgetList.isSelected()){
+                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                    cardView.setBackgroundColor(context.getResources().getColor(R.color.darkCardSelectedBackgroundColor, null));
+                } else {
+                    cardView.setBackgroundColor(context.getResources().getColor(R.color.lightCardBackgroundColor, null));
+                }
+            }
+
             budgetListName.setText(budgetList.getName());
-            budgetListValue.setText(String.valueOf(budgetList.getValue()));
-            budgetListRemainingValue.setText(String.valueOf(budgetList.getRemainingValue()));
-            if(budgetList.getDueDate() != null){
+            String budgetListValueString = context.getResources().getString(R.string.budget_list_value_text) + " " + budgetList.getValue() + budgetList.getCurrencyCode();
+            budgetListValue.setText(budgetListValueString);
+            String budgetListRemainingValueString = context.getResources().getString(R.string.budget_list_remaining_value_text) + " " + budgetList.getRemainingValue() + budgetList.getCurrencyCode();
+            budgetListRemainingValue.setText(budgetListRemainingValueString);
+            if (budgetList.getDueDate() != null) {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                 budgetListDueDate.setText(sdf.format(budgetList.getDueDate()).toString());
-            }else{
+            } else {
                 budgetListDueDate.setText("No due date found(old data)");
             }
 
@@ -105,9 +126,10 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
         @Override
         public void onClick(View v) {
             clickListener.onListItemClick(getBudgetList().getId(),
-                    budgetListName.getText().toString(),
+                    getBudgetList().getName(),
                     budgetListDueDate.getText().toString(),
-                    budgetListValue.getText().toString());
+                    String.valueOf(getBudgetList().getValue()),
+                    getBudgetList().getCurrencyCode());
         }
 
         @Override

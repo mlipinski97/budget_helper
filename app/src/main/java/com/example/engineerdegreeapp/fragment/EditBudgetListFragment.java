@@ -10,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -42,7 +46,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class EditBudgetListFragment extends Fragment implements View.OnClickListener {
+import static com.example.engineerdegreeapp.util.CurrencyUtils.getAllCurrencyCodesSortedByPopular;
+
+public class EditBudgetListFragment extends Fragment implements View.OnClickListener,
+        AdapterView.OnItemSelectedListener {
 
     private TextView listNameErrorTextView;
     private TextView listValueErrorTextView;
@@ -51,25 +58,28 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
     private CalendarView dueDateCalendarView;
     private Account mAccount;
     private AccountManager mAccountManager;
-    Long currentlySelectedDate;
+    private Long currentlySelectedDate;
     private Button cancelButton;
     private Button confirmButton;
-    OnFragmentClickListener mClickListener;
+    private OnFragmentClickListener mClickListener;
     private String listName;
     private String listAmount;
     private String listSelectedDate;
     private Long listId;
-    ToolbarChangeListener toolbarChangeListener;
+    private ToolbarChangeListener toolbarChangeListener;
+    private Spinner currencyCodeSpinner;
+    private String currencyCode;
 
 
-    public EditBudgetListFragment(){
+    public EditBudgetListFragment() {
     }
 
-    public EditBudgetListFragment(String listName, String listAmount, String listSelectedDate, Long listId) {
+    public EditBudgetListFragment(String listName, String listAmount, String listSelectedDate, Long listId, String listCurrency) {
         this.listName = listName;
         this.listAmount = listAmount;
         this.listSelectedDate = listSelectedDate;
         this.listId = listId;
+        currencyCode = listCurrency;
     }
 
     @Nullable
@@ -85,6 +95,9 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
             return null;
         }
 
+        currencyCodeSpinner = rootView.findViewById(R.id.edit_budget_list_currency_spinner);
+        currencyCodeSpinner.setOnItemSelectedListener(this);
+        populateCurrencyCodeSpinner();
         toolbarChangeListener.changeToolbarTitle(getResources().getString(R.string.edit_budget_list_toolbar_name));
         toolbarChangeListener.hideEditButtons();
         listNameErrorTextView = rootView.findViewById(R.id.edit_budget_list_name_error_text_view);
@@ -118,7 +131,7 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
         return rootView;
     }
 
-    private void updateBudgetList(){
+    private void updateBudgetList() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://engineer-degree-project.herokuapp.com/api/budgetlist/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -138,9 +151,10 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
                 .addFormDataPart("name", listNameEditText.getText().toString())
                 .addFormDataPart("budgetValue", listValueEditText.getText().toString().replace(",", "."))
                 .addFormDataPart("dueDate", selectedDate)
+                .addFormDataPart("currencyCode", currencyCode)
                 .build();
 
-        Call<BudgetList> call = budgetListApi.patchBudgetList(auth, listId , requestBody);
+        Call<BudgetList> call = budgetListApi.patchBudgetList(auth, listId, requestBody);
 
         call.enqueue(new Callback<BudgetList>() {
             @Override
@@ -157,7 +171,7 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else{
+                } else {
                     Toast.makeText(getActivity(), "List successfully updated", Toast.LENGTH_SHORT).show();
                     mClickListener.onFragmentClickInteraction(R.id.new_budget_list_button_confirm);
                 }
@@ -173,20 +187,20 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         int clickedItemId = v.getId();
-        switch (clickedItemId){
+        switch (clickedItemId) {
             case R.id.edit_budget_list_button_confirm:
                 hideKeyboard();
-                if(isMoneyRegexSafe() && isNameValid()){
+                if (isMoneyRegexSafe() && isNameValid()) {
                     updateBudgetList();
-                } else{
-                    if(!isMoneyRegexSafe()){
+                } else {
+                    if (!isMoneyRegexSafe()) {
                         listValueErrorTextView.setVisibility(View.VISIBLE);
-                    } else{
+                    } else {
                         listValueErrorTextView.setVisibility(View.INVISIBLE);
                     }
-                    if(!isNameValid()){
+                    if (!isNameValid()) {
                         listNameErrorTextView.setVisibility(View.VISIBLE);
-                    } else{
+                    } else {
                         listNameErrorTextView.setVisibility(View.INVISIBLE);
                     }
                 }
@@ -198,16 +212,26 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
         }
     }
 
-    public interface OnFragmentClickListener{
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        currencyCode = parent.getItemAtPosition(position).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    public interface OnFragmentClickListener {
         void onFragmentClickInteraction(int clickedElementId);
     }
 
-    private boolean isMoneyRegexSafe(){
+    private boolean isMoneyRegexSafe() {
         String moneyValue = listValueEditText.getText().toString();
         return RegexUtils.isMoneyAmountRegexSafe(moneyValue);
     }
 
-    private boolean isNameValid(){
+    private boolean isNameValid() {
         String name = listNameEditText.getText().toString();
         return !name.isEmpty();
     }
@@ -215,25 +239,39 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        try{
+        try {
             mClickListener = (EditBudgetListFragment.OnFragmentClickListener) context;
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement EditBudgetListFragment.OnFragmentClickListener");
         }
-        try{
+        try {
             toolbarChangeListener = (ToolbarChangeListener) context;
-        } catch (ClassCastException f){
+        } catch (ClassCastException f) {
             throw new ClassCastException(context.toString() + "must implement ToolbarChangeListener");
 
         }
     }
 
     public void hideKeyboard() {
-        View view =  getActivity().getCurrentFocus();
-        if(view != null){
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
+    private void populateCurrencyCodeSpinner() {
+        ArrayList<String> currencyList = getAllCurrencyCodesSortedByPopular();
+        if(currencyCode != null){
+            int currentCurrencyIndex = currencyList.indexOf(currencyCode);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, currencyList);
+            currencyCodeSpinner.setAdapter(adapter);
+            currencyCodeSpinner.setSelection(currentCurrencyIndex);
+        } else{
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, currencyList);
+            currencyCodeSpinner.setAdapter(adapter);
+        }
+
+
+    }
 }

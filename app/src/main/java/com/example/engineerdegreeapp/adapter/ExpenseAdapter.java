@@ -8,11 +8,14 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.retrofit.entity.Expense;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,11 +27,14 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     private ArrayList<Expense> expenseList;
     private int numberOfItems;
     final private ListItemClickListener clickListener;
+    private String currencyCode;
 
-    public ExpenseAdapter(ArrayList<Expense> expenseList, int numberOfItems, ListItemClickListener clickListener) {
+    public ExpenseAdapter(ArrayList<Expense> expenseList, int numberOfItems, ListItemClickListener clickListener, Context context, String currencyCode) {
         this.expenseList = expenseList;
         this.numberOfItems = numberOfItems;
         this.clickListener = clickListener;
+        this.context = context;
+        this.currencyCode = currencyCode;
     }
 
 
@@ -69,6 +75,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         TextView expenseValueTextView;
         TextView expenseOwnerNameTextView;
         TextView expenseDateOfExpenseTextView;
+        TextView expenseCategoryTextView;
         CheckBox doneCheckbox;
         CardView cardView;
 
@@ -88,6 +95,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
             super(itemView);
             cardView = itemView.findViewById(R.id.expense_item_card_view);
             cardView.setOnLongClickListener(this);
+            expenseCategoryTextView = itemView.findViewById(R.id.expense_item_category_text_view);
             expenseNameTextView = itemView.findViewById(R.id.expense_item_name_text_view);
             expenseValueTextView = itemView.findViewById(R.id.expense_item_value_text_view);
             expenseOwnerNameTextView = itemView.findViewById(R.id.expense_item_owner_text_view);
@@ -98,9 +106,17 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
 
         public void bind(Expense expense) {
             expenseNameTextView.setText(expense.getName());
-            expenseValueTextView.setText(String.valueOf(expense.getAmount()));
+            String expenseValueString = String.valueOf(expense.getAmount()) + currencyCode;
+            expenseValueTextView.setText(expenseValueString);
             expenseOwnerNameTextView.setText(expense.getExpenseOwnerName());
-
+            expenseCategoryTextView.setText(expense.getCategory().getCategoryName());
+            if(expense.isSelected()){
+                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                    cardView.setBackgroundColor(context.getResources().getColor(R.color.darkCardSelectedBackgroundColor, null));
+                } else {
+                    cardView.setBackgroundColor(context.getResources().getColor(R.color.lightCardBackgroundColor, null));
+                }
+            }
             if(expense.getDateOfExpense() != null){
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                 expenseDateOfExpenseTextView.setText(sdf.format(expense.getDateOfExpense()).toString());

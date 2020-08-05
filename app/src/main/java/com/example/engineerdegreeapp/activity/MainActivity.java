@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private MenuItem edit_budget_users_menu_item;
     private MenuItem edit_sort_expenses_menu_item;
     private String recentlyClickedBudgetListAmount;
+    private String recentlyClickedBudgetListCurrencyCode;
     private ToolbarMenuSortListener toolbarMenuSortByListener;
 
     @Override
@@ -198,9 +199,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 getSupportFragmentManager().popBackStack("budget_list_details_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
-                        .add(R.id.main_fragment_layout_holder, new BudgetListDetailsFragment(recentlyClickedListElementId
-                                , recentlyClickedListElementName
-                                , recentlyClickedDueDate))
+                        .add(R.id.main_fragment_layout_holder, new BudgetListDetailsFragment(recentlyClickedListElementId,
+                                recentlyClickedListElementName,
+                                recentlyClickedDueDate,
+                                recentlyClickedBudgetListCurrencyCode))
                         .commit();
 
                 break;
@@ -223,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
                         .addToBackStack("budget_list_details_fragment")
-                        .replace(R.id.main_fragment_layout_holder, new NewExpenseFragment(listDueDate, budgetListId)).commit();
+                        .replace(R.id.main_fragment_layout_holder, new NewExpenseFragment(listDueDate, budgetListId, recentlyClickedBudgetListCurrencyCode)).commit();
                 break;
         }
 
@@ -233,17 +235,20 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     public void onFragmentBudgetListElementClickInteraction(Long clickedListElementId,
                                                             String clickedListElementName,
                                                             String dueDate,
-                                                            String clickedBudgetListAmount) {
+                                                            String clickedBudgetListAmount,
+                                                            String clickedCurrencyCode) {
         this.recentlyClickedListElementId = clickedListElementId;
         this.recentlyClickedListElementName = clickedListElementName;
         this.recentlyClickedDueDate = dueDate;
         this.recentlyClickedBudgetListAmount = clickedBudgetListAmount;
+        this.recentlyClickedBudgetListCurrencyCode = clickedCurrencyCode;
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
                 .addToBackStack("budget_list_fragment")
                 .replace(R.id.main_fragment_layout_holder, new BudgetListDetailsFragment(clickedListElementId,
                         clickedListElementName,
-                        dueDate)).commit();
+                        dueDate,
+                        recentlyClickedBudgetListCurrencyCode)).commit();
     }
 
     @Override
@@ -273,7 +278,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                     .replace(R.id.main_fragment_layout_holder, new EditBudgetListFragment(recentlyClickedListElementName,
                             recentlyClickedBudgetListAmount,
                             recentlyClickedDueDate,
-                            recentlyClickedListElementId))
+                            recentlyClickedListElementId,
+                            recentlyClickedBudgetListCurrencyCode))
                     .commit();
                 return true;
             case R.id.edit_budget_users_menu_item:

@@ -73,17 +73,20 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
     private String listDueDate;
     private Spinner categorySpinner;
     private Category selectedCategory;
+    private TextView currencyTextView;
+    private String currencyCode;
 
 
     public NewExpenseFragment(){
 
     }
 
-    public NewExpenseFragment(String listDueDate, Long budgetListId) {
+    public NewExpenseFragment(String listDueDate, Long budgetListId, String currencyCode) {
         this.budgetListId = budgetListId;
         this.listDueDate = listDueDate;
         selectedCategory = new Category();
         selectedCategory.setCategoryName("Others");
+        this.currencyCode = currencyCode;
     }
 
     @Nullable
@@ -99,6 +102,8 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
             return null;
         }
 
+        currencyTextView = rootView.findViewById(R.id.new_expense_currency_text_view);
+        currencyTextView.setText(currencyCode);
         categorySpinner = rootView.findViewById(R.id.new_expense_spinner);
         categorySpinner.setOnItemSelectedListener(this);
         expenseNameTextView = rootView.findViewById(R.id.new_expense_name_text_view);
@@ -256,7 +261,6 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     public interface OnFragmentClickListener{
@@ -291,4 +295,3 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
         }
     }
 }
-//TODO selectedcategory setting in spinner listener - its always null atm

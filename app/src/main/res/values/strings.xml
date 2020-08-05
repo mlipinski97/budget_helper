@@ -22,6 +22,8 @@
     <string name="user_help_frame_no_list_found">No planned budgets :)</string>
     <string name="budget_list_delete_button">delete selected lists</string>
     <string name="budget_list_dialog_sort_by_text">Sort by:</string>
+    <string name="budget_list_value_text">Total value: </string>
+    <string name="budget_list_remaining_value_text">Remaining value: </string>
 
     <!-- new/edit budget list fragment -->
     <string name="new_budget_list_toolbar_name">Add new list</string>

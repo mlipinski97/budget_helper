@@ -21,6 +21,8 @@ public class BudgetList {
 
     private boolean isSelected;
 
+    private String currencyCode;
+
     public BudgetList() {
     }
 
@@ -76,5 +78,13 @@ public class BudgetList {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
     }
 }
