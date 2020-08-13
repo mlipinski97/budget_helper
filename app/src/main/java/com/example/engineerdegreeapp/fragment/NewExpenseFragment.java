@@ -196,8 +196,7 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
         String passwordCredential = mAccountManager.getPassword(mAccount);
         String credentials = loginCredential + ":" + passwordCredential;
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String selectedDate = sdf.format(new Date(currentlySelectedDate));
+        String selectedDate = dd_mm_yyy_sdf.format(new Date(currentlySelectedDate));
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)

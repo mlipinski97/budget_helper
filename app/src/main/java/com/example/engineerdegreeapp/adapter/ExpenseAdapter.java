@@ -18,6 +18,8 @@ import com.example.engineerdegreeapp.retrofit.entity.Expense;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import static com.example.engineerdegreeapp.util.DateUtils.dd_mm_yyy_sdf;
+
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder> {
 
 
@@ -119,8 +121,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
                 }
             }
             if (expense.getDateOfExpense() != null) {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                expenseDateOfExpenseTextView.setText(sdf.format(expense.getDateOfExpense()).toString());
+                expenseDateOfExpenseTextView.setText(dd_mm_yyy_sdf.format(expense.getDateOfExpense()).toString());
             } else {
                 expenseDateOfExpenseTextView.setText("No due date found(old data)");
             }

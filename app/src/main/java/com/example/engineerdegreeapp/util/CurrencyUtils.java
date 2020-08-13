@@ -38,6 +38,7 @@ public class CurrencyUtils {
         return currencies.stream().map(Currency::getCurrencyCode).collect(Collectors.toCollection(ArraySet::new));
     }
 
+    //gets all ISO currency codes and puts 7 most used currencies in the world, Polish zloty and locale currency + on top of the list
     public static ArrayList<String> getAllCurrencyCodesSortedByPopular(){
         ArrayList<String> sortedCurrencies = new ArrayList<>(getAllCurrencyCodes());
         sortedCurrencies.remove("JPY");

@@ -17,6 +17,8 @@ import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import static com.example.engineerdegreeapp.util.DateUtils.dd_mm_yyy_sdf;
+
 public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.BudgetListViewHolder> {
 
     private ArrayList<BudgetList> budgetLists;
@@ -107,8 +109,7 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
             String budgetListRemainingValueString = context.getResources().getString(R.string.budget_list_remaining_value_text) + " " + budgetList.getRemainingValue() + budgetList.getCurrencyCode();
             budgetListRemainingValue.setText(budgetListRemainingValueString);
             if (budgetList.getDueDate() != null) {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                budgetListDueDate.setText(sdf.format(budgetList.getDueDate()).toString());
+                budgetListDueDate.setText(dd_mm_yyy_sdf.format(budgetList.getDueDate()).toString());
             } else {
                 budgetListDueDate.setText("No due date found(old data)");
             }

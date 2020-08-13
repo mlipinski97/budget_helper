@@ -45,6 +45,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.engineerdegreeapp.util.CurrencyUtils.getAllCurrencyCodesSortedByPopular;
+import static com.example.engineerdegreeapp.util.DateUtils.dd_mm_yyy_sdf;
 
 public class NewBudgetListFragment extends Fragment implements View.OnClickListener,
         AdapterView.OnItemSelectedListener {
@@ -90,7 +91,6 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
         listNameEditText = rootView.findViewById(R.id.new_budget_list_name_edit_text);
         listValueEditText = rootView.findViewById(R.id.new_budget_list_amount_edit_text);
         listDateErrorTextView = rootView.findViewById(R.id.new_budget_list_date_error_text_view);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -13);
         final Date thirteenDaysAgoDate = cal.getTime();
@@ -146,9 +146,8 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
         String passwordCredential = mAccountManager.getPassword(mAccount);
         String credentials = loginCredential + ":" + passwordCredential;
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String selectedDueDate = sdf.format(new Date(currentlySelectedDueDate));
-        String selectedStartingDate = sdf.format(new Date(currentlySelectedStartingDate));
+        String selectedDueDate = dd_mm_yyy_sdf.format(new Date(currentlySelectedDueDate));
+        String selectedStartingDate = dd_mm_yyy_sdf.format(new Date(currentlySelectedStartingDate));
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
