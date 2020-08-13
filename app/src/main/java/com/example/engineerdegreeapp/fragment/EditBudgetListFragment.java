@@ -47,6 +47,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.engineerdegreeapp.util.CurrencyUtils.getAllCurrencyCodesSortedByPopular;
+import static com.example.engineerdegreeapp.util.DateUtils.dd_mm_yyy_sdf;
 
 public class EditBudgetListFragment extends Fragment implements View.OnClickListener,
         AdapterView.OnItemSelectedListener {
@@ -58,26 +59,32 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
     private CalendarView dueDateCalendarView;
     private Account mAccount;
     private AccountManager mAccountManager;
-    private Long currentlySelectedDate;
+    private Long currentlySelectedDueDate;
     private Button cancelButton;
     private Button confirmButton;
     private OnFragmentClickListener mClickListener;
     private String listName;
     private String listAmount;
-    private String listSelectedDate;
+    private String listSelectedDueDate;
+    private String listSelectedStartingDate;
     private Long listId;
     private ToolbarChangeListener toolbarChangeListener;
     private Spinner currencyCodeSpinner;
     private String currencyCode;
+    private CalendarView startingDateCalendarView;
+    private Long currentlySelectedStartingDate;
+    private TextView listDateErrorTextView;
 
 
     public EditBudgetListFragment() {
     }
 
-    public EditBudgetListFragment(String listName, String listAmount, String listSelectedDate, Long listId, String listCurrency) {
+    public EditBudgetListFragment(String listName, String listAmount, String listSelectedDueDate,
+                                  String listSelectedStartingDate, Long listId, String listCurrency) {
         this.listName = listName;
         this.listAmount = listAmount;
-        this.listSelectedDate = listSelectedDate;
+        this.listSelectedDueDate = listSelectedDueDate;
+        this.listSelectedStartingDate = listSelectedStartingDate;
         this.listId = listId;
         currencyCode = listCurrency;
     }
@@ -102,15 +109,15 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
         toolbarChangeListener.hideEditButtons();
         listNameErrorTextView = rootView.findViewById(R.id.edit_budget_list_name_error_text_view);
         listValueErrorTextView = rootView.findViewById(R.id.edit_budget_list_amount_error_text_view);
+        listDateErrorTextView = rootView.findViewById(R.id.edit_budget_list_date_error_text_view);
         listNameEditText = rootView.findViewById(R.id.edit_budget_list_name_edit_text);
         listNameEditText.setText(listName);
         listValueEditText = rootView.findViewById(R.id.edit_budget_list_amount_edit_text);
         listValueEditText.setText(listAmount);
-        dueDateCalendarView = rootView.findViewById(R.id.edit_budget_list_calendar_view);
-        currentlySelectedDate = dueDateCalendarView.getDate();
-        dueDateCalendarView.setMinDate((new Date().getTime()));
+        dueDateCalendarView = rootView.findViewById(R.id.edit_budget_list_ending_date_calendar_view);
+        currentlySelectedDueDate = dueDateCalendarView.getDate();
         try {
-            dueDateCalendarView.setDate(new SimpleDateFormat("dd-MM-yyyy").parse(listSelectedDate).getTime(), true, true);
+            dueDateCalendarView.setDate(dd_mm_yyy_sdf.parse(listSelectedDueDate).getTime(), true, true);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -119,10 +126,24 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 Calendar c = Calendar.getInstance();
                 c.set(year, month, dayOfMonth);
-                currentlySelectedDate = c.getTimeInMillis();
+                currentlySelectedDueDate = c.getTimeInMillis();
             }
         });
-
+        startingDateCalendarView = rootView.findViewById(R.id.edit_budget_list_starting_date_calendar_view);
+        currentlySelectedStartingDate = dueDateCalendarView.getDate();
+        try {
+            startingDateCalendarView.setDate(dd_mm_yyy_sdf.parse(listSelectedStartingDate).getTime(), true, true);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        startingDateCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                Calendar c = Calendar.getInstance();
+                c.set(year, month, dayOfMonth);
+                currentlySelectedStartingDate = c.getTimeInMillis();
+            }
+        });
         cancelButton = rootView.findViewById(R.id.edit_budget_list_button_cancel);
         cancelButton.setOnClickListener(this);
         confirmButton = rootView.findViewById(R.id.edit_budget_list_button_confirm);
@@ -143,13 +164,14 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
         String passwordCredential = mAccountManager.getPassword(mAccount);
         String credentials = loginCredential + ":" + passwordCredential;
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String selectedDate = sdf.format(new Date(currentlySelectedDate));
+        String selectedDate = dd_mm_yyy_sdf.format(new Date(currentlySelectedDueDate));
+        String selectedStartingDate = dd_mm_yyy_sdf.format(new Date(currentlySelectedStartingDate));
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("name", listNameEditText.getText().toString())
                 .addFormDataPart("budgetValue", listValueEditText.getText().toString().replace(",", "."))
+                .addFormDataPart("startingDate", selectedStartingDate)
                 .addFormDataPart("dueDate", selectedDate)
                 .addFormDataPart("currencyCode", currencyCode)
                 .build();
@@ -190,7 +212,7 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
         switch (clickedItemId) {
             case R.id.edit_budget_list_button_confirm:
                 hideKeyboard();
-                if (isMoneyRegexSafe() && isNameValid()) {
+                if (isMoneyRegexSafe() && isNameValid() && areCalendarsDatesCorrect()) {
                     updateBudgetList();
                 } else {
                     if (!isMoneyRegexSafe()) {
@@ -203,6 +225,11 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
                     } else {
                         listNameErrorTextView.setVisibility(View.INVISIBLE);
                     }
+                    if (!areCalendarsDatesCorrect()) {
+                        listDateErrorTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        listDateErrorTextView.setVisibility(View.INVISIBLE);
+                    }
                 }
                 break;
             case R.id.edit_budget_list_button_cancel:
@@ -210,6 +237,10 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
                 mClickListener.onFragmentClickInteraction(clickedItemId);
                 break;
         }
+    }
+
+    private boolean areCalendarsDatesCorrect() {
+        return currentlySelectedStartingDate < currentlySelectedDueDate;
     }
 
     @Override
@@ -262,12 +293,12 @@ public class EditBudgetListFragment extends Fragment implements View.OnClickList
 
     private void populateCurrencyCodeSpinner() {
         ArrayList<String> currencyList = getAllCurrencyCodesSortedByPopular();
-        if(currencyCode != null){
+        if (currencyCode != null) {
             int currentCurrencyIndex = currencyList.indexOf(currencyCode);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, currencyList);
             currencyCodeSpinner.setAdapter(adapter);
             currencyCodeSpinner.setSelection(currentCurrencyIndex);
-        } else{
+        } else {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, currencyList);
             currencyCodeSpinner.setAdapter(adapter);
         }

@@ -1,0 +1,32 @@
+<resources>
+    <string-array name="sort_by_expenses_values">
+        <item>Kategorie</item>
+        <item>Nazwy (A-Z)</item>
+        <item>Termin (od najwcześniejszego)</item>
+        <item>Termin (od najpóźniejszego)</item>
+        <item>Kwota (od najmniejszej)</item>
+        <item>Kwota (od największej)</item>
+        <item>Ostatnio modyfikowane przez…</item>
+    </string-array>
+
+    <string-array name="sort_by_budget_list_values">
+        <item>Nazwy (A-Z)</item>
+        <item>Termin (od najwcześniejszego)</item>
+        <item>Termin (od najpóźniejszego)</item>
+        <item>Kwota (od najmniejszej)</item>
+        <item>Kwota (od największej)</item>
+        <item>Pozostała kwota (od najmniejszej)</item>
+        <item>Pozostała kwota (od największej)</item>
+    </string-array>
+
+    <string-array name="language_list_names">
+        <item>Angielski</item>
+        <item>Polski</item>
+    </string-array>
+
+    <string-array name="language_list_values">
+        <item>en</item>
+        <item>pl</item>
+    </string-array>
+
+</resources>

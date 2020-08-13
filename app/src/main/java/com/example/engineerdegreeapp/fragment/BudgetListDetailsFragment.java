@@ -4,14 +4,6 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +12,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.adapter.ExpenseAdapter;
@@ -51,7 +50,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapter.ListItemClickListener,
         View.OnClickListener,
         ToolbarMenuSortListener,
-        SortByDialogFragment.onDialogItemClickedListener{
+        SortByDialogFragment.onDialogItemClickedListener {
 
     private final String EXPENSES_BASE_URL = "https://engineer-degree-project.herokuapp.com/api/expenses/";
 
@@ -66,6 +65,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     private ExpenseAdapter expenseAdapter;
     private FloatingActionButton newExpenseFloatingActionButton;
     private String budgetListDueDate;
+    private String budgetListStartingDate;
     private List<Long> expenseIdToChangeDoneState = new LinkedList<>();
     private ArrayList<Expense> selectedExpenses = new ArrayList<>();
     private Button deleteButton;
@@ -75,11 +75,16 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     public BudgetListDetailsFragment() {
     }
 
-    public BudgetListDetailsFragment(Long budgetListId, String budgetListName, String dueDate, String currencyCode) {
+    public BudgetListDetailsFragment(Long budgetListId,
+                                     String budgetListName,
+                                     String budgetListDueDate,
+                                     String budgetListStartingDate,
+                                     String currencyCode) {
         this.budgetListId = budgetListId;
         this.budgetListName = budgetListName;
-        this.budgetListDueDate = dueDate;
+        this.budgetListDueDate = budgetListDueDate;
         this.currencyCode = currencyCode;
+        this.budgetListStartingDate = budgetListStartingDate;
     }
 
     @Nullable
@@ -157,12 +162,12 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
             @Override
             public void onFailure(Call<List<Expense>> call, Throwable t) {
                 expenseListErrorTextView.setVisibility(View.VISIBLE);
-                Log.d("loadExpenseList()", "onFailure call failed");
+                Log.d("loadExpenseList()", "onFailure - call failed");
             }
         });
     }
 
-    private void updateExpenseDoneStatus(Long expenseId){
+    private void updateExpenseDoneStatus(Long expenseId) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(EXPENSES_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -179,13 +184,13 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         call.enqueue(new Callback<Expense>() {
             @Override
             public void onResponse(Call<Expense> call, Response<Expense> response) {
-                if(!response.isSuccessful()) {
+                if (!response.isSuccessful()) {
                     try {
                         Log.d("updateExpenseDoneStatus()", response.errorBody().string());
                     } catch (IOException e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else{
+                } else {
                     Log.d("updateExpenseDoneStatus()", "onResponse: sucessful doneStatusChange - id = " + expenseId);
                 }
             }
@@ -199,7 +204,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
 
     }
 
-    private void deleteSelectedExpenses(ArrayList<Long> expenseIdList){
+    private void deleteSelectedExpenses(ArrayList<Long> expenseIdList) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(EXPENSES_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -214,16 +219,16 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-               if(!response.isSuccessful()){
-                   try{
-                       Log.d("deleteSelectedExpenses()", response.errorBody().string());
-                   } catch (IOException e){
-                       e.printStackTrace();
-                   }
-               } else{
-                   Log.d("deleteSelectedExpenses()", "deleted expenses with id: " + expenseIdList);
-                   loadExpenseList();
-               }
+                if (!response.isSuccessful()) {
+                    try {
+                        Log.d("deleteSelectedExpenses()", response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.d("deleteSelectedExpenses()", "deleted expenses with id: " + expenseIdList);
+                    loadExpenseList();
+                }
             }
 
             @Override
@@ -234,25 +239,35 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     }
 
     @Override
+    public void onListItemClick(View v, Expense expense) {
+
+        if (selectedExpenses.isEmpty()) {
+            Log.d("onListItemClick(View v, Expense expense)", "clicked expense list item while none items selected");
+        } else {
+            onListItemLongClick(v, expense);
+        }
+    }
+
+    @Override
     public void onListItemLongClick(View v, Expense expense) {
         expense.setSelected(!expense.isSelected());
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             v.setBackgroundColor(expense.isSelected() ?
                     getContext().getResources().getColor(R.color.darkCardSelectedBackgroundColor, null)
-                    : getContext().getResources().getColor(R.color.darkCardBackgroundColor, null) );
+                    : getContext().getResources().getColor(R.color.darkCardBackgroundColor, null));
         } else {
             v.setBackgroundColor(expense.isSelected() ?
                     getContext().getResources().getColor(R.color.lightCardSelectedBackgroundColor, null)
-                    : getContext().getResources().getColor(R.color.lightCardBackgroundColor, null) );
+                    : getContext().getResources().getColor(R.color.lightCardBackgroundColor, null));
         }
-        if(expense.isSelected()){
+        if (expense.isSelected()) {
             selectedExpenses.add(expense);
-        } else{
+        } else {
             selectedExpenses.remove(expense);
         }
-        if(!selectedExpenses.isEmpty()){
+        if (!selectedExpenses.isEmpty()) {
             deleteButton.setVisibility(View.VISIBLE);
-        } else{
+        } else {
             deleteButton.setVisibility(View.INVISIBLE);
         }
     }
@@ -260,9 +275,9 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     @Override
     public void onListItemDoneStateChange(Long changedStateExpenseId) {
         Log.d("onListItemDoneStateChange()", "changed checkbox on expense with id: " + changedStateExpenseId);
-        if(expenseIdToChangeDoneState.contains(changedStateExpenseId)){
+        if (expenseIdToChangeDoneState.contains(changedStateExpenseId)) {
             expenseIdToChangeDoneState.remove(changedStateExpenseId);
-        } else{
+        } else {
             expenseIdToChangeDoneState.add(changedStateExpenseId);
         }
 
@@ -274,11 +289,11 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         switch (clickedItemId) {
             case R.id.budget_list_details_floating_action_button:
                 toolbarChangeListener.hideEditButtons();
-                mClickListener.onFragmentClickInteraction(clickedItemId, budgetListDueDate, budgetListId);
+                mClickListener.onFragmentClickInteraction(clickedItemId, budgetListDueDate, budgetListStartingDate, budgetListId);
                 break;
             case R.id.budget_list_details_delete_button:
                 ArrayList<Long> idList = new ArrayList<>();
-                for(Expense e : selectedExpenses){
+                for (Expense e : selectedExpenses) {
                     idList.add(e.getId());
                 }
                 deleteSelectedExpenses(idList);
@@ -343,21 +358,21 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
         expenseListRecyclerView.setAdapter(expenseAdapter);
     }
 
-    public interface OnFragmentClickListener{
-        void onFragmentClickInteraction(int clickedElementId, String listDueDate, Long budgetListId);
+    public interface OnFragmentClickListener {
+        void onFragmentClickInteraction(int clickedElementId, String listDueDate, String listStartingDate, Long budgetListId);
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        try{
+        try {
             mClickListener = (OnFragmentClickListener) context;
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement BudgetListDetailsFragment.OnFragmentClickListener");
         }
-        try{
+        try {
             toolbarChangeListener = (ToolbarChangeListener) context;
-        } catch (ClassCastException f){
+        } catch (ClassCastException f) {
             throw new ClassCastException(context.toString() + "must implement ToolbarChangeListener");
 
         }
@@ -366,7 +381,7 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
     @Override
     public void onPause() {
         super.onPause();
-        for (Long l : expenseIdToChangeDoneState ) {
+        for (Long l : expenseIdToChangeDoneState) {
             Log.d("updateExpenseDoneStatus()", "onPause: updateExpenseDoneStatus() called");
             updateExpenseDoneStatus(l);
         }

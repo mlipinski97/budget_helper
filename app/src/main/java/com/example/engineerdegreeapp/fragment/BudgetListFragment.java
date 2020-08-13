@@ -2,7 +2,6 @@ package com.example.engineerdegreeapp.fragment;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Base64;
@@ -10,10 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,16 +21,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.adapter.BudgetListAdapter;
-import com.example.engineerdegreeapp.adapter.ExpenseAdapter;
 import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
 import com.example.engineerdegreeapp.communication.ToolbarMenuSortListener;
 import com.example.engineerdegreeapp.fragment.dialog.SortByDialogFragment;
 import com.example.engineerdegreeapp.retrofit.BudgetListApi;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
-import com.example.engineerdegreeapp.retrofit.entity.Expense;
 import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -220,7 +214,6 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
 
     private void fillUserHelpFrame() {
         toolbarChangeListener.showOnlySortButton();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         final Date currentTime = cal.getTime();
@@ -245,17 +238,12 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
     }
 
     @Override
-    public void onListItemClick(int clickedBudgetListId,
-                                String clickedBudgetListName,
-                                String listDueDate,
-                                String clickedBudgetListAmount,
-                                String clickedCurrencyCode) {
-        mClickListener.onFragmentBudgetListElementClickInteraction((long) clickedBudgetListId,
-                clickedBudgetListName,
-                listDueDate,
-                clickedBudgetListAmount,
-                clickedCurrencyCode);
-
+    public void onListItemClick(View v, BudgetList budgetList) {
+        if (selectedBudgetLists.isEmpty()) {
+            mClickListener.onFragmentBudgetListElementClickInteraction(budgetList);
+        } else {
+            onListItemLongClick(v, budgetList);
+        }
     }
 
     @Override
@@ -294,6 +282,7 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
                 for (BudgetList bl : selectedBudgetLists) {
                     idList.add((long) bl.getId());
                 }
+                selectedBudgetLists = new LinkedList<>();
                 deleteManySelectedBudgetLists(idList);
                 deleteButton.setVisibility(View.INVISIBLE);
                 break;
@@ -357,11 +346,7 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
     public interface OnFragmentClickListener {
         void onFragmentClickInteraction(int clickedElementId);
 
-        void onFragmentBudgetListElementClickInteraction(Long clickedListElementId,
-                                                         String clickedListElementName,
-                                                         String dueDate,
-                                                         String clickedBudgetListAmount,
-                                                         String clickedCurrencyCode);
+        void onFragmentBudgetListElementClickInteraction(BudgetList budgetList);
     }
 
 

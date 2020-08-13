@@ -15,12 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.retrofit.entity.Expense;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>{
+public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder> {
 
 
     Context context;
@@ -36,7 +34,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         this.context = context;
         this.currencyCode = currencyCode;
     }
-
 
 
     @NonNull
@@ -63,13 +60,16 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     }
 
 
-
     public interface ListItemClickListener {
+        void onListItemClick(View v, Expense expense);
+
         void onListItemLongClick(View v, Expense expense);
+
         void onListItemDoneStateChange(Long changedStateExpenseId);
     }
 
-    class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+    class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener,
+            View.OnClickListener {
 
         TextView expenseNameTextView;
         TextView expenseValueTextView;
@@ -95,6 +95,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
             super(itemView);
             cardView = itemView.findViewById(R.id.expense_item_card_view);
             cardView.setOnLongClickListener(this);
+            cardView.setOnClickListener(this);
             expenseCategoryTextView = itemView.findViewById(R.id.expense_item_category_text_view);
             expenseNameTextView = itemView.findViewById(R.id.expense_item_name_text_view);
             expenseValueTextView = itemView.findViewById(R.id.expense_item_value_text_view);
@@ -110,17 +111,17 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
             expenseValueTextView.setText(expenseValueString);
             expenseOwnerNameTextView.setText(expense.getExpenseOwnerName());
             expenseCategoryTextView.setText(expense.getCategory().getCategoryName());
-            if(expense.isSelected()){
+            if (expense.isSelected()) {
                 if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
                     cardView.setBackgroundColor(context.getResources().getColor(R.color.darkCardSelectedBackgroundColor, null));
                 } else {
                     cardView.setBackgroundColor(context.getResources().getColor(R.color.lightCardBackgroundColor, null));
                 }
             }
-            if(expense.getDateOfExpense() != null){
+            if (expense.getDateOfExpense() != null) {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                 expenseDateOfExpenseTextView.setText(sdf.format(expense.getDateOfExpense()).toString());
-            }else{
+            } else {
                 expenseDateOfExpenseTextView.setText("No due date found(old data)");
             }
             doneCheckbox.setChecked(expense.isDone());
@@ -134,5 +135,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
             return true;
         }
 
+        @Override
+        public void onClick(View v) {
+            clickListener.onListItemClick(v, getExpense());
+        }
     }
 }

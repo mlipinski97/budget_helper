@@ -8,13 +8,14 @@
         android:id="@+id/edit_budget_list_menu_item"
         android:orderInCategory="2"
         android:title="@string/edit_budget_list"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         />
+
     <item
         android:id="@+id/edit_budget_users_menu_item"
         android:orderInCategory="1"
         android:title="@string/edit_budget_users"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:icon="@drawable/ic_people_black_24dp"
         android:iconTint="?attr/buttonColor"
         />
@@ -22,6 +23,6 @@
         android:id="@+id/edit_sort_expenses_menu_item"
         android:orderInCategory="3"
         android:title="@string/edit_budget_sort"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         />
 </menu>

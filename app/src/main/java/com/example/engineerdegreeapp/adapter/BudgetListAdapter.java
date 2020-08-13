@@ -1,7 +1,6 @@
 package com.example.engineerdegreeapp.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,6 @@ import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Currency;
-import java.util.Locale;
 
 public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.BudgetListViewHolder> {
 
@@ -59,11 +56,7 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
     }
 
     public interface ListItemClickListener {
-        void onListItemClick(int clickedBudgetListId,
-                             String clickedBudgetListName,
-                             String listDueDate,
-                             String clickedBudgetListAmount,
-                             String clickedCurrencyCode);
+        void onListItemClick(View v, BudgetList budgetList);
 
         void onListItemLongClick(View v, BudgetList budgetList);
     }
@@ -100,7 +93,7 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
         }
 
         public void bind(BudgetList budgetList) {
-            if(budgetList.isSelected()){
+            if (budgetList.isSelected()) {
                 if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
                     cardView.setBackgroundColor(context.getResources().getColor(R.color.darkCardSelectedBackgroundColor, null));
                 } else {
@@ -125,11 +118,7 @@ public class BudgetListAdapter extends RecyclerView.Adapter<BudgetListAdapter.Bu
 
         @Override
         public void onClick(View v) {
-            clickListener.onListItemClick(getBudgetList().getId(),
-                    getBudgetList().getName(),
-                    budgetListDueDate.getText().toString(),
-                    String.valueOf(getBudgetList().getValue()),
-                    getBudgetList().getCurrencyCode());
+            clickListener.onListItemClick(v, getBudgetList());
         }
 
         @Override

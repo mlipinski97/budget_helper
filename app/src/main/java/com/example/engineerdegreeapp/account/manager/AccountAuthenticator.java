@@ -10,14 +10,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.view.View;
-import android.widget.Toast;
 
-import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.activity.LoginActivity;
 import com.example.engineerdegreeapp.retrofit.UserApi;
 import com.example.engineerdegreeapp.retrofit.entity.UserAuth;
-import com.example.engineerdegreeapp.util.AccountUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -105,7 +101,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         return bundle;
     }
 
-    private void checkCredentialsAndLogIn(final String login, String password){
+    private void checkCredentialsAndLogIn(final String login, String password) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(USERS_API_BASE_URL)
@@ -121,9 +117,9 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         call.enqueue(new Callback<UserAuth>() {
             @Override
             public void onResponse(Call<UserAuth> call, Response<UserAuth> response) {
-                if(!response.isSuccessful()){
+                if (!response.isSuccessful()) {
                     globalAuthToken = null;
-                }else{
+                } else {
                     final DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
                     globalAuthToken = login + "_" + APP_NAME + "_" + df.format(new Date());
                 }

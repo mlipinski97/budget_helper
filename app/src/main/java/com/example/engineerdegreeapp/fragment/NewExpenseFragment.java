@@ -2,6 +2,7 @@ package com.example.engineerdegreeapp.fragment;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -26,6 +27,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.engineerdegreeapp.R;
+import com.example.engineerdegreeapp.adapter.CategorySpinnerAdapter;
+import com.example.engineerdegreeapp.adapter.item.CategoryItem;
 import com.example.engineerdegreeapp.retrofit.CategoryApi;
 import com.example.engineerdegreeapp.retrofit.ExpenseApi;
 import com.example.engineerdegreeapp.retrofit.entity.Category;
@@ -36,6 +39,7 @@ import com.example.engineerdegreeapp.util.RegexUtils;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +55,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.example.engineerdegreeapp.util.DateUtils.dd_mm_yyy_sdf;
 
 public class NewExpenseFragment extends Fragment implements View.OnClickListener,
         AdapterView.OnItemSelectedListener {
@@ -75,20 +81,22 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
     private Category selectedCategory;
     private TextView currencyTextView;
     private String currencyCode;
+    private String listStartingDate;
 
-
-    public NewExpenseFragment(){
+    public NewExpenseFragment() {
 
     }
 
-    public NewExpenseFragment(String listDueDate, Long budgetListId, String currencyCode) {
+    public NewExpenseFragment(String listDueDate, String listStartingDate, Long budgetListId, String currencyCode) {
         this.budgetListId = budgetListId;
         this.listDueDate = listDueDate;
-        selectedCategory = new Category();
-        selectedCategory.setCategoryName("Others");
+        this.selectedCategory = new Category();
+        this.selectedCategory.setCategoryName("Others");
         this.currencyCode = currencyCode;
+        this.listStartingDate = listStartingDate;
     }
 
+    @SuppressLint("SimpleDateFormat")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -113,11 +121,12 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
         dueDateTextView = rootView.findViewById(R.id.new_expense_due_date_text_view);
         expenseNameEditText = rootView.findViewById(R.id.new_expense_name_edit_text);
         expenseValueEditText = rootView.findViewById(R.id.new_expense_amount_edit_text);
-        expenseValueEditText.setFilters(new InputFilter[] {new DecimalInputFilter(10,2)});
+        expenseValueEditText.setFilters(new InputFilter[]{new DecimalInputFilter(10, 2)});
         dueDateCalendarView = rootView.findViewById(R.id.new_expense_calendar_view);
-        dueDateCalendarView.setMinDate((new Date().getTime()));
+
         try {
-            dueDateCalendarView.setMaxDate(new SimpleDateFormat("dd-MM-yyyy").parse(listDueDate).getTime());
+            dueDateCalendarView.setMaxDate(dd_mm_yyy_sdf.parse(listDueDate).getTime());
+            dueDateCalendarView.setMinDate(dd_mm_yyy_sdf.parse(listDueDate).getTime());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -135,7 +144,7 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
         return rootView;
     }
 
-    private void loadCategorySpinnerData(){
+    private void loadCategorySpinnerData() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://engineer-degree-project.herokuapp.com/api/category/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -156,11 +165,13 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else{
+                } else {
                     Log.d("loadCategorySpinnerData()", "loaded all categories");
                     ArrayList<Category> categories = new ArrayList<>(response.body());
                     ArrayList<String> items = categories.stream().map(Category::getCategoryName).collect(Collectors.toCollection(ArrayList::new));
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, items);
+                    ArrayList<CategoryItem> categoryItems = new ArrayList<>();
+                    items.forEach(item -> categoryItems.add(new CategoryItem(item, R.drawable.ic_add_black_24dp)));
+                    CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(getContext(), categoryItems);
                     categorySpinner.setAdapter(adapter);
                 }
             }
@@ -172,6 +183,7 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
         });
 
     }
+
     private void postExpense() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://engineer-degree-project.herokuapp.com/api/expenses/")
@@ -213,7 +225,7 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else{
+                } else {
                     Toast.makeText(getActivity(), "Expense successfully added", Toast.LENGTH_SHORT).show();
                     mClickListener.onFragmentClickInteraction(R.id.new_expense_button_confirm);
                 }
@@ -236,17 +248,17 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
                 break;
             case R.id.new_expense_button_confirm:
                 hideKeyboard();
-                if(isMoneyRegexSafe() && isNameValid()){
+                if (isMoneyRegexSafe() && isNameValid()) {
                     postExpense();
-                } else{
-                    if(!isMoneyRegexSafe()){
+                } else {
+                    if (!isMoneyRegexSafe()) {
                         expenseValueErrorTextView.setVisibility(View.VISIBLE);
-                    } else{
+                    } else {
                         expenseValueErrorTextView.setVisibility(View.INVISIBLE);
                     }
-                    if(!isNameValid()){
+                    if (!isNameValid()) {
                         expenseNameErrorTextView.setVisibility(View.VISIBLE);
-                    } else{
+                    } else {
                         expenseNameErrorTextView.setVisibility(View.INVISIBLE);
                     }
                 }
@@ -263,16 +275,16 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
-    public interface OnFragmentClickListener{
+    public interface OnFragmentClickListener {
         void onFragmentClickInteraction(int clickedElementId);
     }
 
-    private boolean isMoneyRegexSafe(){
+    private boolean isMoneyRegexSafe() {
         String moneyValue = expenseValueEditText.getText().toString();
         return RegexUtils.isMoneyAmountRegexSafe(moneyValue);
     }
 
-    private boolean isNameValid(){
+    private boolean isNameValid() {
         String name = expenseNameEditText.getText().toString();
         return !name.isEmpty();
     }
@@ -280,16 +292,16 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        try{
+        try {
             mClickListener = (OnFragmentClickListener) context;
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement NewExpenseFragment.OnFragmentClickListener");
         }
     }
 
     public void hideKeyboard() {
-        View view =  getActivity().getCurrentFocus();
-        if(view != null){
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }

@@ -34,7 +34,6 @@ import com.example.engineerdegreeapp.retrofit.entity.Friendship;
 import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -72,8 +71,6 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
     private Button popupAddFriendButton;
     private TextView popupErrorTextView;
     private FloatingActionButton addFriendFloatingActionButton;
-
-
 
 
     public FriendsFragment() {
@@ -115,7 +112,6 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
         loadAllFriends();
 
 
-
         return rootView;
     }
 
@@ -130,11 +126,11 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
         popupFindFriendEditText = alertDialog.findViewById(R.id.popup_window_add_friend_edit_text);
         popupAddFriendButton = alertDialog.findViewById(R.id.popup_window_add_friend_button);
         popupAddFriendButton.setOnClickListener(v -> {
-            if(popupFindFriendEditText.getText().toString().isEmpty()){
+            if (popupFindFriendEditText.getText().toString().isEmpty()) {
                 popupErrorTextView.setText(getContext().getResources().getString(R.string.friend_send_friend_request_error_text_view));
                 popupErrorTextView.setVisibility(View.VISIBLE);
                 hideKeyboardOnDefinedView(popupFindFriendEditText);
-            } else{
+            } else {
                 popupErrorTextView.setVisibility(View.INVISIBLE);
                 sendFriendRequest(popupFindFriendEditText.getText().toString(), alertDialog);
                 hideKeyboardOnDefinedView(popupFindFriendEditText);
@@ -200,7 +196,7 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
         });
     }
 
-    public void deleteFriendship(String username){
+    public void deleteFriendship(String username) {
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(FRIENDSHIP_BASE_URL)
@@ -223,7 +219,7 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else{
+                } else {
                     Log.d("deleteFriendship()", "deleted friendship: " + loginCredential + " - " + username);
                     loadAllFriends();
                 }
@@ -236,7 +232,7 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
         });
     }
 
-    public void deleteManyFriendships(ArrayList<String> usernames){
+    public void deleteManyFriendships(ArrayList<String> usernames) {
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(FRIENDSHIP_BASE_URL)
@@ -259,7 +255,7 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else{
+                } else {
                     Log.d("deleteManyFriendships()", "deleted friendships: " + loginCredential + " - " + usernames);
                     loadAllFriends();
                 }
@@ -272,7 +268,7 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
         });
     }
 
-    public void acceptFriendship(String username){
+    public void acceptFriendship(String username) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(FRIENDSHIP_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -295,7 +291,7 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else{
+                } else {
                     Log.d("acceptFriendship()", "accepted friendship: " + loginCredential + " - " + username);
                     loadAllFriends();
                 }
@@ -307,6 +303,7 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
             }
         });
     }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -318,7 +315,7 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
         }
     }
 
-    private void sendFriendRequest(String username , AlertDialog alertDialog) {
+    private void sendFriendRequest(String username, AlertDialog alertDialog) {
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(FRIENDSHIP_BASE_URL)
@@ -349,7 +346,7 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
                         e.printStackTrace();
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else{
+                } else {
                     Log.d("sendFriendRequest()", "friendship request sent: " + loginCredential + " - " + username);
                     loadAllFriends();
                     alertDialog.hide();
@@ -392,15 +389,15 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
             checkBox.setVisibility(View.INVISIBLE);
         }
         boolean isPositionSelected = false;
-        for(Friendship f : friendships){
-            if(f.isSelected()){
+        for (Friendship f : friendships) {
+            if (f.isSelected()) {
                 isPositionSelected = true;
                 break;
             }
         }
-        if(isPositionSelected){
+        if (isPositionSelected) {
             unfriendButton.setVisibility(View.VISIBLE);
-        } else{
+        } else {
             unfriendButton.setVisibility(View.INVISIBLE);
         }
     }
@@ -410,9 +407,9 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
         int clickedItemId = v.getId();
         switch (clickedItemId) {
             case R.id.friends_waiting_confirmation_item_decline_button:
-                if(mAccount.name.equals(friendship.getFriend().getUsername())){
+                if (mAccount.name.equals(friendship.getFriend().getUsername())) {
                     deleteFriendship(friendship.getRequester().getUsername());
-                } else{
+                } else {
                     deleteFriendship(friendship.getFriend().getUsername());
                 }
                 break;
@@ -425,7 +422,7 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
     @Override
     public void onClick(View v) {
         int clickedItemId = v.getId();
-        switch (clickedItemId){
+        switch (clickedItemId) {
             case R.id.friends_fragment_search_button:
                 searchAndReloadLists();
                 hideKeyboard();
@@ -436,10 +433,10 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
             case R.id.friends_fragment_unfriend_button:
                 ArrayList<String> usernames = new ArrayList<>();
                 for (Friendship f : friendships) {
-                    if(f.isSelected()){
-                        if(mAccount.name.equals(f.getFriend().getUsername())){
+                    if (f.isSelected()) {
+                        if (mAccount.name.equals(f.getFriend().getUsername())) {
                             usernames.add(f.getRequester().getUsername());
-                        } else{
+                        } else {
                             usernames.add(f.getFriend().getUsername());
                         }
                     }
@@ -450,7 +447,7 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
         }
     }
 
-    private void searchAndReloadLists(){
+    private void searchAndReloadLists() {
         ArrayList<Friendship> filteredFriendship = friendships.stream()
                 .filter(f ->
                         (f.getRequester().getUsername().equals(mAccount.name)
@@ -465,7 +462,6 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
         ArrayList<Friendship> waitingForConfirmationFriendships = filteredFriendship.stream()
                 .filter(f -> !f.isAccepted())
                 .collect(Collectors.toCollection(ArrayList::new));
-
 
 
         friendshipAdapter = new FriendshipAdapter(confirmedFriendships,
@@ -489,15 +485,15 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
     }
 
     public void hideKeyboard() {
-        View view =  getActivity().getCurrentFocus();
-        if(view != null){
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
     public void hideKeyboardOnDefinedView(View view) {
-        if(view != null){
+        if (view != null) {
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }

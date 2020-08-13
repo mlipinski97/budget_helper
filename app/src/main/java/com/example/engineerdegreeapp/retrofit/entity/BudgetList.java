@@ -15,6 +15,7 @@ public class BudgetList {
     private double value;
 
     private Date dueDate;
+    private Date startingDate;
 
     @SerializedName("remainingValue")
     private double remainingValue;
@@ -86,5 +87,13 @@ public class BudgetList {
 
     public void setCurrencyCode(String currencyCode) {
         this.currencyCode = currencyCode;
+    }
+
+    public Date getStartingDate() {
+        return startingDate;
+    }
+
+    public void setStartingDate(Date startingDate) {
+        this.startingDate = startingDate;
     }
 }

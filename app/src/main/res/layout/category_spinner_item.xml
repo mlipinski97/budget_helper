@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/category_spinner_relative_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:backgroundTint="?attr/backgroundColor">
+    <ImageView
+        android:id="@+id/category_spinner_image_view"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:src="@drawable/ic_baseline_person_add_24"
+        android:layout_centerVertical="true"
+        android:contentDescription="TODO" />
+    <TextView
+        android:id="@+id/category_spinner_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:textAlignment="inherit"
+        android:textSize="30sp"
+        android:paddingStart="5dp"
+        android:layout_toEndOf="@+id/category_spinner_image_view"/>
+
+
+</RelativeLayout>

@@ -1,21 +1,11 @@
 package com.example.engineerdegreeapp.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.preference.PreferenceManager;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
-
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +13,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
@@ -39,6 +39,10 @@ import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 
+import java.util.Locale;
+
+import static com.example.engineerdegreeapp.util.DateUtils.dd_mm_yyy_sdf;
+
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener,
         BudgetListFragment.OnFragmentClickListener,
@@ -47,31 +51,29 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         NewExpenseFragment.OnFragmentClickListener,
         ToolbarChangeListener,
         EditBudgetListFragment.OnFragmentClickListener,
-        ShareBudgetListFragment.OnFragmentClickListener{
+        ShareBudgetListFragment.OnFragmentClickListener {
 
     private Account mAccount;
     private AccountManager mAccountManager;
     public Toolbar mTopToolbar;
     private DrawerLayout drawer;
     private TextView currentlyLoggedInTextView;
-    private Long recentlyClickedListElementId;
-    private String recentlyClickedListElementName;
-    private String recentlyClickedDueDate;
     private MenuItem edit_budget_list_menu_item;
     private MenuItem edit_budget_users_menu_item;
     private MenuItem edit_sort_expenses_menu_item;
-    private String recentlyClickedBudgetListAmount;
-    private String recentlyClickedBudgetListCurrencyCode;
     private ToolbarMenuSortListener toolbarMenuSortByListener;
+    private BudgetList recentlyClickedBudgetList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        loadLocale();
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.AppTheme_NoActionBarDark);
         } else {
             setTheme(R.style.AppTheme_NoActionBarLight);
         }
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         PreferenceManager.getDefaultSharedPreferences(this)
@@ -108,13 +110,14 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         fragmentManager.beginTransaction()
                 .add(R.id.main_fragment_layout_holder, budgetListFragment)
                 .commit();
+
     }
 
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -126,6 +129,15 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
+    public void reload() {
+        Intent intent = getIntent();
+        overridePendingTransition(0, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+    }
 
     private void logout() {
         mAccountManager.removeAccount(mAccount, null, null, null);
@@ -177,11 +189,40 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
         }
+        if (key.equals(getString(R.string.language_preference_key))) {
+            setLocale(sharedPreferences.getString(getString(R.string.language_preference_key), "en"));
+            reload();
+        }
+
+    }
+
+
+    private void setLocale(String language) {
+        Locale locale;
+        if (language.toLowerCase().equals("en") || language.toLowerCase().equals("gb") || language.toLowerCase().equals("us")) {
+            locale = new Locale("en");
+        } else {
+            locale = new Locale(language.toLowerCase(), language.toUpperCase());
+        }
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("My_Lang", language);
+        editor.apply();
+    }
+
+    private void loadLocale() {
+        SharedPreferences preferences = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+        String language = preferences.getString("My_Lang", Locale.getDefault().getCountry());
+        Log.d("loadLocale language:", language);
+        setLocale(language);
     }
 
     @Override
     public void onFragmentClickInteraction(int clickedElementId) {
-        switch (clickedElementId){
+        switch (clickedElementId) {
             case R.id.budget_list_floating_action_button:
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
@@ -199,10 +240,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 getSupportFragmentManager().popBackStack("budget_list_details_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
-                        .add(R.id.main_fragment_layout_holder, new BudgetListDetailsFragment(recentlyClickedListElementId,
-                                recentlyClickedListElementName,
-                                recentlyClickedDueDate,
-                                recentlyClickedBudgetListCurrencyCode))
+                        .add(R.id.main_fragment_layout_holder, new BudgetListDetailsFragment((long) recentlyClickedBudgetList.getId(),
+                                recentlyClickedBudgetList.getName(),
+                                dd_mm_yyy_sdf.format(recentlyClickedBudgetList.getDueDate()),
+                                dd_mm_yyy_sdf.format(recentlyClickedBudgetList.getStartingDate()),
+                                recentlyClickedBudgetList.getCurrencyCode()))
                         .commit();
 
                 break;
@@ -219,36 +261,30 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     @Override
-    public void onFragmentClickInteraction(int clickedElementId, String listDueDate, Long budgetListId) {
-        switch (clickedElementId){
+    public void onFragmentClickInteraction(int clickedElementId, String listDueDate, String listStartingDate, Long budgetListId) {
+        switch (clickedElementId) {
             case R.id.budget_list_details_floating_action_button:
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
                         .addToBackStack("budget_list_details_fragment")
-                        .replace(R.id.main_fragment_layout_holder, new NewExpenseFragment(listDueDate, budgetListId, recentlyClickedBudgetListCurrencyCode)).commit();
+                        .replace(R.id.main_fragment_layout_holder, new NewExpenseFragment(listDueDate,
+                                listStartingDate, budgetListId, recentlyClickedBudgetList.getCurrencyCode())).commit();
                 break;
         }
 
     }
 
     @Override
-    public void onFragmentBudgetListElementClickInteraction(Long clickedListElementId,
-                                                            String clickedListElementName,
-                                                            String dueDate,
-                                                            String clickedBudgetListAmount,
-                                                            String clickedCurrencyCode) {
-        this.recentlyClickedListElementId = clickedListElementId;
-        this.recentlyClickedListElementName = clickedListElementName;
-        this.recentlyClickedDueDate = dueDate;
-        this.recentlyClickedBudgetListAmount = clickedBudgetListAmount;
-        this.recentlyClickedBudgetListCurrencyCode = clickedCurrencyCode;
+    public void onFragmentBudgetListElementClickInteraction(BudgetList budgetList) {
+        this.recentlyClickedBudgetList = budgetList;
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
                 .addToBackStack("budget_list_fragment")
-                .replace(R.id.main_fragment_layout_holder, new BudgetListDetailsFragment(clickedListElementId,
-                        clickedListElementName,
-                        dueDate,
-                        recentlyClickedBudgetListCurrencyCode)).commit();
+                .replace(R.id.main_fragment_layout_holder, new BudgetListDetailsFragment((long) recentlyClickedBudgetList.getId(),
+                        recentlyClickedBudgetList.getName(),
+                        dd_mm_yyy_sdf.format(recentlyClickedBudgetList.getDueDate()),
+                        dd_mm_yyy_sdf.format(recentlyClickedBudgetList.getStartingDate()),
+                        recentlyClickedBudgetList.getCurrencyCode())).commit();
     }
 
     @Override
@@ -264,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.edit_budget_list_menu, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -273,38 +309,35 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         switch (id) {
             case R.id.edit_budget_list_menu_item:
                 getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
-                    .addToBackStack("budget_list_details_fragment")
-                    .replace(R.id.main_fragment_layout_holder, new EditBudgetListFragment(recentlyClickedListElementName,
-                            recentlyClickedBudgetListAmount,
-                            recentlyClickedDueDate,
-                            recentlyClickedListElementId,
-                            recentlyClickedBudgetListCurrencyCode))
-                    .commit();
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                        .addToBackStack("budget_list_details_fragment")
+                        .replace(R.id.main_fragment_layout_holder, new EditBudgetListFragment(recentlyClickedBudgetList.getName(),
+                                String.valueOf(recentlyClickedBudgetList.getValue()),
+                                dd_mm_yyy_sdf.format(recentlyClickedBudgetList.getDueDate()),
+                                dd_mm_yyy_sdf.format(recentlyClickedBudgetList.getStartingDate()),
+                                (long) recentlyClickedBudgetList.getId(),
+                                recentlyClickedBudgetList.getCurrencyCode()))
+                        .commit();
                 return true;
             case R.id.edit_budget_users_menu_item:
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
                         .addToBackStack("budget_list_details_fragment")
-                        .replace(R.id.main_fragment_layout_holder, new ShareBudgetListFragment(recentlyClickedListElementId))
+                        .replace(R.id.main_fragment_layout_holder, new ShareBudgetListFragment((long) recentlyClickedBudgetList.getId()))
                         .commit();
                 return true;
-                case R.id.edit_sort_expenses_menu_item:
-                    toolbarMenuSortByListener.showSortDialog();
+            case R.id.edit_sort_expenses_menu_item:
+                toolbarMenuSortByListener.showSortDialog();
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
+    public boolean onPrepareOptionsMenu(Menu menu) {
         edit_budget_list_menu_item = menu.findItem(R.id.edit_budget_list_menu_item);
-        edit_budget_list_menu_item.setVisible(false);
         edit_budget_users_menu_item = menu.findItem(R.id.edit_budget_users_menu_item);
-        edit_budget_users_menu_item.setVisible(false);
         edit_sort_expenses_menu_item = menu.findItem(R.id.edit_sort_expenses_menu_item);
-        edit_sort_expenses_menu_item.setVisible(false);
         return true;
     }
 

@@ -17,7 +17,7 @@ import com.example.engineerdegreeapp.retrofit.entity.UserAuth;
 
 import java.util.ArrayList;
 
-public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendViewHolder>{
+public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendViewHolder> {
 
     private ArrayList<UserAuth> friendList;
     private int numberOfItems;
@@ -75,11 +75,12 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     public interface ListItemClickListener {
         void onListItemClick(View v, UserAuth User, CheckBox checkBox, AdapterType adapterType);
     }
+
     public interface OnCreateStateChangeListener {
         void onCreateStateChanged(View v, CheckBox checkBox, AdapterType adapterType);
     }
 
-    class FriendViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class FriendViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView friendUsernameTextView;
         CardView cardView;
@@ -103,8 +104,8 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
             selectedCheckbox = itemView.findViewById(R.id.friends_item_done_check_box);
         }
 
-        public void bind(UserAuth user){
-            if(user.isSelected()){
+        public void bind(UserAuth user) {
+            if (user.isSelected()) {
                 if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
                     cardView.setBackgroundColor(context.getResources().getColor(R.color.darkCardSelectedBackgroundColor, null));
                 } else {
@@ -131,13 +132,11 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
 
         private Integer value;
 
-        public Integer getValue()
-        {
+        public Integer getValue() {
             return this.value;
         }
 
-        AdapterType(Integer value)
-        {
+        AdapterType(Integer value) {
             this.value = value;
         }
     }

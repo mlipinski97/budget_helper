@@ -1,6 +1,5 @@
 package com.example.engineerdegreeapp.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -8,16 +7,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceFragmentCompat;
 
-
 import com.example.engineerdegreeapp.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.AppTheme_Dark);
-        } else{
+        } else {
             setTheme(R.style.AppTheme_Light);
         }
         super.onCreate(savedInstanceState);
@@ -27,10 +25,10 @@ public class SettingsActivity extends AppCompatActivity {
                 .replace(R.id.settings, new SettingsFragment())
                 .commit();
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.title_activity_settings);
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
     }
 
     @Override
@@ -49,5 +47,6 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        this.finish();
     }
 }

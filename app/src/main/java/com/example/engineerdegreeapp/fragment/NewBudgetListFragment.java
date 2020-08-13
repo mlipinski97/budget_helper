@@ -27,7 +27,6 @@ import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.retrofit.BudgetListApi;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.util.AccountUtils;
-import com.example.engineerdegreeapp.util.CurrencyUtils;
 import com.example.engineerdegreeapp.util.RegexUtils;
 
 import org.json.JSONObject;
@@ -55,14 +54,17 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
     private EditText listNameEditText;
     private EditText listValueEditText;
     private CalendarView dueDateCalendarView;
+    private CalendarView startingDateCalendarView;
     private Button cancelButton;
     private Button confirmButton;
     private Account mAccount;
     private AccountManager mAccountManager;
     private OnFragmentClickListener mClickListener;
-    private Long currentlySelectedDate;
+    private Long currentlySelectedDueDate;
+    private Long currentlySelectedStartingDate;
     private Spinner currencyCodeSpinner;
     private String currencyCode;
+    private TextView listDateErrorTextView;
 
     public NewBudgetListFragment() {
 
@@ -87,15 +89,34 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
         listValueErrorTextView = rootView.findViewById(R.id.new_budget_list_amount_error_text_view);
         listNameEditText = rootView.findViewById(R.id.new_budget_list_name_edit_text);
         listValueEditText = rootView.findViewById(R.id.new_budget_list_amount_edit_text);
-        dueDateCalendarView = rootView.findViewById(R.id.new_budget_list_calendar_view);
-        dueDateCalendarView.setMinDate((new Date().getTime()));
-        currentlySelectedDate = dueDateCalendarView.getDate();
+        listDateErrorTextView = rootView.findViewById(R.id.new_budget_list_date_error_text_view);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -13);
+        final Date thirteenDaysAgoDate = cal.getTime();
+        cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -12);
+        final Date twelveDaysAgoDate = cal.getTime();
+        dueDateCalendarView = rootView.findViewById(R.id.new_budget_list_ending_date_calendar_view);
+        dueDateCalendarView.setMinDate((twelveDaysAgoDate.getTime()));
+        currentlySelectedDueDate = dueDateCalendarView.getDate();
         dueDateCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 Calendar c = Calendar.getInstance();
                 c.set(year, month, dayOfMonth);
-                currentlySelectedDate = c.getTimeInMillis();
+                currentlySelectedDueDate = c.getTimeInMillis();
+            }
+        });
+        startingDateCalendarView = rootView.findViewById(R.id.new_budget_list_starting_date_calendar_view);
+        startingDateCalendarView.setMinDate((thirteenDaysAgoDate.getTime()));
+        currentlySelectedStartingDate = dueDateCalendarView.getDate();
+        startingDateCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                Calendar c = Calendar.getInstance();
+                c.set(year, month, dayOfMonth);
+                currentlySelectedStartingDate = c.getTimeInMillis();
             }
         });
         cancelButton = rootView.findViewById(R.id.new_budget_list_button_cancel);
@@ -105,7 +126,6 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
 
         return rootView;
     }
-
 
 
     private void populateCurrencyCodeSpinner() {
@@ -127,13 +147,15 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
         String credentials = loginCredential + ":" + passwordCredential;
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String selectedDate = sdf.format(new Date(currentlySelectedDate));
+        String selectedDueDate = sdf.format(new Date(currentlySelectedDueDate));
+        String selectedStartingDate = sdf.format(new Date(currentlySelectedStartingDate));
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("name", listNameEditText.getText().toString())
                 .addFormDataPart("budgetValue", listValueEditText.getText().toString().replace(",", "."))
-                .addFormDataPart("dueDate", selectedDate)
+                .addFormDataPart("startingDate", selectedStartingDate)
+                .addFormDataPart("dueDate", selectedDueDate)
                 .addFormDataPart("currencyCode", currencyCode)
                 .build();
 
@@ -154,7 +176,7 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else{
+                } else {
                     Toast.makeText(getActivity(), "List successfully added", Toast.LENGTH_SHORT).show();
                     mClickListener.onFragmentClickInteraction(R.id.new_budget_list_button_confirm);
                 }
@@ -177,30 +199,39 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
                 break;
             case R.id.new_budget_list_button_confirm:
                 hideKeyboard();
-                if(isMoneyRegexSafe() && isNameValid()){
+                if (isMoneyRegexSafe() && isNameValid() && areCalendarsDatesCorrect()) {
                     postBudgetList();
-                } else{
-                    if(!isMoneyRegexSafe()){
+                } else {
+                    if (!isMoneyRegexSafe()) {
                         listValueErrorTextView.setVisibility(View.VISIBLE);
-                    } else{
+                    } else {
                         listValueErrorTextView.setVisibility(View.INVISIBLE);
                     }
-                    if(!isNameValid()){
+                    if (!isNameValid()) {
                         listNameErrorTextView.setVisibility(View.VISIBLE);
-                    } else{
+                    } else {
                         listNameErrorTextView.setVisibility(View.INVISIBLE);
+                    }
+                    if (!areCalendarsDatesCorrect()) {
+                        listDateErrorTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        listDateErrorTextView.setVisibility(View.INVISIBLE);
                     }
                 }
                 break;
         }
     }
 
-    private boolean isMoneyRegexSafe(){
+    private boolean areCalendarsDatesCorrect() {
+        return currentlySelectedStartingDate < currentlySelectedDueDate;
+    }
+
+    private boolean isMoneyRegexSafe() {
         String moneyValue = listValueEditText.getText().toString();
         return RegexUtils.isMoneyAmountRegexSafe(moneyValue);
     }
 
-    private boolean isNameValid(){
+    private boolean isNameValid() {
         String name = listNameEditText.getText().toString();
         return !name.isEmpty();
     }
@@ -215,23 +246,23 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
 
     }
 
-    public interface OnFragmentClickListener{
+    public interface OnFragmentClickListener {
         void onFragmentClickInteraction(int clickedElementId);
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        try{
+        try {
             mClickListener = (OnFragmentClickListener) context;
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement NewBudgetListFragment.OnFragmentClickListener");
         }
     }
 
     public void hideKeyboard() {
-        View view =  getActivity().getCurrentFocus();
-        if(view != null){
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }

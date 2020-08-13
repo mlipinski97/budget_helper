@@ -20,7 +20,7 @@
     <!-- BudgetList(main) fragment -->
     <string name="budget_list_loading_error">There was a problem loading your list!</string>
     <string name="user_help_frame_no_list_found">No planned budgets :)</string>
-    <string name="budget_list_delete_button">delete selected lists</string>
+    <string name="budget_list_delete_button">Delete selected lists</string>
     <string name="budget_list_dialog_sort_by_text">Sort by:</string>
     <string name="budget_list_value_text">Total value: </string>
     <string name="budget_list_remaining_value_text">Remaining value: </string>
@@ -33,7 +33,9 @@
     <string name="new_budget_list_value_prompt">Money amount:</string>
     <string name="new_budget_list_value_hint">Amount you can spend</string>
     <string name="new_budget_list_value_error">Wrong money amount!</string>
-    <string name="new_budget_list_due_date_prompt">Due date:</string>
+    <string name="new_budget_list_date_error">List can not end before it begins!</string>
+    <string name="new_budget_list_ending_date_prompt">Due date:</string>
+    <string name="new_budget_list_starting_date_prompt">Beginning date:</string>
     <string name="new_budget_list_cancel_button">Cancel</string>
     <string name="new_budget_list_confirm_button">Add list</string>
     <string name="edit_budget_list_confirm_button">Edit list</string>
@@ -41,6 +43,15 @@
 
     <!-- new/edit expense fragment -->
     <string name="new_expense_spinner_title_text">Choose category of your new expense:</string>
+    <string name="new_expense_list_name_prompt">Expense name:</string>
+    <string name="new_expense_list_name_hint">Enter name of your new expense here</string>
+    <string name="new_expense_list_name_error">Expense must have name!</string>
+    <string name="new_expense_list_value_prompt">Money amount:</string>
+    <string name="new_expense_list_value_hint">Amount of expense</string>
+    <string name="new_expense_list_value_error">Wrong money amount!</string>
+    <string name="new_expense_list_due_date_prompt">Due date:</string>
+    <string name="new_expense_list_cancel_button">Cancel</string>
+    <string name="new_expense_list_confirm_button">Add expense</string>
 
     <!-- share budget list fragment -->
     <string name="share_budget_list_toolbar_name">Share your budget list with friends</string>
@@ -57,13 +68,13 @@
     <!-- Navigation drawer -->
     <string name="drawer_navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="drawer_navigation_drawer_close" translatable="false">Close navigation drawer</string>
-    <string name="drawer_contact_email">maciej.lipinski@student.wat.edu.pl</string>
-    <string name="drawer_menu_prompt">Menu:</string>
+    <string name="drawer_contact_email" translatable="false">maciej.lipinski@student.wat.edu.pl</string>
+    <string name="drawer_menu_prompt" translatable="false">Menu:</string>
     <string name="drawer_loading_error">Something went wrong!</string>
     <string name="drawer_logged_in_as">Currently logged in as:</string>
-    <string name="drawer_logout">logout</string>
-    <string name="drawer_settings">settings</string>
-    <string name="drawer_friends">friends</string>
+    <string name="drawer_logout">Logout</string>
+    <string name="drawer_settings">Settings</string>
+    <string name="drawer_friends">Friends</string>
 
     <!-- Settings fragment -->
     <string name="dark_mode">Dark mode</string>
@@ -71,9 +82,11 @@
 
     <!-- Preference Titles -->
     <string name="dark_mode_preference_title">Dark mode</string>
+    <string name="language_preference_title">Language</string>
 
     <!-- Preference keys -->
-    <string name="dark_mode_preference_key">dark_mode</string>
+    <string name="dark_mode_preference_key" translatable="false">dark_mode</string>
+    <string name="language_preference_key" translatable="false">language</string>
 
     <!--Budget List Fragment Details Text-->
     <string name="user_greetings">Greetings </string>
@@ -82,7 +95,7 @@
     <string name="closest_list_to_date_value_total">From total of: </string>
     <string name="budget_list_details_delete_button">delete selected expenses</string>
     <string name="edit_budget_list">Edit</string>
-    <string name="edit_budget_users">users</string>
+    <string name="edit_budget_users">Users</string>
     <string name="edit_budget_sort">Sort by</string>
     <string name="budget_list_details_dialog_cancel_button">Cancel</string>
     <string name="budget_list_details_dialog_sort_by_text">Sort by:</string>
@@ -98,7 +111,7 @@
     <string name="friend_fragment_title">Your friends</string>
     <string name="friend_decline">Decline</string>
     <string name="friend_accept">Accept</string>
-    <string name="friend_request_sent">request sent</string>
+    <string name="friend_request_sent">Request sent</string>
     <string name="friend_add_friend_hint">Enter your friend username</string>
     <string name="friend_send_friend_request_button">Add friend</string>
     <string name="friend_send_friend_request_text_view">Add your friend by entering their username and clicking "add friend"</string>

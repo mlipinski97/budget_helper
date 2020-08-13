@@ -17,7 +17,7 @@ import com.example.engineerdegreeapp.retrofit.entity.Friendship;
 
 import java.util.ArrayList;
 
-public class FriendshipAdapter extends RecyclerView.Adapter<FriendshipAdapter.FriendshipViewHolder>{
+public class FriendshipAdapter extends RecyclerView.Adapter<FriendshipAdapter.FriendshipViewHolder> {
 
     private ArrayList<Friendship> friendShipList;
     private int numberOfItems;
@@ -71,7 +71,7 @@ public class FriendshipAdapter extends RecyclerView.Adapter<FriendshipAdapter.Fr
         void onCreateStateChanged(View v, CheckBox checkBox);
     }
 
-    class FriendshipViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class FriendshipViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView friendUsernameTextView;
         CardView cardView;
@@ -95,8 +95,8 @@ public class FriendshipAdapter extends RecyclerView.Adapter<FriendshipAdapter.Fr
             selectedCheckbox = itemView.findViewById(R.id.friends_item_done_check_box);
         }
 
-        public void bind(Friendship friendship){
-            if(friendship.isSelected()){
+        public void bind(Friendship friendship) {
+            if (friendship.isSelected()) {
                 if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
                     cardView.setBackgroundColor(context.getResources().getColor(R.color.darkCardSelectedBackgroundColor, null));
                 } else {
@@ -105,9 +105,9 @@ public class FriendshipAdapter extends RecyclerView.Adapter<FriendshipAdapter.Fr
                 selectedCheckbox.setVisibility(View.VISIBLE);
                 onCreateStateChangeListener.onCreateStateChanged(cardView, selectedCheckbox);
             }
-            if(friendship.getFriend().getUsername().equals(loggedUsername)){
+            if (friendship.getFriend().getUsername().equals(loggedUsername)) {
                 friendUsernameTextView.setText(friendship.getRequester().getUsername());
-            } else{
+            } else {
                 friendUsernameTextView.setText(friendship.getFriend().getUsername());
             }
             setFriendship(friendship);

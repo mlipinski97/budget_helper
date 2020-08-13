@@ -36,7 +36,6 @@ public interface UserApi {
     @HTTP(method = "DELETE", path = "deletemany", hasBody = true)
     Call<Void> deleteManyFriendships(@Header("Authorization") String auth, @Body List<String> friendsUsernameList);
 
-
     @PATCH("accept")
     Call<Friendship> acceptFriendship(@Header("Authorization") String auth, @Query("requesterUsername") String requesterUsername);
 

@@ -61,7 +61,7 @@ public class FriendshipAwaitingConfirmationAdapter extends RecyclerView.Adapter<
         void onListItemClick(View v, Friendship friendship);
     }
 
-    class FriendshipAwaitingConfirmationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class FriendshipAwaitingConfirmationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView friendUsernameTextView;
         CardView cardView;
@@ -88,10 +88,10 @@ public class FriendshipAwaitingConfirmationAdapter extends RecyclerView.Adapter<
             acceptButton.setOnClickListener(this);
         }
 
-        public void bind(Friendship friendship){
-            if(friendship.getFriend().getUsername().equals(loggedUsername)){
+        public void bind(Friendship friendship) {
+            if (friendship.getFriend().getUsername().equals(loggedUsername)) {
                 friendUsernameTextView.setText(friendship.getRequester().getUsername());
-            } else{
+            } else {
                 friendUsernameTextView.setText(friendship.getFriend().getUsername());
                 acceptButton.setEnabled(false);
                 acceptButton.setText(R.string.friend_request_sent);

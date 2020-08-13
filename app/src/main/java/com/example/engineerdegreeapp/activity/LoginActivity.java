@@ -1,18 +1,15 @@
 package com.example.engineerdegreeapp.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.FragmentManager;
-import androidx.preference.PreferenceManager;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.*;
-import android.widget.Button;
-import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.fragment.LoginFragment;
@@ -22,7 +19,7 @@ import com.example.engineerdegreeapp.util.AccountUtils;
 
 public class LoginActivity extends AppCompatActivity implements
         RegistrationFragment.OnFragmentClickListener,
-        LoginFragment.OnFragmentClickListener{
+        LoginFragment.OnFragmentClickListener {
 
     public static final String ARG_ACCOUNT_TYPE = "accountType";
     public static final String ARG_AUTH_TOKEN_TYPE = "authTokenType";
@@ -42,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements
         // Ask for an auth token
         //mAccountManager.getAuthTokenByFeatures(AccountUtils.ACCOUNT_TYPE, AccountUtils.AUTH_TOKEN_TYPE, null, this, null, null, new GetAuthTokenCallback(), null);
         Account[] accounts = mAccountManager.getAccountsByType(AccountUtils.ACCOUNT_TYPE);
-        if (accounts.length >= 1){
+        if (accounts.length >= 1) {
             startAndGoToMainActivity();
         }
 
@@ -51,13 +48,13 @@ public class LoginActivity extends AppCompatActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         fragmentManager.beginTransaction()
-                .add(R.id.login_fragment_layout_holder ,loginFragment)
+                .add(R.id.login_fragment_layout_holder, loginFragment)
                 .commit();
     }
 
     @Override
     public void onFragmentClickInteraction(int clickedElementId) {
-        switch (clickedElementId){
+        switch (clickedElementId) {
             case R.id.login_sign_in_button:
                 startAndGoToMainActivity();
                 break;
@@ -81,11 +78,11 @@ public class LoginActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    private void checkSharedPreferences(){
+    private void checkSharedPreferences() {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(mPreferences.getBoolean(getString(R.string.dark_mode_preference_key), false)){
+        if (mPreferences.getBoolean(getString(R.string.dark_mode_preference_key), false)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else{
+        } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
     }

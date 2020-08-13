@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -24,7 +23,6 @@ import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.retrofit.UserApi;
 import com.example.engineerdegreeapp.retrofit.entity.UserAuth;
 import com.example.engineerdegreeapp.util.AccountUtils;
-
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -70,9 +68,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        try{
+        try {
             mClickListener = (OnFragmentClickListener) context;
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement OnFragmentClickListener");
         }
     }
@@ -81,7 +79,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         int clickedItemId = v.getId();
-        switch (clickedItemId){
+        switch (clickedItemId) {
             case R.id.login_sign_in_button:
                 hideKeyboard();
                 checkCredentialsAndLogIn();
@@ -94,7 +92,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void checkCredentialsAndLogIn(){
+    private void checkCredentialsAndLogIn() {
         registerButton.setEnabled(false);
         loginButton.setEnabled(false);
 
@@ -114,26 +112,23 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         call.enqueue(new Callback<UserAuth>() {
             @Override
             public void onResponse(Call<UserAuth> call, Response<UserAuth> response) {
-                if(!response.isSuccessful()){
+                if (!response.isSuccessful()) {
                     registerButton.setEnabled(true);
                     loginButton.setEnabled(true);
-                    if(response.code() == 401){
+                    if (response.code() == 401) {
                         errorMessageTextView.setVisibility(View.VISIBLE);
-                    }else{
-                        Toast.makeText(getActivity(),"There was a problem logging in", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "There was a problem logging in", Toast.LENGTH_SHORT).show();
                     }
-                }else{
+                } else {
                     errorMessageTextView.setVisibility(View.INVISIBLE);
                     Account[] accounts = mAccountManager.getAccountsByType(AccountUtils.ACCOUNT_TYPE);
-                    if (accounts.length > 0)
-                    {
+                    if (accounts.length > 0) {
                         registerButton.setEnabled(true);
                         loginButton.setEnabled(true);
                         Toast toast = Toast.makeText(getActivity(), getString(R.string.login_account_manager_already_exists), Toast.LENGTH_LONG);
                         toast.show();
-                    }
-                    else
-                    {
+                    } else {
                         final Account account = new Account(loginCredential, AccountUtils.ACCOUNT_TYPE);
                         final DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
                         String authToken = loginCredential + "_" + AccountUtils.APP_NAME + "_" + df.format(new Date());
@@ -157,13 +152,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    public interface OnFragmentClickListener{
+    public interface OnFragmentClickListener {
         void onFragmentClickInteraction(int clickedElementId);
     }
 
     public void hideKeyboard() {
-        View view =  getActivity().getCurrentFocus();
-        if(view != null){
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
