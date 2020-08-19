@@ -90,4 +90,13 @@
     <string name="language_preference_title">Język</string>
     <string name="new_budget_list_starting_date_prompt">Termin początkowy:</string>
     <string name="new_budget_list_date_error">Lista nie może kończyć się zanim się zacznie!</string>
+    <string name="drawer_admin_add_category">Dodaj kategorię</string>
+    <string name="drawer_admin_edit_category">Edytuj kategorię</string>
+    <string name="category_add_button">Dodaj</string>
+    <string name="category_edit_button">Edytuj</string>
+    <string name="category_cancel_button">Anuluj</string>
+    <string name="category_name_prompt">Nazwa kategorii:</string>
+    <string name="category_name_hint">Wprowadź nazwę</string>
+    <string name="category_icon_prompt">Wybierz icony kategorii:</string>
+    <string name="category_new_added_toast_text">Dodano nową kategorię</string>
 </resources>

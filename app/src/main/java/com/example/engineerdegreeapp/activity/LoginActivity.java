@@ -25,6 +25,7 @@ public class LoginActivity extends AppCompatActivity implements
     public static final String ARG_AUTH_TOKEN_TYPE = "authTokenType";
     public static final String ARG_IS_ADDING_NEW_ACCOUNT = "isAddingNewAccount";
     public static final String PARAM_USER_PASSWORD = "password";
+    public static final String SERVER_USER_ROLE = "serverUserRole";
     private SharedPreferences mPreferences;
     private AccountManager mAccountManager;
 

@@ -41,7 +41,7 @@ public class CategorySpinnerAdapter extends ArrayAdapter<CategoryItem> {
         TextView categoryTextView = convertView.findViewById(R.id.category_spinner_text_view);
         CategoryItem categoryItem = getItem(position);
         if (categoryItem != null) {
-            //categoryImageView.setImageResource(categoryItem.getCategoryImage());
+            categoryImageView.setImageBitmap(categoryItem.getCategoryImage());
             categoryTextView.setText(categoryItem.getCategoryName());
         }
 

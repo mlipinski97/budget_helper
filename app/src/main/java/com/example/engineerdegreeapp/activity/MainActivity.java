@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -32,6 +33,7 @@ import com.example.engineerdegreeapp.fragment.BudgetListFragment;
 import com.example.engineerdegreeapp.fragment.EditBudgetListFragment;
 import com.example.engineerdegreeapp.fragment.FriendsFragment;
 import com.example.engineerdegreeapp.fragment.NewBudgetListFragment;
+import com.example.engineerdegreeapp.fragment.NewCategoryFragment;
 import com.example.engineerdegreeapp.fragment.NewExpenseFragment;
 import com.example.engineerdegreeapp.fragment.ShareBudgetListFragment;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
@@ -41,6 +43,7 @@ import com.google.android.material.navigation.NavigationView.OnNavigationItemSel
 
 import java.util.Locale;
 
+import static com.example.engineerdegreeapp.util.AccountUtils.APP_ADMIN_ROLE;
 import static com.example.engineerdegreeapp.util.DateUtils.dd_mm_yyy_sdf;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener,
@@ -51,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         NewExpenseFragment.OnFragmentClickListener,
         ToolbarChangeListener,
         EditBudgetListFragment.OnFragmentClickListener,
-        ShareBudgetListFragment.OnFragmentClickListener {
+        ShareBudgetListFragment.OnFragmentClickListener,
+        NewCategoryFragment.OnFragmentClickListener{
 
     private Account mAccount;
     private AccountManager mAccountManager;
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private MenuItem edit_sort_expenses_menu_item;
     private ToolbarMenuSortListener toolbarMenuSortByListener;
     private BudgetList recentlyClickedBudgetList;
+    private MenuItem addCategoryAdminMenuItem;
+    private MenuItem editCategoryAdminMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,12 +103,24 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         toggle.syncState();
 
 
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.main_drawer_view);
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
         currentlyLoggedInTextView = headerView.findViewById(R.id.navigation_drawer_logged_user_text_view);
         currentlyLoggedInTextView.setText(mAccount.name);
+        Menu drawerContentMenu = navigationView.getMenu();
+        addCategoryAdminMenuItem = drawerContentMenu.findItem(R.id.drawer_admin_add_category);
+        editCategoryAdminMenuItem = drawerContentMenu.findItem(R.id.drawer_admin_edit_category);
+
+        if(mAccountManager.getUserData(mAccount,LoginActivity.SERVER_USER_ROLE).equals(APP_ADMIN_ROLE)){
+            addCategoryAdminMenuItem.setVisible(true);
+            editCategoryAdminMenuItem.setVisible(true);
+        } else{
+            addCategoryAdminMenuItem.setVisible(false);
+            editCategoryAdminMenuItem.setVisible(false);
+        }
 
         BudgetListFragment budgetListFragment = new BudgetListFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -173,6 +191,22 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
                         .addToBackStack("budget_list_fragment")
                         .replace(R.id.main_fragment_layout_holder, new FriendsFragment()).commit();
+                break;
+            case R.id.drawer_admin_add_category:
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                        .addToBackStack("budget_list_fragment")
+                        .replace(R.id.main_fragment_layout_holder, new NewCategoryFragment()).commit();
+                break;
+            case R.id.drawer_admin_edit_category:
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+                //TODO: make whole edit/delete fragment
+                Toast.makeText(this, "drawer_admin_edit_category", Toast.LENGTH_SHORT).show();
                 break;
         }
         return true;
@@ -246,12 +280,18 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                                 dd_mm_yyy_sdf.format(recentlyClickedBudgetList.getStartingDate()),
                                 recentlyClickedBudgetList.getCurrencyCode()))
                         .commit();
-
+                break;
+            case R.id.new_category_button_confirm:
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.main_fragment_layout_holder, new BudgetListFragment())
+                        .commit();
                 break;
             case R.id.new_budget_list_button_cancel:
             case R.id.new_expense_button_cancel:
             case R.id.edit_budget_list_button_cancel:
             case R.id.share_budget_list_button_cancel:
+            case R.id.new_category_button_cancel:
                 getSupportFragmentManager().popBackStack();
                 break;
             default:

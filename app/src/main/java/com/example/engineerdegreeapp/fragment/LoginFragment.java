@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.engineerdegreeapp.R;
+import com.example.engineerdegreeapp.activity.LoginActivity;
 import com.example.engineerdegreeapp.retrofit.UserApi;
 import com.example.engineerdegreeapp.retrofit.entity.UserAuth;
 import com.example.engineerdegreeapp.util.AccountUtils;
@@ -133,7 +134,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         final DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
                         String authToken = loginCredential + "_" + AccountUtils.APP_NAME + "_" + df.format(new Date());
 
+                        String userRole = response.body().getRoles();
                         Bundle bundle = new Bundle();
+                        bundle.putString(LoginActivity.SERVER_USER_ROLE, userRole);
 
                         mAccountManager.addAccountExplicitly(account, passwordCredential, bundle);
                         mAccountManager.setAuthToken(account, AccountUtils.AUTH_TOKEN_TYPE, authToken);

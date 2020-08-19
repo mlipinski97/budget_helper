@@ -5,6 +5,8 @@ import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Base64;
@@ -14,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -39,9 +40,7 @@ import com.example.engineerdegreeapp.util.RegexUtils;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -168,17 +167,21 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
                 } else {
                     Log.d("loadCategorySpinnerData()", "loaded all categories");
                     ArrayList<Category> categories = new ArrayList<>(response.body());
+                    byte[] decodedString = Base64.decode(categories.get(8).getCategoryImage(), Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                     ArrayList<String> items = categories.stream().map(Category::getCategoryName).collect(Collectors.toCollection(ArrayList::new));
                     ArrayList<CategoryItem> categoryItems = new ArrayList<>();
-                    items.forEach(item -> categoryItems.add(new CategoryItem(item, R.drawable.ic_add_black_24dp)));
+                    items.forEach(item -> categoryItems.add(new CategoryItem(item, decodedByte)));
                     CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(getContext(), categoryItems);
                     categorySpinner.setAdapter(adapter);
+//TODO: change icon for every category
                 }
             }
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
                 Log.d("loadCategorySpinnerData()", "onFailure while loading spinner data");
+                t.printStackTrace();
             }
         });
 
@@ -206,10 +209,6 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
                 .build();
 
         Call<Expense> call = expenseApi.postExpense(auth, budgetListId, selectedCategory.getCategoryName(), requestBody);
-        System.out.println(expenseNameEditText.getText().toString());
-        System.out.println(expenseValueEditText.getText().toString().replace(",", "."));
-        System.out.println(selectedDate);
-        System.out.println(budgetListId);
         call.enqueue(new Callback<Expense>() {
             @Override
             public void onResponse(Call<Expense> call, Response<Expense> response) {

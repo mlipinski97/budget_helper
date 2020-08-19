@@ -25,5 +25,19 @@
             android:icon="@drawable/ic_logout"
             android:title="@string/drawer_logout" />
     </group>
+    <group>
+        <item
+            android:id="@+id/drawer_admin_add_category"
+            android:icon="@drawable/ic_baseline_category_24"
+            android:title="@string/drawer_admin_add_category"
+            android:visible="false"
+            />
+        <item
+            android:id="@+id/drawer_admin_edit_category"
+            android:icon="@drawable/ic_baseline_edit_24"
+            android:title="@string/drawer_admin_edit_category"
+            android:visible="false"
+            />
+    </group>
 
 </menu>

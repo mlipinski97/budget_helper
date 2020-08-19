@@ -8,6 +8,8 @@ public class AccountUtils {
     public static final String APP_NAME = "engineer_degree";
     public static final String ACCOUNT_TYPE = "engineer_degree";
     public static final String AUTH_TOKEN_TYPE = "engineer_degree.token_type";
+    public static final String APP_USER_ROLE = "ROLE_USER";
+    public static final String APP_ADMIN_ROLE = "ROLE_ADMIN";
 
     public static Account getAccount(Context context, String accountName) {
         AccountManager accountManager = AccountManager.get(context);

@@ -1,12 +1,13 @@
 package com.example.engineerdegreeapp.adapter.item;
 
+import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 public class CategoryItem {
     private String categoryName;
-    private int categoryImage;
+    private Bitmap categoryImage;
 
-    public CategoryItem(String categoryName, int categoryImage) {
+    public CategoryItem(String categoryName, Bitmap categoryImage) {
         this.categoryName = categoryName;
         this.categoryImage = categoryImage;
     }
@@ -19,11 +20,11 @@ public class CategoryItem {
         this.categoryName = categoryName;
     }
 
-    public int getCategoryImage() {
+    public Bitmap getCategoryImage() {
         return categoryImage;
     }
 
-    public void setCategoryImage(int categoryImage) {
+    public void setCategoryImage(Bitmap categoryImage) {
         this.categoryImage = categoryImage;
     }
 }
