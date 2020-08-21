@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -48,7 +49,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.app.Activity.RESULT_OK;
 
-public class NewCategoryFragment extends Fragment implements View.OnClickListener {
+public class EditCategoryFragment extends Fragment implements View.OnClickListener {
 
     private static final int RESULT_LOAD_IMAGE = 1;
 
@@ -59,15 +60,22 @@ public class NewCategoryFragment extends Fragment implements View.OnClickListene
     private Button cancelButton;
     private Button confirmButton;
     private OnFragmentClickListener mClickListener;
+    private String oldCategoryName;
+    private Bitmap decodedByte = null;
     private ToolbarChangeListener toolbarChangeListener;
 
-    public NewCategoryFragment() {
+
+    public EditCategoryFragment() {
+    }
+
+    public EditCategoryFragment(String categoryName) {
+        this.oldCategoryName = categoryName;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_new_category, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_edit_category, container, false);
 
 
         mAccountManager = AccountManager.get(getContext());
@@ -78,16 +86,17 @@ public class NewCategoryFragment extends Fragment implements View.OnClickListene
             return null;
         }
 
-        toolbarChangeListener.changeToolbarTitle(getContext().getResources().getString(R.string.category_new_toolbar_title));
+        toolbarChangeListener.changeToolbarTitle(getContext().getResources().getString(R.string.category_edit_toolbar_title));
         toolbarChangeListener.hideEditButtons();
 
-        categoryNameEditText = rootView.findViewById(R.id.new_category_name_edit_text);
-        categoryIconImageView = rootView.findViewById(R.id.new_category_icon_image_view);
-        cancelButton = rootView.findViewById(R.id.new_category_button_cancel);
-        confirmButton = rootView.findViewById(R.id.new_category_button_confirm);
+        categoryNameEditText = rootView.findViewById(R.id.edit_category_name_edit_text);
+        categoryIconImageView = rootView.findViewById(R.id.edit_category_icon_image_view);
+        cancelButton = rootView.findViewById(R.id.edit_category_button_cancel);
+        confirmButton = rootView.findViewById(R.id.edit_category_button_confirm);
         categoryIconImageView.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
         confirmButton.setOnClickListener(this);
+        getAndLoadCategory(oldCategoryName);
 
         return rootView;
     }
@@ -96,11 +105,19 @@ public class NewCategoryFragment extends Fragment implements View.OnClickListene
         void onFragmentClickInteraction(int clickedElementId);
     }
 
-    public void hideKeyboard() {
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            mClickListener = (OnFragmentClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implement EditCategoryFragment.OnFragmentClickListener");
+        }
+        try {
+            toolbarChangeListener = (ToolbarChangeListener) context;
+        } catch (ClassCastException f) {
+            throw new ClassCastException(context.toString() + "must implement ToolbarChangeListener");
+
         }
     }
 
@@ -108,15 +125,15 @@ public class NewCategoryFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         int clickedItemId = v.getId();
         switch (clickedItemId) {
-            case R.id.new_category_icon_image_view:
+            case R.id.edit_category_icon_image_view:
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
                 break;
-            case R.id.new_category_button_confirm:
-                postCategory();
+            case R.id.edit_category_button_confirm:
+                editCategory();
                 hideKeyboard();
                 break;
-            case R.id.new_category_button_cancel:
+            case R.id.edit_category_button_cancel:
                 hideKeyboard();
                 mClickListener.onFragmentClickInteraction(clickedItemId);
                 break;
@@ -132,25 +149,59 @@ public class NewCategoryFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            mClickListener = (OnFragmentClickListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement NewCategoryFragment.OnFragmentClickListener");
-        }
-        try {
-            toolbarChangeListener = (ToolbarChangeListener) context;
-        } catch (ClassCastException f) {
-            throw new ClassCastException(context.toString() + "must implement ToolbarChangeListener");
-
+    public void hideKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
+    private void getAndLoadCategory(String CategoryName) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://engineer-degree-project.herokuapp.com/api/category/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-    //TODO do postCategory, edit category(backend too)
-    private void postCategory() {
+        CategoryApi categoryApi = retrofit.create(CategoryApi.class);
+        String loginCredential = mAccount.name;
+        String passwordCredential = mAccountManager.getPassword(mAccount);
+        String credentials = loginCredential + ":" + passwordCredential;
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        Call<Category> call = categoryApi.getSingleCategory(auth, oldCategoryName);
+        call.enqueue(new Callback<Category>() {
+            @Override
+            public void onResponse(Call<Category> call, Response<Category> response) {
+                if (!response.isSuccessful()) {
+                    try {
+                        Log.d("getAndLoadCategory()", response.errorBody().string());
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Log.d("getAndLoadCategory()", "loaded all categories");
+                    Category category = response.body();
+                    if (category.getCategoryImage() != null) {
+                        byte[] decodedString = Base64.decode(category.getCategoryImage(), Base64.DEFAULT);
+                        decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                        categoryIconImageView.setImageBitmap(decodedByte);
+                    } else {
+                        categoryIconImageView.setImageResource(R.drawable.question_mark);
+                    }
+
+                    categoryNameEditText.setText(category.getCategoryName());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Category> call, Throwable t) {
+                Log.d("getAndLoadCategory()", "onFailure while calling load");
+            }
+        });
+    }
+
+    private void editCategory() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://engineer-degree-project.herokuapp.com/api/category/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -165,10 +216,7 @@ public class NewCategoryFragment extends Fragment implements View.OnClickListene
 
 
         Bitmap imageBitmap = ((BitmapDrawable) categoryIconImageView.getDrawable()).getBitmap();
-
-        //create a file to write bitmap data
         File f = new File(getContext().getCacheDir(), "photo.png");
-
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 85 /*ignored for PNG*/, bos);
@@ -191,26 +239,26 @@ public class NewCategoryFragment extends Fragment implements View.OnClickListene
         String fileName = categoryNameEditText.getText().toString() + "_icon_image";
         MultipartBody.Part imagePart = MultipartBody.Part.createFormData("categoryImage", fileName, RequestBody.create(MediaType.parse("image/png"), f));
 
-        Call<Category> call = categoryApi.postCategory(auth, categoryNameEditText.getText().toString(), imagePart);
+        Call<Category> call = categoryApi.editCategory(auth, oldCategoryName, categoryNameEditText.getText().toString(), imagePart);
         call.enqueue(new Callback<Category>() {
             @Override
             public void onResponse(Call<Category> call, Response<Category> response) {
                 if (!response.isSuccessful()) {
                     try {
-                        Log.d("postCategory()", response.errorBody().string());
+                        Log.d("editCategory()", response.errorBody().string());
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Log.d("postCategory()", "posted new  category" + categoryNameEditText.getText().toString());
-                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.category_new_added_toast_text) + "(" + categoryNameEditText.getText().toString() + ")", Toast.LENGTH_SHORT).show();
-                    mClickListener.onFragmentClickInteraction(R.id.new_category_button_confirm);
+                    Log.d("editCategory()", "posted edited category" + categoryNameEditText.getText().toString());
+                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.category_edited_toast_text) + "(" + categoryNameEditText.getText().toString() + ")", Toast.LENGTH_SHORT).show();
+                    mClickListener.onFragmentClickInteraction(R.id.edit_category_button_confirm);
                 }
             }
 
             @Override
             public void onFailure(Call<Category> call, Throwable t) {
-                Log.d("onFailure()", "failed to add category: " + categoryNameEditText.getText().toString());
+                Log.d("onFailure()", "failed to edit category: " + categoryNameEditText.getText().toString());
                 t.printStackTrace();
             }
         });

@@ -9,6 +9,10 @@ public class Category {
     @SerializedName("categoryImage")
     private String categoryImage;
 
+    private boolean isSelected;
+
+    private boolean isDeleted;
+
 
     public Category(String categoryName) {
         this.categoryName = categoryName;
@@ -20,6 +24,14 @@ public class Category {
     public Category(String categoryName, String categoryImage) {
         this.categoryName = categoryName;
         this.categoryImage = categoryImage;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public String getCategoryImage() {
@@ -36,5 +48,13 @@ public class Category {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

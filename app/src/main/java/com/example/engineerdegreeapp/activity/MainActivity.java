@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -30,13 +29,16 @@ import com.example.engineerdegreeapp.communication.ToolbarChangeListener;
 import com.example.engineerdegreeapp.communication.ToolbarMenuSortListener;
 import com.example.engineerdegreeapp.fragment.BudgetListDetailsFragment;
 import com.example.engineerdegreeapp.fragment.BudgetListFragment;
+import com.example.engineerdegreeapp.fragment.CategoryBrowserFragment;
 import com.example.engineerdegreeapp.fragment.EditBudgetListFragment;
+import com.example.engineerdegreeapp.fragment.EditCategoryFragment;
 import com.example.engineerdegreeapp.fragment.FriendsFragment;
 import com.example.engineerdegreeapp.fragment.NewBudgetListFragment;
 import com.example.engineerdegreeapp.fragment.NewCategoryFragment;
 import com.example.engineerdegreeapp.fragment.NewExpenseFragment;
 import com.example.engineerdegreeapp.fragment.ShareBudgetListFragment;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
+import com.example.engineerdegreeapp.retrofit.entity.Category;
 import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
@@ -55,7 +57,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         ToolbarChangeListener,
         EditBudgetListFragment.OnFragmentClickListener,
         ShareBudgetListFragment.OnFragmentClickListener,
-        NewCategoryFragment.OnFragmentClickListener{
+        NewCategoryFragment.OnFragmentClickListener,
+        EditCategoryFragment.OnFragmentClickListener,
+        CategoryBrowserFragment.OnFragmentClickListener {
 
     private Account mAccount;
     private AccountManager mAccountManager;
@@ -103,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         toggle.syncState();
 
 
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.main_drawer_view);
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
@@ -114,10 +117,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         addCategoryAdminMenuItem = drawerContentMenu.findItem(R.id.drawer_admin_add_category);
         editCategoryAdminMenuItem = drawerContentMenu.findItem(R.id.drawer_admin_edit_category);
 
-        if(mAccountManager.getUserData(mAccount,LoginActivity.SERVER_USER_ROLE).equals(APP_ADMIN_ROLE)){
+        if (mAccountManager.getUserData(mAccount, LoginActivity.SERVER_USER_ROLE).equals(APP_ADMIN_ROLE)) {
             addCategoryAdminMenuItem.setVisible(true);
             editCategoryAdminMenuItem.setVisible(true);
-        } else{
+        } else {
             addCategoryAdminMenuItem.setVisible(false);
             editCategoryAdminMenuItem.setVisible(false);
         }
@@ -205,8 +208,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 if (drawer.isDrawerOpen(GravityCompat.START)) {
                     drawer.closeDrawer(GravityCompat.START);
                 }
-                //TODO: make whole edit/delete fragment
-                Toast.makeText(this, "drawer_admin_edit_category", Toast.LENGTH_SHORT).show();
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                        .addToBackStack("budget_list_fragment")
+                        .replace(R.id.main_fragment_layout_holder, new CategoryBrowserFragment()).commit();
                 break;
         }
         return true;
@@ -287,11 +292,13 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                         .add(R.id.main_fragment_layout_holder, new BudgetListFragment())
                         .commit();
                 break;
+            case R.id.edit_category_button_confirm:
             case R.id.new_budget_list_button_cancel:
             case R.id.new_expense_button_cancel:
             case R.id.edit_budget_list_button_cancel:
             case R.id.share_budget_list_button_cancel:
             case R.id.new_category_button_cancel:
+            case R.id.edit_category_button_cancel:
                 getSupportFragmentManager().popBackStack();
                 break;
             default:
@@ -325,6 +332,14 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                         dd_mm_yyy_sdf.format(recentlyClickedBudgetList.getDueDate()),
                         dd_mm_yyy_sdf.format(recentlyClickedBudgetList.getStartingDate()),
                         recentlyClickedBudgetList.getCurrencyCode())).commit();
+    }
+
+    @Override
+    public void onFragmentCategoryBrowserElementClickInteraction(Category category) {
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                .addToBackStack("category_browser_fragment")
+                .replace(R.id.main_fragment_layout_holder, new EditCategoryFragment(category.getCategoryName())).commit();
     }
 
     @Override
@@ -406,4 +421,5 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     public void changeSortButtonListener(ToolbarMenuSortListener listener) {
         toolbarMenuSortByListener = listener;
     }
+
 }

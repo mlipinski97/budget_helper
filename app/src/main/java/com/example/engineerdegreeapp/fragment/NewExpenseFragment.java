@@ -45,7 +45,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -167,11 +170,10 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
                 } else {
                     Log.d("loadCategorySpinnerData()", "loaded all categories");
                     ArrayList<Category> categories = new ArrayList<>(response.body());
-                    byte[] decodedString = Base64.decode(categories.get(8).getCategoryImage(), Base64.DEFAULT);
-                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                    ArrayList<String> items = categories.stream().map(Category::getCategoryName).collect(Collectors.toCollection(ArrayList::new));
+                    categories = categories.stream().filter(c -> !c.isDeleted()).collect(Collectors.toCollection(ArrayList::new));
+                    Map<String, Bitmap> mappedCategories = transformToCategoryItems(categories);
                     ArrayList<CategoryItem> categoryItems = new ArrayList<>();
-                    items.forEach(item -> categoryItems.add(new CategoryItem(item, decodedByte)));
+                    mappedCategories.entrySet().forEach(e -> categoryItems.add(new CategoryItem(e.getKey(), e.getValue())));
                     CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(getContext(), categoryItems);
                     categorySpinner.setAdapter(adapter);
 //TODO: change icon for every category
@@ -185,6 +187,21 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
             }
         });
 
+    }
+
+    private Map<String, Bitmap> transformToCategoryItems(ArrayList<Category> categories){
+        ArrayList<String> categoryNames = categories.stream().map(Category::getCategoryName).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<String> categoryImageStrings = categories.stream().map(Category::getCategoryImage).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Bitmap> categoryBitmaps = new ArrayList<>();
+
+        categoryImageStrings.forEach(c -> {
+            byte[] decodedString = Base64.decode(c, Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            categoryBitmaps.add(decodedByte);
+        });
+
+        return IntStream.range(0, categoryNames.size()).boxed()
+                .collect(Collectors.toMap(categoryNames::get, categoryBitmaps::get));
     }
 
     private void postExpense() {
@@ -207,7 +224,6 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
                 .addFormDataPart("amount", expenseValueEditText.getText().toString().replace(",", "."))
                 .addFormDataPart("dateOfExpense", selectedDate)
                 .build();
-
         Call<Expense> call = expenseApi.postExpense(auth, budgetListId, selectedCategory.getCategoryName(), requestBody);
         call.enqueue(new Callback<Expense>() {
             @Override
@@ -220,7 +236,9 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
                                 .replace("[", "")
                                 .replace("]", "");
                         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+                        Log.d("postExpense()", "onResponse: " + errorMessage);
                     } catch (Exception e) {
+                        e.printStackTrace();
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } else {
@@ -266,7 +284,8 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        selectedCategory.setCategoryName(parent.getItemAtPosition(position).toString());
+        CategoryItem category = (CategoryItem) parent.getItemAtPosition(position);
+        selectedCategory.setCategoryName(category.getCategoryName());
     }
 
     @Override

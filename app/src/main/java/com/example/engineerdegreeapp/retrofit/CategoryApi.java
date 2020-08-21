@@ -11,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
@@ -24,6 +25,9 @@ public interface CategoryApi {
     @GET("getall")
     Call<List<Category>> getAllCategories(@Header("Authorization") String auth);
 
+    @GET("getbyname")
+    Call<Category> getSingleCategory(@Header("Authorization") String auth, @Query("categoryName") String categoryName);
+
     @Multipart
     @POST("add")
     Call<Category> postCategory(@Header("Authorization") String auth, @Query("categoryName") String categoryName, @Part MultipartBody.Part categoryImage);
@@ -32,10 +36,13 @@ public interface CategoryApi {
     @PATCH("edit")
     Call<Category> editCategory(@Header("Authorization") String auth,
                                 @Query("oldCategoryName") String oldCategoryName,
-                                @Query("newCategoryName") String newCategoryName,
+                                    @Query("newCategoryName") String newCategoryName,
                                 @Part MultipartBody.Part categoryImage);
 
     @DELETE("delete")
-    Call<Void> deleteBudgetList(@Header("Authorization") String auth, @Query("categoryName") String categoryName);
+    Call<Void> deleteCategory(@Header("Authorization") String auth, @Query("categoryName") String categoryName);
+
+    @HTTP(method = "DELETE", path = "deletemany", hasBody = true)
+    Call<Void> deleteManyCategories(@Header("Authorization") String auth, @Body List<String> nameList);
     
 }

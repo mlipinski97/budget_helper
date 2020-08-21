@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.engineerdegreeapp.R;
 import com.example.engineerdegreeapp.retrofit.entity.Expense;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import static com.example.engineerdegreeapp.util.DateUtils.dd_mm_yyy_sdf;
@@ -23,7 +22,7 @@ import static com.example.engineerdegreeapp.util.DateUtils.dd_mm_yyy_sdf;
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder> {
 
 
-    Context context;
+    private Context context;
     private ArrayList<Expense> expenseList;
     private int numberOfItems;
     final private ListItemClickListener clickListener;
