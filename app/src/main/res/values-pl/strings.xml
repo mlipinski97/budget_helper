@@ -105,4 +105,6 @@
     <string name="category_new_toolbar_title">Dodaj kategorię</string>
     <string name="category_edit_toolbar_title">Edytuj kategorię</string>
     <string name="category_browse_toolbar_title">Przeglądaj kategorie</string>
+    <string name="dark_mode_preference_on">Włączony</string>
+    <string name="dark_mode_preference_off">Wyłączony</string>
 </resources>

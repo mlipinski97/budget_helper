@@ -4,8 +4,8 @@
     <style name="AppTheme.NoActionBarLight" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">#CBF1E6</item>
-        <item name="colorPrimaryDark">#CBF1E6</item>
+        <item name="colorPrimary">#008080</item>
+        <item name="colorPrimaryDark">#008080</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">#4C89AF</item>
         <item name="cardBackgroundColor">#CBF1E6</item>
@@ -13,7 +13,7 @@
         <item name="actionMenuTextColor">#353333</item>
         <item name="tintColor">#000000</item>
         <item name="buttonColor">#758C85</item>
-        <item name="toolbarColor">#758C85</item>
+        <item name="toolbarColor">#008080</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="preferenceTheme">@style/AppTheme.Light</item>
         <item name="declineButtonColor">#758C85</item>
@@ -42,8 +42,8 @@
 
     <!--light mode application theme with actionbar. -->
     <style name="AppTheme.Light" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">#CBF1E6</item>
-        <item name="colorPrimaryDark">#CBF1E6</item>
+        <item name="colorPrimary">#008080</item>
+        <item name="colorPrimaryDark">#008080</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">#4C89AF</item>
         <item name="cardBackgroundColor">#CBF1E6</item>
@@ -51,7 +51,7 @@
         <item name="actionMenuTextColor">#353333</item>
         <item name="tintColor">#000000</item>
         <item name="buttonColor">#0B6A4C</item>
-        <item name="toolbarColor">#0B6A4C</item>
+        <item name="toolbarColor">#008080</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="declineButtonColor">#758C85</item>

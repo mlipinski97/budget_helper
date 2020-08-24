@@ -85,6 +85,8 @@
     <!-- Preference Titles -->
     <string name="dark_mode_preference_title">Dark mode</string>
     <string name="language_preference_title">Language</string>
+    <string name="dark_mode_preference_on">On</string>
+    <string name="dark_mode_preference_off">Off</string>
 
     <!-- Preference keys -->
     <string name="dark_mode_preference_key" translatable="false">dark_mode</string>

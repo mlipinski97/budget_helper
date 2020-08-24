@@ -4,8 +4,8 @@
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="@string/dark_mode_preference_key"
-        android:summaryOff="Off"
-        android:summaryOn="On"
+        android:summaryOff="@string/dark_mode_preference_off"
+        android:summaryOn="@string/dark_mode_preference_on"
         android:title="@string/dark_mode_preference_title" />
     <DropDownPreference
         android:defaultValue="en"
@@ -14,5 +14,6 @@
         app:entries="@array/language_list_names"
         app:entryValues="@array/language_list_values"
         app:useSimpleSummaryProvider="true"
+        android:icon="@drawable/language_globe_icon"
         />
 </PreferenceScreen>
