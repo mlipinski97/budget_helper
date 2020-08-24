@@ -4,8 +4,8 @@
     <style name="AppTheme.NoActionBarLight" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">#CBF1E6</item>
+        <item name="colorPrimaryDark">#CBF1E6</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">#4C89AF</item>
         <item name="cardBackgroundColor">#CBF1E6</item>
@@ -24,8 +24,8 @@
     <style name="AppTheme.NoActionBarDark" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">#6C6A6A</item>
+        <item name="colorPrimaryDark">#6C6A6A</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">#2C2C2C</item>
         <item name="cardBackgroundColor">#6C6A6A</item>
@@ -42,8 +42,8 @@
 
     <!--light mode application theme with actionbar. -->
     <style name="AppTheme.Light" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">#CBF1E6</item>
+        <item name="colorPrimaryDark">#CBF1E6</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">#4C89AF</item>
         <item name="cardBackgroundColor">#CBF1E6</item>
@@ -60,8 +60,8 @@
 
     <!--dark mode application theme with actionbar. -->
     <style name="AppTheme.Dark" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">#6C6A6A</item>
+        <item name="colorPrimaryDark">#6C6A6A</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">#2C2C2C</item>
         <item name="cardBackgroundColor">#6C6A6A</item>

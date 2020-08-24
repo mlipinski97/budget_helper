@@ -11,6 +11,7 @@ public class Category {
 
     private boolean isSelected;
 
+    @SerializedName("deleted")
     private boolean isDeleted;
 
 
@@ -21,10 +22,17 @@ public class Category {
     public Category() {
     }
 
+    public Category(String categoryName, String categoryImage, boolean isDeleted) {
+        this.categoryName = categoryName;
+        this.categoryImage = categoryImage;
+        this.isDeleted = isDeleted;
+    }
+
     public Category(String categoryName, String categoryImage) {
         this.categoryName = categoryName;
         this.categoryImage = categoryImage;
     }
+
 
     public boolean isDeleted() {
         return isDeleted;

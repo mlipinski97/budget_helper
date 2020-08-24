@@ -129,10 +129,16 @@
     <string name="category_name_hint">Enter category name here</string>
     <string name="category_icon_prompt">Choose category icon:</string>
     <string name="category_new_added_toast_text">New Category added</string>
+    <string name="category_edited_toast_text">Category edited</string>
+    <string name="category_delete_button">Delete selected categories</string>
+    <string name="category_loading_error">There was a problem loading categories!</string>
+    <string name="category_new_toolbar_title">Add new category</string>
+    <string name="category_edit_toolbar_title">Edit selected category</string>
+    <string name="category_browse_toolbar_title">Browse category</string>
 
 
     <!-- placeholders and testing -->
-    <string name="dummy_button">[PH]button</string>
-    <string name="dummy_content">[PH]content</string>
+    <string name="place_holder_button">[PH]button</string>
+    <string name="place_holder_content">[PH]content</string>
 
 </resources>

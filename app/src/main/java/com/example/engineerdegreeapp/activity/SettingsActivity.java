@@ -1,5 +1,6 @@
 package com.example.engineerdegreeapp.activity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -48,5 +49,10 @@ public class SettingsActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         this.finish();
+    }
+
+    @Override
+    protected void onApplyThemeResource(Resources.Theme theme, int resid, boolean first) {
+        super.onApplyThemeResource(theme, resid, first);
     }
 }

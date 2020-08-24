@@ -1,45 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="2dp">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/expense_item_card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardBackgroundColor="?attr/cardBackgroundColor"
-        tools:ignore="PrivateResource"
-        android:id="@+id/expense_item_card_view">
+        tools:ignore="PrivateResource">
 
         <TextView
             android:id="@+id/expense_item_name_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="#25"
-            android:textSize="25sp"
-            android:textColor="?attr/textColor"/>
+            android:text="@string/place_holder_content"
+            android:textColor="?attr/textColor"
+            android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/expense_item_category_image_view"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="2dp"
+            android:contentDescription="category_image"
+            android:layout_marginTop="37dp" />
 
         <TextView
             android:id="@+id/expense_item_category_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
-            android:text="#15"
-            android:textSize="18sp"
-            android:textColor="?attr/textColor"/>
+            android:layout_marginStart="44dp"
+            android:text="@string/place_holder_content"
+            android:textColor="?attr/textColor"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/expense_item_owner_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
-            android:text="#15"
-            android:textSize="15sp"
+            android:layout_marginStart="44sp"
+            android:text="@string/place_holder_content"
             android:textColor="?attr/textColor"
-            />
+            android:textSize="15sp" />
 
 
         <TextView
@@ -48,25 +57,25 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginTop="50dp"
-            android:layout_marginEnd="70dp"
-            android:text="#20"
-            android:textSize="20sp"
-            android:textColor="?attr/textColor" />
+            android:layout_marginEnd="45dp"
+            android:text="@string/place_holder_content"
+            android:textColor="?attr/textColor"
+            android:textSize="20sp" />
+
         <TextView
             android:id="@+id/expense_item_value_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginEnd="70dp"
-            android:text="#20"
-            android:textSize="20sp"
+            android:layout_marginEnd="45dp"
+            android:text="@string/place_holder_content"
             android:textColor="?attr/textColor"
-            />
+            android:textSize="20sp" />
+
         <CheckBox
             android:id="@+id/expense_item_done_check_box"
-            android:layout_width="60dp"
+            android:layout_width="35dp"
             android:layout_height="60dp"
-            android:layout_gravity="center_vertical|end"
-            />
+            android:layout_gravity="center_vertical|end" />
     </androidx.cardview.widget.CardView>
 </FrameLayout>

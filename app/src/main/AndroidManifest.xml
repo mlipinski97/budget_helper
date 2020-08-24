@@ -27,7 +27,8 @@
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme.Light"
+            android:theme="@style/AppTheme.Dark"
+            android:launchMode="singleTop"
             />
         <activity
             android:name=".activity.LoginActivity"

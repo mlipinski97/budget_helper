@@ -120,7 +120,7 @@ public class CategoryBrowserFragment extends Fragment implements CategoryAdapter
     public void onClick(View v) {
         int clickedItemId = v.getId();
         switch (clickedItemId) {
-            case R.id.budget_list_delete_button:
+            case R.id.category_recycler_view_delete_button:
                 ArrayList<String> nameList = new ArrayList<>();
                 for (Category c : selectedCategories) {
                     nameList.add(c.getCategoryName());
@@ -191,7 +191,8 @@ public class CategoryBrowserFragment extends Fragment implements CategoryAdapter
                 } else {
                     categoryListErrorTextView.setVisibility(View.INVISIBLE);
                     Log.d("loadCategoryList()", "loaded all categories");
-                    categoryList = new ArrayList<>(response.body()).stream().filter(c -> !c.isDeleted()).collect(Collectors.toCollection(ArrayList::new));
+                    categoryList = new ArrayList<>(response.body());
+                    categoryList = categoryList.stream().filter(c -> !c.isDeleted()).collect(Collectors.toCollection(ArrayList::new));
                     expenseAdapter = new CategoryAdapter(getContext(), categoryList, categoryList.size(), CategoryBrowserFragment.this);
                     categoryListRecyclerView.setAdapter(expenseAdapter);
                 }

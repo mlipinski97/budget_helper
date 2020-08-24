@@ -219,7 +219,7 @@ public class EditCategoryFragment extends Fragment implements View.OnClickListen
         File f = new File(getContext().getCacheDir(), "photo.png");
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 85 /*ignored for PNG*/, bos);
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100 /*ignored for PNG*/, bos);
         byte[] bitmapData = bos.toByteArray();
 
         FileOutputStream fos = null;

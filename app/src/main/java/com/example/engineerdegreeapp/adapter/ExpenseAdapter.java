@@ -1,10 +1,14 @@
 package com.example.engineerdegreeapp.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -79,6 +83,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         TextView expenseCategoryTextView;
         CheckBox doneCheckbox;
         CardView cardView;
+        ImageView categoryImageView;
 
 
         private Expense expense;
@@ -104,6 +109,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
             expenseDateOfExpenseTextView = itemView.findViewById(R.id.expense_item_due_date_text_view);
             doneCheckbox = itemView.findViewById(R.id.expense_item_done_check_box);
             doneCheckbox.setOnClickListener(v -> clickListener.onListItemDoneStateChange(expense.getId()));
+            categoryImageView = itemView.findViewById(R.id.expense_item_category_image_view);
         }
 
         public void bind(Expense expense) {
@@ -112,6 +118,15 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
             expenseValueTextView.setText(expenseValueString);
             expenseOwnerNameTextView.setText(expense.getExpenseOwnerName());
             expenseCategoryTextView.setText(expense.getCategory().getCategoryName());
+            if (expense.getCategory().getCategoryImage() != null) {
+                byte[] decodedString = Base64.decode(expense.getCategory().getCategoryImage(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+                categoryImageView.setImageBitmap(decodedByte);
+            } else {
+                categoryImageView.setImageResource(R.drawable.question_mark);
+            }
+
             if (expense.isSelected()) {
                 if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
                     cardView.setBackgroundColor(context.getResources().getColor(R.color.darkCardSelectedBackgroundColor, null));

@@ -171,7 +171,7 @@ public class NewCategoryFragment extends Fragment implements View.OnClickListene
 
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 85 /*ignored for PNG*/, bos);
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100 /*ignored for PNG*/, bos);
         byte[] bitmapData = bos.toByteArray();
 
         FileOutputStream fos = null;

@@ -1,5 +1,7 @@
 package com.example.engineerdegreeapp.retrofit.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -13,6 +15,7 @@ public class Expense {
     private Long budgetListId;
     private boolean done;
     private boolean isSelected;
+    @SerializedName("category")
     private Category category;
 
     public Expense() {
@@ -26,6 +29,16 @@ public class Expense {
         this.done = done;
         this.budgetListId = budgetListId;
     }
+    public Expense(Long id, Double amount, Date dateOfExpense, UserAuth expenseOwner, boolean done, Long budgetListId, Category category) {
+        this.id = id;
+        this.amount = amount;
+        this.dateOfExpense = dateOfExpense;
+        this.expenseOwner = expenseOwner;
+        this.done = done;
+        this.budgetListId = budgetListId;
+        this.category = category;
+    }
+
 
     public String getExpenseOwnerName(){
         return expenseOwner.getUsername();

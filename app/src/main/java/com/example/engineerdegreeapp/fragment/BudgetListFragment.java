@@ -227,9 +227,9 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
             accountDetailsListNameTextView.setText(R.string.closest_list_to_date);
             accountDetailsListNameTextView.append(" " + elementToDisplay.getName());
             accountDetailsValueRemainingTextView.setText(R.string.closest_list_to_date_value_remaining);
-            accountDetailsValueRemainingTextView.append(" " + String.valueOf(elementToDisplay.getRemainingValue()));
+            accountDetailsValueRemainingTextView.append(" " + String.valueOf(elementToDisplay.getRemainingValue()) + " " + elementToDisplay.getCurrencyCode());
             accountDetailsValueTotalTextView.setText(R.string.closest_list_to_date_value_total);
-            accountDetailsValueTotalTextView.append(" " + String.valueOf(elementToDisplay.getValue()));
+            accountDetailsValueTotalTextView.append(" " + String.valueOf(elementToDisplay.getValue()) + " " + elementToDisplay.getCurrencyCode());
         } else {
             accountDetailsListNameTextView.setText(R.string.user_help_frame_no_list_found);
             accountDetailsValueRemainingTextView.setText("");

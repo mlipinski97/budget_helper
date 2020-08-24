@@ -85,8 +85,8 @@
     <string name="friend_send_friend_request_error_text_view">Użytkownik nie znaleziony</string>
     <string name="friend_send_friend_request_unknown_error">Wystąpił nieznany błąd. Jeśli ten problem się powtarza skontaktuj się z pomocą techniczną.</string>
     <string name="add_friend_menu_item">Dodaj znajomego</string>
-    <string name="dummy_button">[PH]Przycisk</string>
-    <string name="dummy_content">[PH]Zawartość tekstowa</string>
+    <string name="place_holder_button">[PH]Przycisk</string>
+    <string name="place_holder_content">[PH]Zawartość tekstowa</string>
     <string name="language_preference_title">Język</string>
     <string name="new_budget_list_starting_date_prompt">Termin początkowy:</string>
     <string name="new_budget_list_date_error">Lista nie może kończyć się zanim się zacznie!</string>
@@ -99,4 +99,10 @@
     <string name="category_name_hint">Wprowadź nazwę</string>
     <string name="category_icon_prompt">Wybierz icony kategorii:</string>
     <string name="category_new_added_toast_text">Dodano nową kategorię</string>
+    <string name="category_edited_toast_text">Kategoria zedytowana</string>
+    <string name="category_delete_button">Usuń wybrane kategorie</string>
+    <string name="category_loading_error">Wystąpił problem przy wczytywaniu kategorii!</string>
+    <string name="category_new_toolbar_title">Dodaj kategorię</string>
+    <string name="category_edit_toolbar_title">Edytuj kategorię</string>
+    <string name="category_browse_toolbar_title">Przeglądaj kategorie</string>
 </resources>

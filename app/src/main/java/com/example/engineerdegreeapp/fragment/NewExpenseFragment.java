@@ -125,10 +125,9 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
         expenseValueEditText = rootView.findViewById(R.id.new_expense_amount_edit_text);
         expenseValueEditText.setFilters(new InputFilter[]{new DecimalInputFilter(10, 2)});
         dueDateCalendarView = rootView.findViewById(R.id.new_expense_calendar_view);
-
         try {
             dueDateCalendarView.setMaxDate(dd_mm_yyy_sdf.parse(listDueDate).getTime());
-            dueDateCalendarView.setMinDate(dd_mm_yyy_sdf.parse(listDueDate).getTime());
+            dueDateCalendarView.setMinDate(dd_mm_yyy_sdf.parse(listStartingDate).getTime());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -176,7 +175,6 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
                     mappedCategories.entrySet().forEach(e -> categoryItems.add(new CategoryItem(e.getKey(), e.getValue())));
                     CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(getContext(), categoryItems);
                     categorySpinner.setAdapter(adapter);
-//TODO: change icon for every category
                 }
             }
 
