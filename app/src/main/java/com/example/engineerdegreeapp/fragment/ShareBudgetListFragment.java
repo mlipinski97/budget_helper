@@ -31,7 +31,6 @@ import com.example.engineerdegreeapp.retrofit.entity.Friendship;
 import com.example.engineerdegreeapp.retrofit.entity.UserAuth;
 import com.example.engineerdegreeapp.util.AccountUtils;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -220,14 +219,14 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
                             getContext(),
                             ShareBudgetListFragment.this);
                     alreadySharedRecyclerView.setAdapter(alreadySharedAdapter);
-                    if(alreadySharedAdapter.getItemCount() < 1){
+                    if (alreadySharedAdapter.getItemCount() < 1) {
                         sharedNoPositionsTextView.setVisibility(View.VISIBLE);
-                    } else{
+                    } else {
                         sharedNoPositionsTextView.setVisibility(View.INVISIBLE);
                     }
-                    if(notSharedAdapter.getItemCount() < 1){
+                    if (notSharedAdapter.getItemCount() < 1) {
                         notSharedNoPositionsTextView.setVisibility(View.VISIBLE);
-                    } else{
+                    } else {
                         notSharedNoPositionsTextView.setVisibility(View.INVISIBLE);
                     }
                 }
@@ -241,7 +240,7 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
         });
     }
 
-    private void shareBudgetList(String username){
+    private void shareBudgetList(String username) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BUDGET_LIST_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -262,14 +261,14 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Log.d("shareBudgetList()", "shared budgetlist with id: "+ budgetListId + " with user: " + username);
+                    Log.d("shareBudgetList()", "shared budgetlist with id: " + budgetListId + " with user: " + username);
                     getAllFriendsWithPermission(budgetListId);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("shareBudgetList()", "onFailure while trying to share budgetlist with id: "+ budgetListId + " with user: " + username);
+                Log.d("shareBudgetList()", "onFailure while trying to share budgetlist with id: " + budgetListId + " with user: " + username);
             }
         });
     }
@@ -296,7 +295,7 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
                     }
                 } else {
                     userNamesToShare.forEach(userName -> {
-                        Log.d("shareManyBudgetLists()", "shared budgetlist with id: "+ budgetListId + " with user: " + userName);
+                        Log.d("shareManyBudgetLists()", "shared budgetlist with id: " + budgetListId + " with user: " + userName);
                     });
                     getAllFriendsWithPermission(budgetListId);
                 }
@@ -305,13 +304,13 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 userNamesToShare.forEach(userName -> {
-                    Log.d("shareManyBudgetLists()", "onFailure while trying to share budgetlist with id: "+ budgetListId + " with user: " + userName);
+                    Log.d("shareManyBudgetLists()", "onFailure while trying to share budgetlist with id: " + budgetListId + " with user: " + userName);
                 });
             }
         });
     }
 
-    private void revokeBudgetList(String username){
+    private void revokeBudgetList(String username) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BUDGET_LIST_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -332,19 +331,19 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Log.d("revokeBudgetList()", "revoked budgetlist with id: "+ budgetListId + " from user: " + username);
+                    Log.d("revokeBudgetList()", "revoked budgetlist with id: " + budgetListId + " from user: " + username);
                     getAllFriendsWithPermission(budgetListId);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("revokeBudgetList()", "onFailure while trying to revoke budgetlist with id: "+ budgetListId + " from user: " + username);
+                Log.d("revokeBudgetList()", "onFailure while trying to revoke budgetlist with id: " + budgetListId + " from user: " + username);
             }
         });
     }
 
-    private void revokeManyBudgetLists(List<String> userNamesToRevoke){
+    private void revokeManyBudgetLists(List<String> userNamesToRevoke) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BUDGET_LIST_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -366,7 +365,7 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
                     }
                 } else {
                     userNamesToRevoke.forEach(userName -> {
-                        Log.d("revokeManyBudgetLists()", "revoked budgetlist with id: "+ budgetListId + " from user: " + userName);
+                        Log.d("revokeManyBudgetLists()", "revoked budgetlist with id: " + budgetListId + " from user: " + userName);
                     });
                     getAllFriendsWithPermission(budgetListId);
                 }
@@ -375,7 +374,7 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 userNamesToRevoke.forEach(userName -> {
-                    Log.d("revokeManyBudgetLists()", "onFailure while trying to revoke budgetlist with id: "+ budgetListId + " from user: " + userName);
+                    Log.d("revokeManyBudgetLists()", "onFailure while trying to revoke budgetlist with id: " + budgetListId + " from user: " + userName);
                 });
             }
         });
@@ -414,15 +413,15 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
                     checkBox.setVisibility(View.INVISIBLE);
                 }
                 boolean isAnyWithPermissionSelected = false;
-                for(UserAuth u : friendsWithPermission){
-                    if(u.isSelected()){
+                for (UserAuth u : friendsWithPermission) {
+                    if (u.isSelected()) {
                         isAnyWithPermissionSelected = true;
                         break;
                     }
                 }
-                if(isAnyWithPermissionSelected){
+                if (isAnyWithPermissionSelected) {
                     revokeButton.setVisibility(View.VISIBLE);
-                } else{
+                } else {
                     revokeButton.setVisibility(View.INVISIBLE);
                 }
                 break;
@@ -455,15 +454,15 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
                     checkBox.setVisibility(View.INVISIBLE);
                 }
                 boolean isAnyWithoutPermissionSelected = false;
-                for(UserAuth u : friendsWithoutPermission){
-                    if(u.isSelected()){
+                for (UserAuth u : friendsWithoutPermission) {
+                    if (u.isSelected()) {
                         isAnyWithoutPermissionSelected = true;
                         break;
                     }
                 }
-                if(isAnyWithoutPermissionSelected){
+                if (isAnyWithoutPermissionSelected) {
                     shareButton.setVisibility(View.VISIBLE);
-                } else{
+                } else {
                     shareButton.setVisibility(View.INVISIBLE);
                 }
                 break;
@@ -472,7 +471,7 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
 
     @Override
     public void onCreateStateChanged(View v, CheckBox checkBox, FriendAdapter.AdapterType adapterType) {
-        switch(adapterType){
+        switch (adapterType) {
             case TYPE_FRIENDS_WITH_PERMISSION:
                 selectedFriendsViewsWithPermission.add(v);
                 selectedFriendsCheckboxesWithPermission.add(checkBox);
@@ -516,11 +515,11 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
             case R.id.share_budget_list_button_share:
                 ArrayList<String> userNamesToShare = new ArrayList<>();
                 friendsWithoutPermission.forEach(f -> {
-                    if(f.isSelected()){
+                    if (f.isSelected()) {
                         userNamesToShare.add(f.getUsername());
                     }
                 });
-                if(userNamesToShare.size() > 1){
+                if (userNamesToShare.size() > 1) {
                     shareManyBudgetLists(userNamesToShare);
                 } else {
                     shareBudgetList(userNamesToShare.get(0));
@@ -531,11 +530,11 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
                 ArrayList<String> userNamesToRevoke = new ArrayList<>();
 
                 friendsWithPermission.forEach(f -> {
-                    if(f.isSelected()){
+                    if (f.isSelected()) {
                         userNamesToRevoke.add(f.getUsername());
                     }
                 });
-                if(userNamesToRevoke.size() > 1){
+                if (userNamesToRevoke.size() > 1) {
                     revokeManyBudgetLists(userNamesToRevoke);
                 } else {
                     revokeBudgetList(userNamesToRevoke.get(0));
@@ -547,7 +546,6 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
                 break;
         }
     }
-
 
 
     private List<UserAuth> getFriendsFromFriendships(List<Friendship> friendships) {
