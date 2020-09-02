@@ -12,7 +12,8 @@
         android:layout_height="match_parent"
         app:cardBackgroundColor="?attr/cardBackgroundColor"
         tools:ignore="PrivateResource"
-        android:id="@+id/friends_item_card_view">
+        android:id="@+id/friends_item_card_view"
+        app:cardCornerRadius="10dp">
         <TextView
             android:id="@+id/friends_item_username_text_view"
             android:layout_width="wrap_content"

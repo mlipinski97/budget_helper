@@ -4,28 +4,32 @@
     <style name="AppTheme.NoActionBarLight" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">#008080</item>
-        <item name="colorPrimaryDark">#008080</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="backgroundColor">#4C89AF</item>
-        <item name="cardBackgroundColor">#CBF1E6</item>
+        <item name="colorPrimary">#2b8990</item>
+        <item name="colorPrimaryDark">#2b8990</item>
+        <item name="colorAccent">#2b8990</item>
+        <item name="backgroundColor">#2FAEAE</item>
+        <item name="cardBackgroundColor">#A669BAC3</item>
         <item name="textColor">#353333</item>
-        <item name="actionMenuTextColor">#353333</item>
+        <item name="actionMenuTextColor">#FFFFFF</item>
         <item name="tintColor">#000000</item>
-        <item name="buttonColor">#758C85</item>
-        <item name="toolbarColor">#008080</item>
+        <item name="buttonColor">#2b8990</item>
+        <item name="toolbarColor">#2b8990</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
         <item name="preferenceTheme">@style/AppTheme.Light</item>
         <item name="declineButtonColor">#758C85</item>
         <item name="acceptButtonColor">#27C32D</item>
+        <item name="welcomeHelperBackground">#CC4DA2AC</item>
+        <item name="backgroundImage">@mipmap/watercolor_small_background</item>
+        <item name="hintTextColor">#2b8990</item>
+        <item name="calendarFocusColor">#2b8990</item>
     </style>
 
     <!--dark mode application theme without actionbar. -->
     <style name="AppTheme.NoActionBarDark" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="colorPrimary">#6C6A6A</item>
-        <item name="colorPrimaryDark">#6C6A6A</item>
+        <item name="colorPrimary">#656464</item>
+        <item name="colorPrimaryDark">#656464</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">#2C2C2C</item>
         <item name="cardBackgroundColor">#6C6A6A</item>
@@ -38,6 +42,10 @@
         <item name="preferenceTheme">@style/AppTheme.Dark</item>
         <item name="declineButtonColor">#656464</item>
         <item name="acceptButtonColor">#27C32D</item>
+        <item name="welcomeHelperBackground">#2C2C2C</item>
+        <item name="backgroundImage">@mipmap/watercolor_small_dark_background</item>
+        <item name="hintTextColor">#C6C6C6</item>
+        <item name="calendarFocusColor">#0A656C</item>
     </style>
 
     <!--light mode application theme with actionbar. -->
@@ -56,12 +64,16 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="declineButtonColor">#758C85</item>
         <item name="acceptButtonColor">#27C32D</item>
+        <item name="welcomeHelperBackground">#69bac3</item>
+        <item name="backgroundImage">@mipmap/watercolor_small_background</item>
+        <item name="hintTextColor">#2b8990</item>
+        <item name="calendarFocusColor">#2b8990</item>
     </style>
 
     <!--dark mode application theme with actionbar. -->
     <style name="AppTheme.Dark" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">#6C6A6A</item>
-        <item name="colorPrimaryDark">#6C6A6A</item>
+        <item name="colorPrimary">#656464</item>
+        <item name="colorPrimaryDark">#656464</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">#2C2C2C</item>
         <item name="cardBackgroundColor">#6C6A6A</item>
@@ -74,6 +86,10 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="declineButtonColor">#656464</item>
         <item name="acceptButtonColor">#27C32D</item>
+        <item name="welcomeHelperBackground">#2C2C2C</item>
+        <item name="backgroundImage">@mipmap/watercolor_small_dark_background</item>
+        <item name="hintTextColor">#C6C6C6</item>
+        <item name="calendarFocusColor">#0A656C</item>
     </style>
 
 
@@ -87,8 +103,9 @@
     </style>
 
     <style name="CalenderViewCustom" parent="Theme.AppCompat">
-        <item name="colorAccent">?attr/cardBackgroundColor</item>
-        <item name="colorPrimary">?attr/cardBackgroundColor</item>
+        <item name="colorAccent">?attr/calendarFocusColor</item>
+        <item name="colorPrimary">?attr/toolbarColor</item>
+        <item name="android:textColorPrimary">?attr/textColor</item>
     </style>
 
     <style name="CalenderViewDateCustomText" parent="android:TextAppearance.DeviceDefault.Small">

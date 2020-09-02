@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ds">
-        <attr name="backgroundColor" format="color"/>
-        <attr name="cardBackgroundColor" format="color"/>
-        <attr name="textColor" format="color"/>
-        <attr name="tintColor" format="color"/>
-        <attr name="buttonColor" format="color"/>
-        <attr name="toolbarColor" format="color"/>
-        <attr name="declineButtonColor" format="color"/>
-        <attr name="acceptButtonColor" format="color"/>
+        <attr name="backgroundColor" format="color" />
+        <attr name="cardBackgroundColor" format="color" />
+        <attr name="textColor" format="color" />
+        <attr name="tintColor" format="color" />
+        <attr name="buttonColor" format="color" />
+        <attr name="toolbarColor" format="color" />
+        <attr name="declineButtonColor" format="color" />
+        <attr name="acceptButtonColor" format="color" />
+        <attr name="welcomeHelperBackground" format="color" />
+        <attr name="backgroundImage" format="reference" />
+        <attr name="hintTextColor" format="color" />
+        <attr name="calendarFocusColor" format="color" />
     </declare-styleable>
 </resources>

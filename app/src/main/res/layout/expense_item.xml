@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardBackgroundColor="?attr/cardBackgroundColor"
-        tools:ignore="PrivateResource">
+        tools:ignore="PrivateResource"
+        app:cardCornerRadius="10dp">
 
         <TextView
             android:id="@+id/expense_item_name_text_view"

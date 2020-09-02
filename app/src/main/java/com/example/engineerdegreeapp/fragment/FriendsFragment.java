@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -371,13 +372,14 @@ public class FriendsFragment extends Fragment implements FriendshipAdapter.ListI
 
     @Override
     public void onListItemClick(View v, Friendship friendship, CheckBox checkBox) {
+        CardView cardView = (CardView)v;
         friendship.setSelected(!friendship.isSelected());
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            v.setBackgroundColor(friendship.isSelected() ?
+            cardView.setCardBackgroundColor(friendship.isSelected() ?
                     getContext().getResources().getColor(R.color.darkCardSelectedBackgroundColor, null)
                     : getContext().getResources().getColor(R.color.darkCardBackgroundColor, null));
         } else {
-            v.setBackgroundColor(friendship.isSelected() ?
+            cardView.setCardBackgroundColor(friendship.isSelected() ?
                     getContext().getResources().getColor(R.color.lightCardSelectedBackgroundColor, null)
                     : getContext().getResources().getColor(R.color.lightCardBackgroundColor, null));
         }

@@ -29,8 +29,12 @@
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.Dark"
             android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+
             />
         <activity
+            android:windowSoftInputMode="stateHidden|adjustPan"
+
             android:name=".activity.LoginActivity"
             android:launchMode="singleTop"
             android:noHistory="true"
@@ -43,6 +47,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBarLight"
             android:launchMode="singleTop"

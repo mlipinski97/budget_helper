@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -250,13 +251,14 @@ public class BudgetListDetailsFragment extends Fragment implements ExpenseAdapte
 
     @Override
     public void onListItemLongClick(View v, Expense expense) {
+        CardView cardView = (CardView)v;
         expense.setSelected(!expense.isSelected());
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            v.setBackgroundColor(expense.isSelected() ?
+            cardView.setCardBackgroundColor(expense.isSelected() ?
                     getContext().getResources().getColor(R.color.darkCardSelectedBackgroundColor, null)
                     : getContext().getResources().getColor(R.color.darkCardBackgroundColor, null));
         } else {
-            v.setBackgroundColor(expense.isSelected() ?
+            cardView.setCardBackgroundColor(expense.isSelected() ?
                     getContext().getResources().getColor(R.color.lightCardSelectedBackgroundColor, null)
                     : getContext().getResources().getColor(R.color.lightCardBackgroundColor, null));
         }

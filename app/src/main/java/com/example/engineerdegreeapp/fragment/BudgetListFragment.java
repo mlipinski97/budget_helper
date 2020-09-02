@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +32,6 @@ import com.example.engineerdegreeapp.util.AccountUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -248,13 +249,14 @@ public class BudgetListFragment extends Fragment implements BudgetListAdapter.Li
 
     @Override
     public void onListItemLongClick(View v, BudgetList budgetList) {
+        CardView cardView = (CardView)v;
         budgetList.setSelected(!budgetList.isSelected());
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            v.setBackgroundColor(budgetList.isSelected() ?
+            cardView.setCardBackgroundColor(budgetList.isSelected() ?
                     getContext().getResources().getColor(R.color.darkCardSelectedBackgroundColor, null)
                     : getContext().getResources().getColor(R.color.darkCardBackgroundColor, null));
         } else {
-            v.setBackgroundColor(budgetList.isSelected() ?
+            cardView.setCardBackgroundColor(budgetList.isSelected() ?
                     getContext().getResources().getColor(R.color.lightCardSelectedBackgroundColor, null)
                     : getContext().getResources().getColor(R.color.lightCardBackgroundColor, null));
         }

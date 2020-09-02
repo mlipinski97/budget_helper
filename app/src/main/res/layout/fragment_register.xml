@@ -4,7 +4,14 @@
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor"
     >
-
+    <ImageView
+        android:id="@+id/background_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="1"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:src="?attr/backgroundImage" />
     <EditText
         android:id="@+id/register_username_edit_text"
         android:layout_width="match_parent"
@@ -18,6 +25,7 @@
         android:hint="@string/login_prompt"
         android:inputType="textEmailAddress"
         android:textColor="?attr/textColor"
+        android:textColorHint="?attr/hintTextColor"
         />
 
     <EditText
@@ -34,6 +42,7 @@
         android:autofillHints="password"
         android:inputType="textPassword"
         android:textColor="?attr/textColor"
+        android:textColorHint="?attr/hintTextColor"
         />
 
     <EditText
@@ -50,6 +59,7 @@
         android:autofillHints="password"
         android:inputType="textPassword"
         android:textColor="?attr/textColor"
+        android:textColorHint="?attr/hintTextColor"
         />
 
     <Button
@@ -62,6 +72,8 @@
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:text="@string/confirm_registration_action"
+        android:backgroundTint="?attr/buttonColor"
+        android:textColor="?attr/textColor"
         />
 
         <Button
@@ -74,5 +86,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:text="@string/cancel_registration_action"
+            android:backgroundTint="?attr/buttonColor"
+            android:textColor="?attr/textColor"
             />
 </RelativeLayout>

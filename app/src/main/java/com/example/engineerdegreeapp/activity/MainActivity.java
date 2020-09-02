@@ -1,4 +1,4 @@
-package com.example.engineerdegreeapp.activity;
+    package com.example.engineerdegreeapp.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         loadLocale();
+
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.AppTheme_NoActionBarDark);
         } else {
@@ -84,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
 
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
@@ -96,10 +96,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         } else {
             return;
         }
-
-
+        setContentView(R.layout.activity_main);
         mTopToolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(mTopToolbar);
+
         drawer = findViewById(R.id.main_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, mTopToolbar,
                 R.string.drawer_navigation_drawer_open, R.string.drawer_navigation_drawer_close);

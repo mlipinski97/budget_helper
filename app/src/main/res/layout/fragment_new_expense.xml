@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundColor">
+    android:background="?attr/backgroundImage"
+    android:gravity="top">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -29,9 +31,10 @@
             android:backgroundTint="?attr/toolbarColor"
             android:hint="@string/new_expense_list_name_hint"
             android:textColor="?attr/textColor"
-            android:textColorHint="?attr/toolbarColor"
+            android:textColorHint="?attr/hintTextColor"
             android:inputType="textCapSentences"
             android:maxLength="30"
+
             />
 
         <TextView
@@ -66,7 +69,7 @@
             android:ems="10"
             android:hint="@string/new_expense_list_value_hint"
             android:textColor="?attr/textColor"
-            android:textColorHint="?attr/toolbarColor"
+            android:textColorHint="?attr/hintTextColor"
             android:inputType="numberDecimal"/>
 
         <TextView
@@ -110,7 +113,7 @@
             android:background="?attr/cardBackgroundColor"
             android:paddingEnd="5sp"
             android:paddingStart="5sp"
-            />
+            tools:ignore="PrivateResource" />
         <TextView
             android:id="@+id/new_expense_due_date_text_view"
             android:layout_width="wrap_content"
@@ -121,16 +124,17 @@
             android:text="@string/new_expense_list_due_date_prompt"
             android:textColor="?attr/textColor" />
 
+
+
         <CalendarView
             android:id="@+id/new_expense_calendar_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/new_expense_due_date_text_view"
             android:layout_centerHorizontal="true"
-            android:dateTextAppearance="@style/CalenderViewDateCustomText"
             android:theme="@style/CalenderViewCustom"
-            android:weekDayTextAppearance="@style/CalenderViewWeekCustomText"
-            />
+            android:dateTextAppearance="@style/CalenderViewDateCustomText"
+            android:weekDayTextAppearance="@style/CalenderViewWeekCustomText"/>
 
         <Button
             android:id="@+id/new_expense_button_cancel"

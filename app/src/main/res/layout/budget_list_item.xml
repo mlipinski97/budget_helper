@@ -9,9 +9,10 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/budget_list_item_card_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="88dp"
         app:cardBackgroundColor="?attr/cardBackgroundColor"
-        tools:ignore="PrivateResource">
+        tools:ignore="PrivateResource"
+        app:cardCornerRadius="10dp">
 
         <TextView
             android:id="@+id/budget_list_name_text_view"
@@ -19,8 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="#25"
-            android:textSize="25sp"
-            android:textColor="?attr/textColor"/>
+            android:textColor="?attr/textColor"
+            android:textSize="25sp" />
 
         <TextView
             android:id="@+id/budget_list_due_date_text_view"
@@ -28,8 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:text="#20"
-            android:textSize="20sp"
-            android:textColor="?attr/textColor"/>
+            android:textColor="?attr/textColor"
+            android:textSize="20sp" />
 
 
         <TextView
@@ -39,15 +40,16 @@
             android:layout_gravity="end"
             android:layout_marginTop="50dp"
             android:text="#18"
-            android:textSize="18sp"
-            android:textColor="?attr/textColor" />
+            android:textColor="?attr/textColor"
+            android:textSize="18sp" />
+
         <TextView
             android:id="@+id/budget_list_value_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|top"
             android:text="#18"
-            android:textSize="18sp"
-            android:textColor="?attr/textColor" />
+            android:textColor="?attr/textColor"
+            android:textSize="18sp" />
     </androidx.cardview.widget.CardView>
 </FrameLayout>

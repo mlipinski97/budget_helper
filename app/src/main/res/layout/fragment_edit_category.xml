@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundColor">
+    android:background="?attr/backgroundImage"
+    android:gravity="top">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,7 +23,7 @@
             android:layout_below="@id/edit_category_name_text_view"
             android:inputType="textCapSentences"
             android:textColor="?attr/textColor"
-            android:textColorHint="?attr/toolbarColor"/>
+            android:textColorHint="?attr/hintTextColor"/>
 
         <TextView
             android:id="@+id/edit_category_icon_text_view"

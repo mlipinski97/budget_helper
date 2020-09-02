@@ -7,11 +7,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <ImageView
+        android:id="@+id/background_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="1"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:src="?attr/backgroundImage" />
+
     <FrameLayout
         android:id="@+id/fragment_budget_list_details_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/backgroundColor">
+        android:background="?attr/welcomeHelperBackground">
+
+
 
         <TextView
         android:id="@+id/fragment_budget_list_greetings_details_text_view"

@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundColor">
+    android:background="?attr/backgroundImage"
+    android:gravity="top">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,7 +22,7 @@
                 android:hint="@string/share_budget_list_search_hint"
                 android:inputType="text"
                 android:textColor="?attr/textColor"
-                android:textColorHint="?attr/toolbarColor" />
+                android:textColorHint="?attr/hintTextColor" />
 
             <Button
                 android:id="@+id/share_budget_list_username_search_button"
@@ -67,6 +68,7 @@
                 android:text="@string/share_budget_list_not_shared_no_positions"
                 android:textColor="?attr/textColor"
                 android:visibility="invisible" />
+
             <TextView
                 android:id="@+id/share_budget_list_not_shared_loading_error_text_view"
                 android:layout_width="match_parent"
@@ -111,6 +113,7 @@
                 android:text="@string/share_budget_list_not_shared_no_positions"
                 android:textColor="?attr/textColor"
                 android:visibility="invisible" />
+
             <TextView
                 android:id="@+id/share_budget_list_shared_loading_error_text_view"
                 android:layout_width="match_parent"
@@ -121,13 +124,14 @@
                 android:visibility="invisible" />
 
         </LinearLayout>
+
         <Button
             android:id="@+id/share_budget_list_button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/share_budget_list_shared_linear_layout"
             android:layout_alignParentStart="true"
             android:layout_marginStart="10dp"
-            android:layout_below="@+id/share_budget_list_shared_linear_layout"
             android:backgroundTint="?attr/buttonColor"
             android:text="@string/new_budget_list_cancel_button"
             android:textColor="?attr/textColor" />
@@ -136,23 +140,24 @@
             android:id="@+id/share_budget_list_button_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/share_budget_list_shared_linear_layout"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
-            android:layout_below="@+id/share_budget_list_shared_linear_layout"
             android:backgroundTint="?attr/buttonColor"
             android:text="@string/share_budget_list_share_button"
             android:textColor="?attr/textColor"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
+
         <Button
             android:id="@+id/share_budget_list_button_revoke"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/share_budget_list_shared_linear_layout"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
-            android:layout_below="@+id/share_budget_list_shared_linear_layout"
             android:backgroundTint="?attr/buttonColor"
             android:text="@string/share_budget_list_revoke_button"
             android:textColor="?attr/textColor"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
     </RelativeLayout>
 </ScrollView>
