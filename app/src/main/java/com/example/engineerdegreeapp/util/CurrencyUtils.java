@@ -57,12 +57,14 @@ public class CurrencyUtils {
         sortedCurrencies.add(0, "USD");
         sortedCurrencies.remove("EUR");
         sortedCurrencies.add(0, "EUR");
+
         sortedCurrencies.remove(getLocalCurrencyCode());
         sortedCurrencies.add(0, getLocalCurrencyCode());
         return sortedCurrencies;
     }
 
     public static String getLocalCurrencyCode(){
+        System.out.println(Locale.getDefault().getCountry());
         Currency currency = Currency.getInstance(Locale.getDefault());
         return currency.getCurrencyCode();
     }

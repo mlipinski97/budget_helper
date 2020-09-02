@@ -29,7 +29,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:backgroundTint="?attr/buttonColor"
+                android:background="@drawable/standard_button_background"
+                android:gravity="center"
+                android:padding="10dp"
                 android:text="@string/share_budget_list_search_button"
                 android:textColor="?attr/textColor" />
         </LinearLayout>
@@ -110,7 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/share_budget_list_not_shared_no_positions"
+                android:text="@string/share_budget_list_already_shared_no_positions"
                 android:textColor="?attr/textColor"
                 android:visibility="invisible" />
 
@@ -132,7 +134,9 @@
             android:layout_below="@+id/share_budget_list_shared_linear_layout"
             android:layout_alignParentStart="true"
             android:layout_marginStart="10dp"
-            android:backgroundTint="?attr/buttonColor"
+            android:background="@drawable/standard_button_background"
+            android:gravity="center"
+            android:padding="10dp"
             android:text="@string/new_budget_list_cancel_button"
             android:textColor="?attr/textColor" />
 
@@ -143,7 +147,9 @@
             android:layout_below="@+id/share_budget_list_shared_linear_layout"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="?attr/buttonColor"
+            android:background="@drawable/standard_button_background"
+            android:gravity="center"
+            android:padding="10dp"
             android:text="@string/share_budget_list_share_button"
             android:textColor="?attr/textColor"
             android:visibility="invisible" />
@@ -155,7 +161,9 @@
             android:layout_below="@+id/share_budget_list_shared_linear_layout"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="?attr/buttonColor"
+            android:background="@drawable/standard_button_background"
+            android:gravity="center"
+            android:padding="10dp"
             android:text="@string/share_budget_list_revoke_button"
             android:textColor="?attr/textColor"
             android:visibility="invisible" />

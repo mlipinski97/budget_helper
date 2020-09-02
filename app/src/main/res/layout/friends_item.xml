@@ -20,6 +20,7 @@
             android:layout_height="match_parent"
             android:textColor="?attr/textColor"
             android:text="#15"
+            android:padding="5dp"
             android:textSize="15sp"
             android:layout_gravity="center|start"
             />

@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="login_error_color">#D50C0C</color>
-    <color name="darkCardBackgroundColor">#6C6A6A</color>
+    <color name="darkCardBackgroundColor">#A66C6A6A</color>
     <color name="darkCardSelectedBackgroundColor">#959292</color>
     <color name="lightCardBackgroundColor">#9969BAC3</color>
     <color name="lightCardSelectedBackgroundColor">#b1dddd</color>

@@ -1,66 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundColor"
-    >
+    android:background="?attr/backgroundColor">
+
     <ImageView
         android:id="@+id/background_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:adjustViewBounds="true"
         android:alpha="1"
         android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
         android:src="?attr/backgroundImage" />
+
     <EditText
         android:id="@+id/register_username_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="180dp"
         android:layout_marginLeft="50dp"
+        android:layout_marginTop="180dp"
         android:layout_marginRight="50dp"
-        android:padding="10dp"
         android:autofillHints="email"
         android:hint="@string/login_prompt"
         android:inputType="textEmailAddress"
+        android:padding="10dp"
         android:textColor="?attr/textColor"
-        android:textColorHint="?attr/hintTextColor"
-        />
+        android:textColorHint="?attr/hintTextColor" />
 
     <EditText
         android:id="@+id/register_password_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
         android:layout_below="@+id/register_username_edit_text"
-        android:padding="10dp"
         android:layout_centerHorizontal="true"
-        android:hint="@string/password_prompt"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
         android:autofillHints="password"
+        android:hint="@string/password_prompt"
         android:inputType="textPassword"
+        android:padding="10dp"
         android:textColor="?attr/textColor"
-        android:textColorHint="?attr/hintTextColor"
-        />
+        android:textColorHint="?attr/hintTextColor" />
 
     <EditText
         android:id="@+id/register_password_confirmation_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
         android:layout_below="@+id/register_password_edit_text"
-        android:padding="10dp"
         android:layout_centerHorizontal="true"
-        android:hint="@string/password_confirmation_prompt"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
         android:autofillHints="password"
+        android:hint="@string/password_confirmation_prompt"
         android:inputType="textPassword"
+        android:padding="10dp"
         android:textColor="?attr/textColor"
-        android:textColorHint="?attr/hintTextColor"
-        />
+        android:textColorHint="?attr/hintTextColor" />
 
     <Button
         android:id="@+id/register_confirm_button"
@@ -68,25 +66,27 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/register_password_confirmation_edit_text"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="50dp"
+        android:background="@drawable/standard_button_background"
+        android:gravity="center"
+        android:padding="10dp"
         android:text="@string/confirm_registration_action"
-        android:backgroundTint="?attr/buttonColor"
-        android:textColor="?attr/textColor"
-        />
+        android:textColor="?attr/textColor" />
 
-        <Button
-            android:id="@+id/register_cancel_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/register_confirm_button"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:text="@string/cancel_registration_action"
-            android:backgroundTint="?attr/buttonColor"
-            android:textColor="?attr/textColor"
-            />
+    <Button
+        android:id="@+id/register_cancel_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/register_confirm_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="50dp"
+        android:background="@drawable/standard_button_background"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/cancel_registration_action"
+        android:textColor="?attr/textColor" />
 </RelativeLayout>

@@ -32,7 +32,7 @@
         <item name="colorPrimaryDark">#656464</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">#2C2C2C</item>
-        <item name="cardBackgroundColor">#6C6A6A</item>
+        <item name="cardBackgroundColor">#A66C6A6A</item>
         <item name="textColor">#D8D4D4</item>
         <item name="actionMenuTextColor">#D8D4D4</item>
         <item name="tintColor">#ffffff</item>
@@ -76,7 +76,7 @@
         <item name="colorPrimaryDark">#656464</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">#2C2C2C</item>
-        <item name="cardBackgroundColor">#6C6A6A</item>
+        <item name="cardBackgroundColor">#A66C6A6A</item>
         <item name="textColor">#D8D4D4</item>
         <item name="actionMenuTextColor">#D8D4D4</item>
         <item name="tintColor">#ffffff</item>

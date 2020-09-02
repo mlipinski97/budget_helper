@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private void setLocale(String language) {
         Locale locale;
         if (language.toLowerCase().equals("en") || language.toLowerCase().equals("gb") || language.toLowerCase().equals("us")) {
-            locale = new Locale("en");
+            locale = new Locale("en", "US");
         } else {
             locale = new Locale(language.toLowerCase(), language.toUpperCase());
         }

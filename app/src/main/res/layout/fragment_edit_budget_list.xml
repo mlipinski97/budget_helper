@@ -154,7 +154,9 @@
             android:layout_below="@id/edit_budget_list_date_error_text_view"
             android:layout_alignParentStart="true"
             android:layout_marginStart="10dp"
-            android:backgroundTint="?attr/buttonColor"
+            android:background="@drawable/standard_button_background"
+            android:gravity="center"
+            android:padding="10dp"
             android:text="@string/new_budget_list_cancel_button"
             android:textColor="?attr/textColor" />
 
@@ -165,7 +167,9 @@
             android:layout_below="@id/edit_budget_list_date_error_text_view"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="?attr/buttonColor"
+            android:background="@drawable/standard_button_background"
+            android:gravity="center"
+            android:padding="10dp"
             android:text="@string/edit_budget_list_confirm_button"
             android:textColor="?attr/textColor" />
     </RelativeLayout>
