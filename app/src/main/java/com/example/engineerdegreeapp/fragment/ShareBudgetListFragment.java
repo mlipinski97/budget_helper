@@ -31,6 +31,7 @@ import com.example.engineerdegreeapp.retrofit.entity.Friendship;
 import com.example.engineerdegreeapp.retrofit.entity.UserAuth;
 import com.example.engineerdegreeapp.util.AccountUtils;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -262,12 +263,50 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
                     }
                 } else {
                     Log.d("shareBudgetList()", "shared budgetlist with id: "+ budgetListId + " with user: " + username);
+                    getAllFriendsWithPermission(budgetListId);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.d("shareBudgetList()", "onFailure while trying to share budgetlist with id: "+ budgetListId + " with user: " + username);
+            }
+        });
+    }
+
+    private void shareManyBudgetLists(List<String> userNamesToShare) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BUDGET_LIST_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        BudgetListApi budgetListApi = retrofit.create(BudgetListApi.class);
+        String loginCredential = mAccount.name;
+        String passwordCredential = mAccountManager.getPassword(mAccount);
+        String credentials = loginCredential + ":" + passwordCredential;
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        Call<Void> call = budgetListApi.shareManyBudgetLists(auth, userNamesToShare, budgetListId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    try {
+                        Log.d("shareManyBudgetLists()", response.errorBody().string());
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    userNamesToShare.forEach(userName -> {
+                        Log.d("shareManyBudgetLists()", "shared budgetlist with id: "+ budgetListId + " with user: " + userName);
+                    });
+                    getAllFriendsWithPermission(budgetListId);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                userNamesToShare.forEach(userName -> {
+                    Log.d("shareManyBudgetLists()", "onFailure while trying to share budgetlist with id: "+ budgetListId + " with user: " + userName);
+                });
             }
         });
     }
@@ -294,12 +333,50 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
                     }
                 } else {
                     Log.d("revokeBudgetList()", "revoked budgetlist with id: "+ budgetListId + " from user: " + username);
+                    getAllFriendsWithPermission(budgetListId);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.d("revokeBudgetList()", "onFailure while trying to revoke budgetlist with id: "+ budgetListId + " from user: " + username);
+            }
+        });
+    }
+
+    private void revokeManyBudgetLists(List<String> userNamesToRevoke){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BUDGET_LIST_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        BudgetListApi budgetListApi = retrofit.create(BudgetListApi.class);
+        String loginCredential = mAccount.name;
+        String passwordCredential = mAccountManager.getPassword(mAccount);
+        String credentials = loginCredential + ":" + passwordCredential;
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        Call<Void> call = budgetListApi.revokeManyBudgetLists(auth, userNamesToRevoke, budgetListId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    try {
+                        Log.d("revokeManyBudgetLists()", response.errorBody().string());
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    userNamesToRevoke.forEach(userName -> {
+                        Log.d("revokeManyBudgetLists()", "revoked budgetlist with id: "+ budgetListId + " from user: " + userName);
+                    });
+                    getAllFriendsWithPermission(budgetListId);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                userNamesToRevoke.forEach(userName -> {
+                    Log.d("revokeManyBudgetLists()", "onFailure while trying to revoke budgetlist with id: "+ budgetListId + " from user: " + userName);
+                });
             }
         });
     }
@@ -437,28 +514,41 @@ public class ShareBudgetListFragment extends Fragment implements View.OnClickLis
                 searchAndReloadLists();
                 break;
             case R.id.share_budget_list_button_share:
+                ArrayList<String> userNamesToShare = new ArrayList<>();
                 friendsWithoutPermission.forEach(f -> {
                     if(f.isSelected()){
-                        shareBudgetList(f.getUsername());
+                        userNamesToShare.add(f.getUsername());
                     }
                 });
+                if(userNamesToShare.size() > 1){
+                    shareManyBudgetLists(userNamesToShare);
+                } else {
+                    shareBudgetList(userNamesToShare.get(0));
+                }
                 shareButton.setVisibility(View.INVISIBLE);
-                getAllFriendsWithPermission(budgetListId);
                 break;
             case R.id.share_budget_list_button_revoke:
+                ArrayList<String> userNamesToRevoke = new ArrayList<>();
+
                 friendsWithPermission.forEach(f -> {
                     if(f.isSelected()){
-                        revokeBudgetList(f.getUsername());
+                        userNamesToRevoke.add(f.getUsername());
                     }
                 });
+                if(userNamesToRevoke.size() > 1){
+                    revokeManyBudgetLists(userNamesToRevoke);
+                } else {
+                    revokeBudgetList(userNamesToRevoke.get(0));
+                }
                 revokeButton.setVisibility(View.INVISIBLE);
-                getAllFriendsWithPermission(budgetListId);
                 break;
             case R.id.share_budget_list_button_cancel:
                 mClickListener.onFragmentClickInteraction(clickedItemId);
                 break;
         }
     }
+
+
 
     private List<UserAuth> getFriendsFromFriendships(List<Friendship> friendships) {
         ArrayList<UserAuth> friendList = new ArrayList<>();

@@ -3,6 +3,7 @@ package com.example.engineerdegreeapp.retrofit;
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.retrofit.entity.Expense;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.RequestBody;
@@ -32,6 +33,12 @@ public interface BudgetListApi {
 
     @HTTP(method = "DELETE", path = "deletemany", hasBody = true)
     Call<Void> deleteManyBudgetLists(@Header("Authorization") String auth, @Body List<Long> idList);
+
+    @HTTP(method = "DELETE", path = "revokemany", hasBody = true)
+    Call<Void> revokeManyBudgetLists(@Header("Authorization") String auth, @Body List<String> usernameList, @Query("budgetListId") Long budgetListId);
+
+    @HTTP(method = "PATCH", path = "sharemany", hasBody = true)
+    Call<Void> shareManyBudgetLists(@Header("Authorization") String auth, @Body List<String> usernameList, @Query("budgetListId") Long budgetListId);
 
     @PATCH("share")
     Call<Void> shareBudgetList(@Header("Authorization") String auth, @Query("username") String username, @Query("budgetListId") Long budgetListId);

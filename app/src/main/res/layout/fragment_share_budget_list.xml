@@ -31,8 +31,10 @@
                 android:layout_weight="0"
                 android:background="@drawable/standard_button_background"
                 android:gravity="center"
+                android:layout_marginBottom="5dp"
                 android:padding="10dp"
                 android:text="@string/share_budget_list_search_button"
+                android:layout_marginTop="5dp"
                 android:textColor="?attr/textColor" />
         </LinearLayout>
 
@@ -138,6 +140,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/new_budget_list_cancel_button"
+            android:layout_marginBottom="5dp"
             android:textColor="?attr/textColor" />
 
         <Button
@@ -151,6 +154,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/share_budget_list_share_button"
+            android:layout_marginBottom="5dp"
             android:textColor="?attr/textColor"
             android:visibility="invisible" />
 
@@ -164,6 +168,7 @@
             android:background="@drawable/standard_button_background"
             android:gravity="center"
             android:padding="10dp"
+            android:layout_marginBottom="5dp"
             android:text="@string/share_budget_list_revoke_button"
             android:textColor="?attr/textColor"
             android:visibility="invisible" />
