@@ -13,6 +13,7 @@ public class Expense {
     private Date dateOfExpense;
     private UserAuth expenseOwner;
     private Long budgetListId;
+    private BudgetList budgetList;
     private boolean done;
     private boolean isSelected;
     @SerializedName("category")
@@ -39,6 +40,18 @@ public class Expense {
         this.category = category;
     }
 
+    public Expense(Long id, String name, Double amount, Date dateOfExpense, UserAuth expenseOwner, Long budgetListId, BudgetList budgetList, boolean done, boolean isSelected, Category category) {
+        this.id = id;
+        this.name = name;
+        this.amount = amount;
+        this.dateOfExpense = dateOfExpense;
+        this.expenseOwner = expenseOwner;
+        this.budgetListId = budgetListId;
+        this.budgetList = budgetList;
+        this.done = done;
+        this.isSelected = isSelected;
+        this.category = category;
+    }
 
     public String getExpenseOwnerName(){
         return expenseOwner.getUsername();
@@ -114,5 +127,13 @@ public class Expense {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public BudgetList getBudgetList() {
+        return budgetList;
+    }
+
+    public void setBudgetList(BudgetList budgetList) {
+        this.budgetList = budgetList;
     }
 }

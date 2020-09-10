@@ -1,4 +1,4 @@
-    package com.example.engineerdegreeapp.activity;
+package com.example.engineerdegreeapp.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 
@@ -33,6 +34,7 @@ import com.example.engineerdegreeapp.fragment.CategoryBrowserFragment;
 import com.example.engineerdegreeapp.fragment.EditBudgetListFragment;
 import com.example.engineerdegreeapp.fragment.EditCategoryFragment;
 import com.example.engineerdegreeapp.fragment.FriendsFragment;
+import com.example.engineerdegreeapp.fragment.MonthlyStatisticsFragment;
 import com.example.engineerdegreeapp.fragment.NewBudgetListFragment;
 import com.example.engineerdegreeapp.fragment.NewCategoryFragment;
 import com.example.engineerdegreeapp.fragment.NewExpenseFragment;
@@ -190,28 +192,41 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 if (drawer.isDrawerOpen(GravityCompat.START)) {
                     drawer.closeDrawer(GravityCompat.START);
                 }
+                getSupportFragmentManager().popBackStack("BEFORE_FRIENDS_FRAGMENT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
-                        .addToBackStack("budget_list_fragment")
-                        .replace(R.id.main_fragment_layout_holder, new FriendsFragment()).commit();
+                        .addToBackStack("BEFORE_FRIENDS_FRAGMENT")
+                        .replace(R.id.main_fragment_layout_holder, new FriendsFragment(), "FRIENDS_FRAGMENT").commit();
                 break;
             case R.id.drawer_admin_add_category:
                 if (drawer.isDrawerOpen(GravityCompat.START)) {
                     drawer.closeDrawer(GravityCompat.START);
                 }
+                getSupportFragmentManager().popBackStack("BEFORE_NEW_CATEGORY_FRAGMENT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
-                        .addToBackStack("budget_list_fragment")
-                        .replace(R.id.main_fragment_layout_holder, new NewCategoryFragment()).commit();
+                        .addToBackStack("BEFORE_NEW_CATEGORY_FRAGMENT")
+                        .replace(R.id.main_fragment_layout_holder, new NewCategoryFragment(), "NEW_CATEGORY_FRAGMENT").commit();
                 break;
             case R.id.drawer_admin_edit_category:
                 if (drawer.isDrawerOpen(GravityCompat.START)) {
                     drawer.closeDrawer(GravityCompat.START);
                 }
+                getSupportFragmentManager().popBackStack("BEFORE_EDIT_CATEGORY_FRAGMENT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
-                        .addToBackStack("budget_list_fragment")
-                        .replace(R.id.main_fragment_layout_holder, new CategoryBrowserFragment()).commit();
+                        .addToBackStack("BEFORE_EDIT_CATEGORY_FRAGMENT")
+                        .replace(R.id.main_fragment_layout_holder, new CategoryBrowserFragment(), "EDIT_CATEGORY_FRAGMENT").commit();
+                break;
+            case R.id.drawer_statistics:
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+                getSupportFragmentManager().popBackStack("BEFORE_MONTHLY_STATISTICS_FRAGMENT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_right, R.anim.exit_to_left)
+                        .addToBackStack("BEFORE_MONTHLY_STATISTICS_FRAGMENT")
+                        .replace(R.id.main_fragment_layout_holder, new MonthlyStatisticsFragment(), "MONTHLY_STATISTICS_FRAGMENT").commit();
                 break;
         }
         return true;
@@ -421,5 +436,16 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     public void changeSortButtonListener(ToolbarMenuSortListener listener) {
         toolbarMenuSortByListener = listener;
     }
+
+    private void popEveryFragmentOfClass(Class<?> cls) {
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        for (int i = fragmentManager.getBackStackEntryCount() - 1; i > 0; i--) {
+            Fragment fragment = fragmentManager.findFragmentByTag(fragmentManager.getBackStackEntryAt(i).getName());
+            if (fragment.getClass().getName().equals(cls.getName())) {
+                System.out.println(fragment.getClass().getName());
+            }
+        }
+    }
+
 
 }

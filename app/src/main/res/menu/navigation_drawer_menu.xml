@@ -11,15 +11,21 @@
             android:icon="@drawable/ic_people_black_24dp"
             android:title="@string/drawer_friends"
             />
+
         <item
-            android:id="@+id/drawer_settings"
-            android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/drawer_settings"
+            android:id="@+id/drawer_statistics"
+            android:icon="@drawable/ic_baseline_pie_chart_24"
+            android:title="@string/drawer_statistics"
             />
     </group>
     <group
         android:id="@+id/drawer_group_2"
         android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/drawer_settings"
+            />
         <item
             android:id="@+id/drawer_logout"
             android:icon="@drawable/ic_logout"

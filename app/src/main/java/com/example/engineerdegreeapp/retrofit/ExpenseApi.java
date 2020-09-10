@@ -36,4 +36,10 @@ public interface ExpenseApi {
     @HTTP(method = "DELETE", path = "deletemany", hasBody = true)
     Call<Void> deleteManyExpenses(@Header("Authorization") String auth, @Body List<Long> idList);
 
+    @GET("getmonthstatistics")
+    Call<List<Expense>> getAllByDateAndExpenseOwner(@Header("Authorization") String auth,
+                                                    @Query("startDate") String startDate,
+                                                    @Query("endDate") String endDate,
+                                                    @Query("username") String username);
+
 }

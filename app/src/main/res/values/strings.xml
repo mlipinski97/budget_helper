@@ -22,8 +22,8 @@
     <string name="user_help_frame_no_list_found">No planned budgets :)</string>
     <string name="budget_list_delete_button">Delete selected lists</string>
     <string name="budget_list_dialog_sort_by_text">Sort by:</string>
-    <string name="budget_list_value_text">Total value: </string>
-    <string name="budget_list_remaining_value_text">Remaining value: </string>
+    <string name="budget_list_value_text">Total: </string>
+    <string name="budget_list_remaining_value_text">Remaining: </string>
 
     <!-- new/edit budget list fragment -->
     <string name="new_budget_list_toolbar_name">Add new list</string>
@@ -74,9 +74,11 @@
     <string name="drawer_logged_in_as">Currently logged in as:</string>
     <string name="drawer_logout">Logout</string>
     <string name="drawer_settings">Settings</string>
+    <string name="drawer_statistics">Statistics</string>
     <string name="drawer_friends">Friends</string>
     <string name="drawer_admin_add_category">Add category</string>
     <string name="drawer_admin_edit_category">Edit category</string>
+
 
     <!-- Settings fragment -->
     <string name="dark_mode">Dark mode</string>
@@ -138,6 +140,12 @@
     <string name="category_edit_toolbar_title">Edit selected category</string>
     <string name="category_browse_toolbar_title">Browse category</string>
 
+    <!-- statistics -->
+    <string name="statistics_year_loading_error">There was a problem fetching year data</string>
+    <string name="statistics_expenses_loading_error">There was a problem fetching data about your expenses</string>
+    <string name="statistics_pie_chart_center_text">"Total spent: "</string>
+    <string name="statistics_pie_chart_no_data_center_text">Your data will be shown here</string>
+    <string name="statistics_loading_currency_rates_error">Could not load currency rates. Currency rates might be shown incorrectly.</string>
 
     <!-- placeholders and testing -->
     <string name="place_holder_button">[PH]button</string>

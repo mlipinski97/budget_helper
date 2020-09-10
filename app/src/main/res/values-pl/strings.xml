@@ -17,8 +17,8 @@
     <string name="user_help_frame_no_list_found">Brak zaplanowanych list budżetowych ;)</string>
     <string name="budget_list_delete_button">Usuń zaznaczone listy</string>
     <string name="budget_list_dialog_sort_by_text">Sortuj:</string>
-    <string name="budget_list_value_text">Wartość</string>
-    <string name="budget_list_remaining_value_text">Pozostałą wartość</string>
+    <string name="budget_list_value_text">Wartość: </string>
+    <string name="budget_list_remaining_value_text">Pozostało: </string>
     <string name="new_budget_list_toolbar_name">Dodaj nową listę</string>
     <string name="new_budget_list_name_prompt">Nazwa listy</string>
     <string name="new_budget_list_name_hint">Wprowadź  nazwę nowej listy</string>
@@ -107,4 +107,10 @@
     <string name="category_browse_toolbar_title">Przeglądaj kategorie</string>
     <string name="dark_mode_preference_on">Włączony</string>
     <string name="dark_mode_preference_off">Wyłączony</string>
+    <string name="drawer_statistics">Statystyki</string>
+    <string name="statistics_year_loading_error">Wystąpił problem z wczytywaniem roku</string>
+    <string name="statistics_expenses_loading_error">Wystąpił problem podczas wczytywania twoich wydatków</string>
+    <string name="statistics_pie_chart_center_text">"Łącznie wydano: "</string>
+    <string name="statistics_pie_chart_no_data_center_text">Twoje dane pojawią się tutaj</string>
+    <string name="statistics_loading_currency_rates_error">Nie można wczytać kursu walut. Waluty mogą być przeliczane nieprawidłowo.</string>
 </resources>

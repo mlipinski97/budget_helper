@@ -3,6 +3,8 @@ package com.example.engineerdegreeapp.util;
 import android.util.ArraySet;
 import android.util.Log;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.HashSet;
@@ -12,34 +14,32 @@ import java.util.stream.Collectors;
 
 public class CurrencyUtils {
 
-    public static Set<Currency> getAllCurrencies()
-    {
-        Set<Currency> toret = new HashSet<Currency>();
-        Locale[] locs = Locale.getAvailableLocales();
+    public static Set<Currency> getAllCurrencies() {
+        Set<Currency> currencySet = new HashSet<Currency>();
+        Locale[] locales = Locale.getAvailableLocales();
 
-        for(Locale loc : locs) {
+        for (Locale loc : locales) {
             try {
-                Currency currency = Currency.getInstance( loc );
+                Currency currency = Currency.getInstance(loc);
 
-                if ( currency != null ) {
-                    toret.add( currency );
+                if (currency != null) {
+                    currencySet.add(currency);
                 }
-            } catch(Exception exc)
-            {
-                Log.d("getAllCurrencies()", "failed to get currency from Locale");
+            } catch (Exception exc) {
+                Log.d("getAllCurrencies()", "failed to get currency from Locale - " + loc.getDisplayCountry());
             }
         }
 
-        return toret;
+        return currencySet;
     }
 
-    public static Set<String> getAllCurrencyCodes(){
+    public static Set<String> getAllCurrencyCodes() {
         ArrayList<Currency> currencies = new ArrayList<>(CurrencyUtils.getAllCurrencies());
         return currencies.stream().map(Currency::getCurrencyCode).collect(Collectors.toCollection(ArraySet::new));
     }
 
     //gets all ISO currency codes and puts 7 most used currencies in the world, Polish zloty and locale currency + on top of the list
-    public static ArrayList<String> getAllCurrencyCodesSortedByPopular(){
+    public static ArrayList<String> getAllCurrencyCodesSortedByPopular() {
         ArrayList<String> sortedCurrencies = new ArrayList<>(getAllCurrencyCodes());
         sortedCurrencies.remove("JPY");
         sortedCurrencies.add(0, "JPY");
@@ -63,9 +63,17 @@ public class CurrencyUtils {
         return sortedCurrencies;
     }
 
-    public static String getLocalCurrencyCode(){
-        System.out.println(Locale.getDefault().getCountry());
+    public static String getLocalCurrencyCode() {
         Currency currency = Currency.getInstance(Locale.getDefault());
+        Log.d("getLocalCurrencyCode()", "current local currency code: " + currency.getCurrencyCode());
         return currency.getCurrencyCode();
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }

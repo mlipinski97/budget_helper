@@ -2,6 +2,7 @@ package com.example.engineerdegreeapp.retrofit;
 
 import com.example.engineerdegreeapp.retrofit.entity.BudgetList;
 import com.example.engineerdegreeapp.retrofit.entity.Expense;
+import com.example.engineerdegreeapp.retrofit.entity.StringResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,5 +46,8 @@ public interface BudgetListApi {
 
     @DELETE("revoke")
     Call<Void> revokeBudgetList(@Header("Authorization") String auth, @Query("username") String username, @Query("budgetListId") Long budgetListId);
+
+    @GET("getearliestdateforuser")
+    Call<StringResponse> getEarliestDateForUser(@Header("Authorization") String auth, @Query("username") String username);
 
 }

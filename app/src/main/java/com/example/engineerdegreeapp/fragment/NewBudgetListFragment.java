@@ -31,7 +31,6 @@ import com.example.engineerdegreeapp.util.RegexUtils;
 
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,6 +48,8 @@ import static com.example.engineerdegreeapp.util.DateUtils.dd_mm_yyy_sdf;
 
 public class NewBudgetListFragment extends Fragment implements View.OnClickListener,
         AdapterView.OnItemSelectedListener {
+
+    private final String BUDGET_LIST_BASE_URL = "https://engineer-degree-project.herokuapp.com/api/budgetlist/";
 
     private TextView listNameErrorTextView;
     private TextView listValueErrorTextView;
@@ -136,7 +137,7 @@ public class NewBudgetListFragment extends Fragment implements View.OnClickListe
 
     private void postBudgetList() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://engineer-degree-project.herokuapp.com/api/budgetlist/")
+                .baseUrl(BUDGET_LIST_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundImage"
+    android:gravity="top">
+
+
+    <LinearLayout
+        android:id="@+id/monthly_statistics_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:id="@+id/monthly_statistics_month_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="40sp"
+            android:layout_weight="0.8"
+            android:background="?attr/cardBackgroundColor"
+            android:spinnerMode="dropdown"
+            android:textAlignment="center" />
+
+        <Spinner
+            android:id="@+id/monthly_statistics_year_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="40sp"
+            android:layout_weight="0.2"
+            android:background="?attr/cardBackgroundColor"
+            android:spinnerMode="dropdown"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/monthly_statistics_pie_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/monthly_statistics_linear_layout" />
+
+    <Spinner
+        android:id="@+id/monthly_statistics_currency_spinner"
+        android:layout_width="wrap_content"
+        android:minWidth="20dp"
+        android:minHeight="20dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/monthly_statistics_linear_layout"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/cardBackgroundColor"
+        android:spinnerMode="dropdown" />
+</RelativeLayout>

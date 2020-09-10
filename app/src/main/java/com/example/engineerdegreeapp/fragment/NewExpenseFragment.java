@@ -46,7 +46,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -187,7 +186,7 @@ public class NewExpenseFragment extends Fragment implements View.OnClickListener
 
     }
 
-    private Map<String, Bitmap> transformToCategoryItems(ArrayList<Category> categories){
+    private Map<String, Bitmap> transformToCategoryItems(ArrayList<Category> categories) {
         ArrayList<String> categoryNames = categories.stream().map(Category::getCategoryName).collect(Collectors.toCollection(ArrayList::new));
         ArrayList<String> categoryImageStrings = categories.stream().map(Category::getCategoryImage).collect(Collectors.toCollection(ArrayList::new));
         ArrayList<Bitmap> categoryBitmaps = new ArrayList<>();
